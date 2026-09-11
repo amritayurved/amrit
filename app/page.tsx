@@ -9,7 +9,8 @@ const crmOrderEndpoint = "https://amrit-ayurveda-crm.rohitsangwan517.chatgpt.sit
 const supportWhatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent("नमस्ते, मुझे Amrit Ayurveda के products के बारे में जानकारी चाहिए।")}`;
 
 type ProductId = "takat-power-x" | "max-x7-x100-combo";
-const comboOfferEndsAt = new Date("2026-08-31T23:59:59+05:30").getTime();
+const comboOfferDurationMs = 3 * 24 * 60 * 60 * 1000;
+const comboOfferStorageKey = "amrit-combo-offer-ends-at";
 
 const storeProducts = {
   "takat-power-x": {
@@ -286,8 +287,25 @@ export default function Home() {
   }, [cartOpen]);
 
   useEffect(() => {
+    const now = Date.now();
+    const savedEndsAt = Number(localStorage.getItem(comboOfferStorageKey));
+    let offerEndsAt = Number.isFinite(savedEndsAt)
+      && savedEndsAt > now
+      && savedEndsAt - now <= comboOfferDurationMs
+      ? savedEndsAt
+      : now + comboOfferDurationMs;
+
+    localStorage.setItem(comboOfferStorageKey, String(offerEndsAt));
+
     const updateOfferTimer = () => {
-      const remaining = Math.max(0, comboOfferEndsAt - Date.now());
+      let remaining = offerEndsAt - Date.now();
+
+      if (remaining <= 0) {
+        offerEndsAt = Date.now() + comboOfferDurationMs;
+        localStorage.setItem(comboOfferStorageKey, String(offerEndsAt));
+        remaining = offerEndsAt - Date.now();
+      }
+
       setOfferTimeLeft({
         days: Math.floor(remaining / 86400000),
         hours: Math.floor((remaining % 86400000) / 3600000),
