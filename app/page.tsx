@@ -13,7 +13,7 @@ type ProductId = "takat-power-x" | "max-x7-x100-combo";
 const comboOfferDurationMs = 3 * 24 * 60 * 60 * 1000;
 const comboOfferStorageKey = "amrit-combo-offer-ends-at";
 const customGalleryPhotos = [
-  "/my-photos/photo-1.jpg",
+  "/my-photos/photo-1.webp",
   "/my-photos/photo-2.jpg",
   "/my-photos/photo-3.jpg",
   "/my-photos/photo-4.jpg",
@@ -600,7 +600,7 @@ export default function Home() {
           <p className="customGalleryIntro">इस खाली gallery में आपकी 4 photos दिखाई जाएँगी।</p>
           <div className="customGalleryGrid">
             {customGalleryPhotos.map((src, index) => (
-              <div className="customGallerySlot" key={src}>
+              <div className={`customGallerySlot ${index === 0 ? "customGallerySlotFull" : ""}`} key={src}>
                 <Image
                   src={src}
                   alt={`Amrit Ayurveda gallery photo ${index + 1}`}

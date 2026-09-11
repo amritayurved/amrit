@@ -572,6 +572,17 @@ footer { padding:75px 0 105px; background:#050505; border-top:1px solid #2b2b2b;
   transition: opacity 240ms ease;
 }
 
+.customGallerySlotFull {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: min(100%, 921px);
+  aspect-ratio: 921 / 2048;
+}
+
+.customGallerySlotFull img {
+  object-fit: contain;
+}
+
 .customGallerySlot.hasPhoto {
   border-style: solid;
 }
