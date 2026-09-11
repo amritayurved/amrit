@@ -16,7 +16,6 @@ const customGalleryPhotos = [
   "/my-photos/photo-1.jpg",
   "/my-photos/photo-2.jpg",
   "/my-photos/photo-3.jpg",
-  "/my-photos/photo-4.jpg",
 ] as const;
 const wellnessBenefitCards = [
   {
@@ -650,7 +649,7 @@ export default function Home() {
         <div className="siteShell">
           <span className="sectionKicker center">YOUR PHOTO SPACE</span>
           <h2 className="centerTitle" id="custom-gallery-title">अपनी फोटो यहाँ लगाएँ</h2>
-          <p className="customGalleryIntro">इस खाली gallery में आपकी 4 photos दिखाई जाएँगी।</p>
+          <p className="customGalleryIntro">इस gallery में आपकी 3 photos दिखाई जाएँगी।</p>
           <div className="customGalleryGrid">
             {customGalleryPhotos.map((src, index) => (
               <div className="customGallerySlot" key={src}>
