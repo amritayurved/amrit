@@ -13,9 +13,9 @@ type ProductId = "takat-power-x" | "max-x7-x100-combo";
 const comboOfferDurationMs = 3 * 24 * 60 * 60 * 1000;
 const comboOfferStorageKey = "amrit-combo-offer-ends-at";
 const customGalleryPhotos = [
-  "/my-photos/photo-1.jpg",
-  "/my-photos/photo-2.jpg",
-  "/my-photos/photo-3.jpg",
+  "/my-photos/photo-1.webp",
+  "/my-photos/photo-2.webp",
+  "/my-photos/photo-3.webp",
   "/my-photos/photo-4.jpg",
 ] as const;
 const wellnessBenefitCards = [
@@ -648,9 +648,9 @@ export default function Home() {
 
       <section className="customGallerySection" aria-labelledby="custom-gallery-title">
         <div className="siteShell">
-          <span className="sectionKicker center">YOUR PHOTO SPACE</span>
-          <h2 className="centerTitle" id="custom-gallery-title">अपनी फोटो यहाँ लगाएँ</h2>
-          <p className="customGalleryIntro">इस खाली gallery में आपकी 4 photos दिखाई जाएँगी।</p>
+          <span className="sectionKicker center">AMRIT AYURVEDA • GALLERY</span>
+          <h2 className="centerTitle" id="custom-gallery-title">Product & Wellness Gallery</h2>
+          <p className="customGalleryIntro">TAKAT POWER X की 4 premium product और lifestyle photos देखें।</p>
           <div className="customGalleryGrid">
             {customGalleryPhotos.map((src, index) => (
               <div className="customGallerySlot" key={src}>
