@@ -534,3 +534,87 @@ footer { padding:75px 0 105px; background:#050505; border-top:1px solid #2b2b2b;
   .saleTicker > div,.heroAurora,.carouselSlide.active > img,.carouselSlide.active .slideCaption,.slideProgress,.redButton,.testimonialCard,.liveDot,.limitedBadge,.comboShine,.comboGlowOrb,.capsuleFloat,.oilFloat { animation:none !important; }
   .carouselSlide,.courseCard,.redButton,.slideArrow { transition:none; }
 }
+/* Custom photo folder */
+.customGallerySection {
+  padding: 72px 0;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(170, 22, 34, 0.1), transparent 42%),
+    #f7f3ec;
+}
+
+.customGalleryIntro {
+  max-width: 620px;
+  margin: 12px auto 30px;
+  color: #665f57;
+  text-align: center;
+}
+
+.customGalleryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.customGallerySlot {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1px dashed rgba(35, 28, 21, 0.34);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(236, 227, 214, 0.72));
+}
+
+.customGallerySlot img {
+  z-index: 1;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.customGallerySlot.hasPhoto {
+  border-style: solid;
+}
+
+.customGallerySlot.hasPhoto img {
+  opacity: 1;
+}
+
+.customGalleryPlaceholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 8px;
+  color: #8b8175;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-align: center;
+}
+
+.customGalleryPlaceholder b {
+  color: #a41624;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.customGallerySlot.hasPhoto .customGalleryPlaceholder {
+  opacity: 0;
+}
+
+@media (max-width: 900px) {
+  .customGalleryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .customGallerySection {
+    padding: 54px 0;
+  }
+
+  .customGalleryGrid {
+    grid-template-columns: 1fr;
+  }
+}

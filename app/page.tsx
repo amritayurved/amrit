@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useState, type MouseEvent } from "react";
 
 const phone = "918290695226";
@@ -11,6 +12,12 @@ const supportWhatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent("�
 type ProductId = "takat-power-x" | "max-x7-x100-combo";
 const comboOfferDurationMs = 3 * 24 * 60 * 60 * 1000;
 const comboOfferStorageKey = "amrit-combo-offer-ends-at";
+const customGalleryPhotos = [
+  "/my-photos/photo-1.jpg",
+  "/my-photos/photo-2.jpg",
+  "/my-photos/photo-3.jpg",
+  "/my-photos/photo-4.jpg",
+] as const;
 
 const storeProducts = {
   "takat-power-x": {
@@ -585,6 +592,29 @@ export default function Home() {
       </section>
 
       <div className="privacyStrip"><div className="siteShell"><strong>सुरक्षित और गोपनीय डिलीवरी</strong><span>आपकी जानकारी और पैकिंग पूरी तरह private रखी जाती है।</span></div></div>
+
+      <section className="customGallerySection" aria-labelledby="custom-gallery-title">
+        <div className="siteShell">
+          <span className="sectionKicker center">YOUR PHOTO SPACE</span>
+          <h2 className="centerTitle" id="custom-gallery-title">अपनी फोटो यहाँ लगाएँ</h2>
+          <p className="customGalleryIntro">इस खाली gallery में आपकी 4 photos दिखाई जाएँगी।</p>
+          <div className="customGalleryGrid">
+            {customGalleryPhotos.map((src, index) => (
+              <div className="customGallerySlot" key={src}>
+                <Image
+                  src={src}
+                  alt={`Amrit Ayurveda gallery photo ${index + 1}`}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 25vw"
+                  onLoad={event => event.currentTarget.parentElement?.classList.add("hasPhoto")}
+                  onError={event => event.currentTarget.parentElement?.classList.remove("hasPhoto")}
+                />
+                <span className="customGalleryPlaceholder"><b>{String(index + 1).padStart(2, "0")}</b>PHOTO SLOT</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="featuredProductsSection" id="products" aria-labelledby="products-title">
         <div className="siteShell">
