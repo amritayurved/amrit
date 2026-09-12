@@ -83,6 +83,15 @@ type CustomerDetails = {
   pincode: string;
 };
 
+type ConfirmedOrder = {
+  id: string;
+  customerName: string;
+  productName: string;
+  quantity: number;
+  total: number;
+  method: "COD" | "UPI";
+};
+
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
@@ -231,7 +240,7 @@ export default function Home() {
   const [orderSaving, setOrderSaving] = useState(false);
   const [orderError, setOrderError] = useState("");
   const [savedOrderId, setSavedOrderId] = useState("");
-  const [confirmedCustomerName, setConfirmedCustomerName] = useState("");
+  const [confirmedOrder, setConfirmedOrder] = useState<ConfirmedOrder | null>(null);
   const [orderSuccessOpen, setOrderSuccessOpen] = useState(false);
   const [offerTimeLeft, setOfferTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [customer, setCustomer] = useState<CustomerDetails>({
@@ -424,7 +433,14 @@ export default function Home() {
       });
       if (!response.ok) throw new Error("Order CRM में save नहीं हुआ");
       setSavedOrderId(paymentRef);
-      setConfirmedCustomerName(customer.name.trim());
+      setConfirmedOrder({
+        id: paymentRef,
+        customerName: customer.name.trim(),
+        productName: activeProduct.shortName,
+        quantity: cartQty,
+        total: method === "upi" ? onlineTotal : codTotal,
+        method: method.toUpperCase() as "COD" | "UPI",
+      });
       setOrderSuccessOpen(true);
       return true;
     } catch {
@@ -503,15 +519,26 @@ export default function Home() {
           <small>PRIVATE • DISCREET • RESPONSIBLE</small>
         </section>
       </div>}
-      {orderSuccessOpen && savedOrderId && <div className="orderSuccessOverlay" role="dialog" aria-modal="true" aria-labelledby="order-success-title">
+      {orderSuccessOpen && confirmedOrder && <div className="orderSuccessOverlay" role="dialog" aria-modal="true" aria-labelledby="order-success-title">
         <section className="orderSuccessCard">
           <span className="orderSuccessCheck" aria-hidden="true">✓</span>
-          <p className="sectionKicker center">ORDER CONFIRMED</p>
-          <h2 id="order-success-title">धन्यवाद, {confirmedCustomerName}!</h2>
-          <p className="orderSuccessMessage">आपका ऑर्डर सफलतापूर्वक बुक हो गया है।</p>
-          <p className="orderConfirmationCode"><span>CONFIRMATION CODE / ORDER ID</span><strong>{savedOrderId}</strong></p>
-          <p className="orderContactMessage">Amrit Ayurveda टीम जल्द ही आपसे संपर्क करेगी।</p>
+          <p className="sectionKicker center">AMRIT AYURVEDA</p>
+          <h2 id="order-success-title">ऑर्डर कन्फर्म!</h2>
+          <p className="orderCustomerThanks">धन्यवाद, <strong>{confirmedOrder.customerName} जी</strong></p>
+          <p className="orderSuccessMessage">आपका {confirmedOrder.method} ऑर्डर सफलतापूर्वक प्राप्त हो गया है।</p>
+          <div className="confirmedOrderSummary">
+            <p><strong>{confirmedOrder.quantity} {confirmedOrder.quantity === 1 ? "Pack" : "Packs"}</strong><span>₹{formatPrice(confirmedOrder.total)}</span></p>
+            <small>{confirmedOrder.productName}</small>
+          </div>
+          <p className="orderConfirmationCode"><span>CONFIRMATION CODE / ORDER ID</span><strong>{confirmedOrder.id}</strong></p>
+          <div className="orderContactMessage">
+            <strong>Amrit Ayurveda टीम जल्द ही आपसे संपर्क करेगी।</strong>
+            <p>हम आपके दिए हुए mobile number पर ऑर्डर की पुष्टि के लिए संपर्क करेंगे। कृपया अपना फोन उपलब्ध रखें।</p>
+          </div>
+          <p className="orderDispatchMessage">ऑर्डर की पुष्टि होने के बाद आपका parcel सुरक्षित तरीके से pack करके भेजा जाएगा।</p>
+          <div className="orderTrustRow"><span>100% गोपनीय पैकेजिंग</span><span>सुरक्षित डिलीवरी</span></div>
           <button className="redButton" onClick={() => { setOrderSuccessOpen(false); setCartOpen(false); }}>ठीक है</button>
+          <small className="orderHelpNote">सहायता के लिए WhatsApp विकल्प वेबसाइट पर उपलब्ध है।</small>
         </section>
       </div>}
       <div className="saleTicker" aria-label="वर्तमान ऑफर">
