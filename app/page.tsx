@@ -231,6 +231,8 @@ export default function Home() {
   const [orderSaving, setOrderSaving] = useState(false);
   const [orderError, setOrderError] = useState("");
   const [savedOrderId, setSavedOrderId] = useState("");
+  const [confirmedCustomerName, setConfirmedCustomerName] = useState("");
+  const [orderSuccessOpen, setOrderSuccessOpen] = useState(false);
   const [offerTimeLeft, setOfferTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [customer, setCustomer] = useState<CustomerDetails>({
     name: "",
@@ -361,6 +363,7 @@ export default function Home() {
   }, [activeProduct.shortName, cartQty, onlineTotal, paymentRef]);
 
   function buyCourse(qty: number) {
+    setOrderSuccessOpen(false);
     setSelectedQty(qty);
     setCartProductId("takat-power-x");
     setCartQty(qty);
@@ -368,6 +371,7 @@ export default function Home() {
   }
 
   function buyCombo() {
+    setOrderSuccessOpen(false);
     setCartProductId("max-x7-x100-combo");
     setCartQty(1);
     setPaymentMethod("upi");
@@ -391,7 +395,10 @@ export default function Home() {
   }
 
   async function submitWebsiteOrder(method: "cod" | "upi") {
-    if (savedOrderId === paymentRef) return true;
+    if (savedOrderId === paymentRef) {
+      setOrderSuccessOpen(true);
+      return true;
+    }
     setOrderSaving(true);
     setOrderError("");
     try {
@@ -417,6 +424,8 @@ export default function Home() {
       });
       if (!response.ok) throw new Error("Order CRM में save नहीं हुआ");
       setSavedOrderId(paymentRef);
+      setConfirmedCustomerName(customer.name.trim());
+      setOrderSuccessOpen(true);
       return true;
     } catch {
       setOrderError("Order save नहीं हुआ। Internet check करके दोबारा try करें।");
@@ -492,6 +501,17 @@ export default function Home() {
           <button className="redButton" onClick={confirmAdultEntry}>हाँ, मेरी उम्र 18+ है — ENTER</button>
           <button className="ageExit" onClick={leaveAdultStore}>अभी बाहर जाएँ</button>
           <small>PRIVATE • DISCREET • RESPONSIBLE</small>
+        </section>
+      </div>}
+      {orderSuccessOpen && savedOrderId && <div className="orderSuccessOverlay" role="dialog" aria-modal="true" aria-labelledby="order-success-title">
+        <section className="orderSuccessCard">
+          <span className="orderSuccessCheck" aria-hidden="true">✓</span>
+          <p className="sectionKicker center">ORDER CONFIRMED</p>
+          <h2 id="order-success-title">धन्यवाद, {confirmedCustomerName}!</h2>
+          <p className="orderSuccessMessage">आपका ऑर्डर सफलतापूर्वक बुक हो गया है।</p>
+          <p className="orderConfirmationCode"><span>CONFIRMATION CODE / ORDER ID</span><strong>{savedOrderId}</strong></p>
+          <p className="orderContactMessage">Amrit Ayurveda टीम जल्द ही आपसे संपर्क करेगी।</p>
+          <button className="redButton" onClick={() => { setOrderSuccessOpen(false); setCartOpen(false); }}>ठीक है</button>
         </section>
       </div>}
       <div className="saleTicker" aria-label="वर्तमान ऑफर">

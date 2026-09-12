@@ -16,6 +16,18 @@ a { color:inherit; text-decoration:none; }
 .ageGateCard .redButton { width:100%; min-height:55px; }
 .ageExit { margin-top:11px; padding:10px 18px; border:0; color:#837b7c; background:transparent; font-size:11px; font-weight:800; }
 .ageGateCard > small { display:block; margin-top:16px; color:#6e6667; font-size:8px; font-weight:900; letter-spacing:.2em; }
+.orderSuccessOverlay { position:fixed; inset:0; z-index:120; display:grid; place-items:center; padding:18px; background:#000000df; backdrop-filter:blur(12px); }
+.orderSuccessCard { width:min(500px,100%); padding:38px 30px 30px; border:1px solid #43d37b75; border-radius:26px; background:radial-gradient(circle at 50% 0,#174a2d 0,transparent 42%),linear-gradient(145deg,#121d16,#080a09 68%); box-shadow:0 38px 110px #000,0 0 55px #1bb65a2e; text-align:center; }
+.orderSuccessCheck { width:78px; height:78px; display:grid; place-items:center; margin:0 auto 20px; border:2px solid #59e58e; border-radius:50%; background:#16944b; color:#fff; font-size:40px; font-weight:900; box-shadow:0 0 0 9px #34d47717,0 0 42px #20c5654f; }
+.orderSuccessCard .sectionKicker { color:#65e797; }
+.orderSuccessCard h2 { margin:10px 0 9px; font-family:Georgia,serif; font-size:clamp(27px,6vw,38px); line-height:1.15; }
+.orderSuccessMessage { margin:0 0 20px; color:#e5eee8; font-size:15px; line-height:1.6; }
+.orderConfirmationCode { margin:0 0 19px; padding:14px; border:1px dashed #5ace86a3; border-radius:14px; background:#07150d; }
+.orderConfirmationCode span,.orderConfirmationCode strong { display:block; }
+.orderConfirmationCode span { color:#82ba96; font-size:9px; font-weight:900; letter-spacing:.12em; }
+.orderConfirmationCode strong { margin-top:7px; color:#73f0a2; font-size:18px; overflow-wrap:anywhere; }
+.orderContactMessage { margin:0 0 23px; color:#b9c9bf; font-size:13px; line-height:1.65; }
+.orderSuccessCard .redButton { width:100%; min-height:52px; }
 .siteShell { width:min(1180px,calc(100% - 40px)); margin-inline:auto; }
 .siteRoot { min-height:100vh; background:var(--black); }
 .saleTicker { height:42px; overflow:hidden; display:flex; align-items:center; background:var(--red); color:white; font-size:13px; font-weight:800; white-space:nowrap; }
