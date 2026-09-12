@@ -1,0 +1,39 @@
+/* Custom photo folder sizing: slightly larger cards and full-photo fit */
+.customGalleryGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  max-width: 1120px;
+  margin-inline: auto;
+}
+
+.customGallerySlot {
+  aspect-ratio: 4 / 5.35;
+  min-height: 440px;
+}
+
+.customGallerySlot img {
+  object-fit: contain !important;
+  object-position: center;
+  background: #f7f3ec;
+}
+
+@media (max-width: 900px) {
+  .customGalleryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .customGallerySlot {
+    min-height: 420px;
+  }
+}
+
+@media (max-width: 520px) {
+  .customGalleryGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .customGallerySlot {
+    width: 100%;
+    min-height: 0;
+    aspect-ratio: 4 / 5.35;
+  }
+}
