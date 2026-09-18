@@ -4,15 +4,16 @@ const CRM_PROJECT_ID = 26522;
 const WP_API = "https://api.websitepublisher.ai";
 
 type OrderInput = {
-  orderId?: string;
-  name?: string;
+  customer?: string;
   phone?: string;
   address?: string;
   pincode?: string;
-  quantity?: number;
+  quantity?: string | number;
   product?: string;
   notes?: string;
-  paymentMethod?: string;
+  payment?: string;
+  order_id?: string;
+  order_type?: string;
 };
 
 async function submitWpForm(formName: string, fields: Record<string, string>) {
@@ -21,13 +22,14 @@ async function submitWpForm(formName: string, fields: Record<string, string>) {
     headers: { Accept: "application/json" },
     cache: "no-store",
   });
-  const sessionJson = await sessionRes.json();
+
+  const sessionJson = await sessionRes.json().catch(() => ({}));
   const session = sessionJson?.data;
+
   if (!sessionRes.ok || !session?.session_id || !session?.csrf_token) {
     throw new Error("CRM session could not be created");
   }
 
-  // WebsitePublisher applies a short time-to-submit anti-bot floor.
   await new Promise((resolve) => setTimeout(resolve, 3200));
 
   const submitRes = await fetch(`${WP_API}/sapi/project/${CRM_PROJECT_ID}/form/submit`, {
@@ -46,21 +48,32 @@ async function submitWpForm(formName: string, fields: Record<string, string>) {
   });
 
   const submitJson = await submitRes.json().catch(() => ({}));
-  const actionCompleted = submitJson?.data?.action_result?.status === "completed";
-  if (!submitRes.ok || submitJson?.success === false || !actionCompleted) {
-    throw new Error(submitJson?.error?.message || "CRM form submission failed");
+  const actionStatus = submitJson?.data?.action_result?.status;
+
+  if (
+    !submitRes.ok ||
+    submitJson?.success === false ||
+    (actionStatus && actionStatus !== "completed")
+  ) {
+    throw new Error(
+      submitJson?.error?.message ||
+      submitJson?.message ||
+      "CRM form submission failed"
+    );
   }
+
   return submitJson;
 }
 
 function normalizeOrder(input: OrderInput) {
-  const customer = String(input.name || "").trim();
+  const customer = String(input.customer || "").trim();
   const phone = String(input.phone || "").replace(/\D/g, "").slice(-10);
   const address = String(input.address || "").trim();
   const pincode = String(input.pincode || "").replace(/\D/g, "").slice(0, 6);
   const quantity = Math.max(1, Math.min(10, Number(input.quantity || 1)));
   const product = String(input.product || "TAKAT POWER X").trim();
-  const method = String(input.paymentMethod || "COD").toUpperCase();
+  const payment = String(input.payment || "COD").trim() === "Prepaid" ? "Prepaid" : "COD";
+  const orderType = String(input.order_type || "").toLowerCase() === "reorder" ? "Reorder" : "Order";
 
   if (customer.length < 2) throw new Error("Customer name is required");
   if (!/^[6-9]\d{9}$/.test(phone)) throw new Error("Valid mobile number is required");
@@ -69,9 +82,9 @@ function normalizeOrder(input: OrderInput) {
 
   let unitAmount: number;
   if (product === "MAX X7 Capsule + MAX X100 Oil Combo") {
-    unitAmount = method === "UPI" ? 1499 : 2500;
+    unitAmount = payment === "Prepaid" ? 1499 : 2500;
   } else if (product === "TAKAT POWER X") {
-    unitAmount = method === "UPI" ? 1349.1 : 1499;
+    unitAmount = payment === "Prepaid" ? 1349.1 : 1499;
   } else {
     throw new Error("Unknown product");
   }
@@ -85,13 +98,14 @@ function normalizeOrder(input: OrderInput) {
     pincode,
     product,
     quantity: String(quantity),
-    payment: method === "UPI" ? "Prepaid" : "COD",
+    payment,
     amount: String(amount),
-    order_id: String(input.orderId || "").trim(),
+    order_id: String(input.order_id || "").trim(),
     notes: String(input.notes || "").trim(),
-    state: "",
-    district: "",
-    city: "",
+    order_type: orderType,
+    state: "Unknown",
+    district: "Unknown",
+    city: "Unknown",
   };
 }
 
@@ -103,7 +117,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, result });
   } catch (error) {
     return NextResponse.json(
-      { ok: false, error: error instanceof Error ? error.message : "Order save failed" },
+      {
+        ok: false,
+        error: error instanceof Error ? error.message : "Order save failed",
+      },
       { status: 502 },
     );
   }
