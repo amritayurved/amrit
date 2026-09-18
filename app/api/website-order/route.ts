@@ -108,36 +108,3 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET() {
-  try {
-    const result = await submitWpForm("website_order_test", {
-      customer: "TEST-CHECK",
-      phone: "9876543210",
-      address: "Backend integration test",
-      pincode: "141001",
-      product: "TAKAT POWER X",
-      quantity: "1",
-      payment: "COD",
-      amount: "1499",
-      order_id: "TEST-CHECK",
-      notes: "Temporary backend verification",
-      state: "",
-      district: "",
-      city: "",
-    });
-    const encoded = Buffer.from(JSON.stringify(result)).toString("base64url").slice(0, 500);
-    await fetch(`${WP_API}/sapi/project/${CRM_PROJECT_ID}/debug/${encoded}`, {
-      method: "GET",
-      cache: "no-store",
-    }).catch(() => undefined);
-    return NextResponse.json({ ok: true, result });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Self-test failed";
-    const encoded = Buffer.from(message).toString("base64url").slice(0, 500);
-    await fetch(`${WP_API}/sapi/project/${CRM_PROJECT_ID}/debug-error/${encoded}`, {
-      method: "GET",
-      cache: "no-store",
-    }).catch(() => undefined);
-    return NextResponse.json({ ok: false, error: message }, { status: 502 });
-  }
-}
