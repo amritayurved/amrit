@@ -1,12 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState, type MouseEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 
 const phone = "918290695226";
 const upiId = "8295820654@okbizaxis";
 const siteUrl = "https://amrit-ayurveda.rohitsangwan517.chatgpt.site";
-const crmOrderEndpoint = "/api/website-order";
+const CRM_PROJECT_ID = 26522;
 const supportWhatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent("नमस्ते, मुझे Amrit Ayurveda के products के बारे में जानकारी चाहिए।")}`;
 
 type ProductId = "takat-power-x" | "max-x7-x100-combo";
@@ -68,6 +68,14 @@ const upiAppTargets = {
 } as const;
 
 type UpiAppTarget = keyof typeof upiAppTargets;
+
+type CrmFormResult = { ok: boolean; data?: any };
+type CrmSapi = { submitForm: (formName: string, fields: Record<string, unknown>) => Promise<CrmFormResult> };
+declare global {
+  interface Window {
+    WP?: { sapi: (projectId: number) => CrmSapi };
+  }
+}
 
 function formatPrice(value: number) {
   return value.toLocaleString("en-IN", {
@@ -225,6 +233,7 @@ const heroSlides = [
 ];
 
 export default function Home() {
+  const formStartedRef = useRef(false);
   const [ageGateOpen, setAgeGateOpen] = useState(true);
   const [activeSlide, setActiveSlide] = useState(0);
   const [carouselPaused, setCarouselPaused] = useState(false);
@@ -304,6 +313,12 @@ export default function Home() {
   }, [cartOpen]);
 
   useEffect(() => {
+    if (cartOpen && cartQty > 0) {
+      trackActivity("cart_open", "Cart opened");
+    }
+  }, [cartOpen]);
+
+  useEffect(() => {
     const now = Date.now();
     const savedEndsAt = Number(localStorage.getItem(comboOfferStorageKey));
     let offerEndsAt = Number.isFinite(savedEndsAt)
@@ -372,6 +387,7 @@ export default function Home() {
   }, [activeProduct.shortName, cartQty, onlineTotal, paymentRef]);
 
   function buyCourse(qty: number) {
+    trackActivity("product_order_click", "TAKAT POWER X order button", "TAKAT POWER X", qty);
     setOrderSuccessOpen(false);
     setSelectedQty(qty);
     setCartProductId("takat-power-x");
@@ -380,6 +396,7 @@ export default function Home() {
   }
 
   function buyCombo() {
+    trackActivity("product_order_click", "MAX X7 + X100 combo order button", "MAX X7 + X100 COMBO", 1);
     setOrderSuccessOpen(false);
     setCartProductId("max-x7-x100-combo");
     setCartQty(1);
@@ -397,7 +414,60 @@ export default function Home() {
     else window.location.replace("https://www.google.com/");
   }
 
+  function activitySessionId() {
+    const key = "amrit-website-activity-session";
+    let id = sessionStorage.getItem(key);
+    if (!id) {
+      id = typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : "sess-" + Date.now() + "-" + Math.random().toString(36).slice(2, 10);
+      sessionStorage.setItem(key, id);
+    }
+    return id;
+  }
+
+  async function crmSapi() {
+    for (let i = 0; i < 50; i += 1) {
+      if (window.WP?.sapi) return window.WP.sapi(CRM_PROJECT_ID);
+      await new Promise(resolve => window.setTimeout(resolve, 100));
+    }
+    throw new Error("CRM form service unavailable");
+  }
+
+  async function submitCrmForm(formName: string, fields: Record<string, unknown>) {
+    const sapi = await crmSapi();
+    const result = await sapi.submitForm(formName, fields);
+    if (!result?.ok) {
+      const message = result?.data?.error?.message || result?.data?.message || "CRM form submission failed";
+      throw new Error(String(message));
+    }
+    return result;
+  }
+
+  function trackActivity(
+    eventType: string,
+    label: string,
+    product = activeProduct.shortName,
+    quantity = Math.max(1, cartQty || 1),
+    orderRef = paymentRef,
+  ) {
+    void submitCrmForm("website_activity", {
+      event_type: eventType,
+      session_id: activitySessionId(),
+      label,
+      path: window.location.pathname,
+      product,
+      quantity: String(quantity),
+      order_ref: orderRef,
+      website: "",
+    }).catch(() => undefined);
+  }
+
   function updateCustomer(field: keyof CustomerDetails, value: string) {
+    if (!formStartedRef.current) {
+      formStartedRef.current = true;
+      trackActivity("form_start", "Checkout delivery form started");
+    }
     setCustomer(current => ({ ...current, [field]: value }));
     setDetailsError(false);
     setOrderError("");
@@ -411,27 +481,27 @@ export default function Home() {
     setOrderSaving(true);
     setOrderError("");
     try {
-      const response = await fetch(crmOrderEndpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          orderId: paymentRef,
-          name: customer.name,
-          phone: customer.mobile,
-          address: customer.address,
-          city: "",
-          district: "",
-          state: "",
-          pincode: customer.pincode,
-          landmark: "",
-          quantity: cartQty,
-          product: activeProduct.name,
-          notes: activeProduct.cartDetail,
-          orderValue: method === "upi" ? onlineTotal : codTotal,
-          paymentMethod: method.toUpperCase(),
-        }),
+      const isReorder = localStorage.getItem("amrit-last-order-phone") === customer.mobile;
+      const result = await submitCrmForm("website_order", {
+        customer: customer.name.trim(),
+        phone: customer.mobile,
+        address: customer.address.trim(),
+        state: "Unknown",
+        district: "Unknown",
+        city: "Unknown",
+        pincode: customer.pincode,
+        product: activeProduct.name,
+        quantity: String(cartQty),
+        payment: method === "upi" ? "Prepaid" : "COD",
+        amount: String(method === "upi" ? onlineTotal : codTotal),
+        order_id: paymentRef,
+        notes: activeProduct.cartDetail,
+        order_type: isReorder ? "Reorder" : "Order",
+        website: "",
       });
-      if (!response.ok) throw new Error("Order CRM में save नहीं हुआ");
+      if (!result.ok) throw new Error("Order CRM में save नहीं हुआ");
+      localStorage.setItem("amrit-last-order-phone", customer.mobile);
+      trackActivity(isReorder ? "reorder_submit" : "order_submit", isReorder ? "Reorder submitted" : "Order submitted");
       setSavedOrderId(paymentRef);
       setConfirmedOrder({
         id: paymentRef,
@@ -558,7 +628,7 @@ export default function Home() {
             <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
           </nav>
           <div className="navActions">
-            <a className="headerWhatsApp" href={supportWhatsappUrl} target="_blank" rel="noreferrer"><span>WA</span> CHAT</a>
+            <a className="headerWhatsApp" href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer"><span>WA</span> CHAT</a>
             <button className="menuButton" onClick={() => setMenuOpen(value => !value)} aria-expanded={menuOpen}>MENU</button>
             <button className="cartTrigger" onClick={() => setCartOpen(true)} aria-label={`Cart में ${cartQty} item`}>CART <span>{cartQty}</span></button>
           </div>
@@ -630,7 +700,7 @@ export default function Home() {
             </div>
             <div className="heroActions">
               <button className="redButton heroBuy" onClick={() => buyCourse(selectedQty)}>BUY NOW • ₹{selectedCourse.price.toLocaleString("en-IN")}</button>
-              <a className="whatsappButton heroWhatsApp" href={supportWhatsappUrl} target="_blank" rel="noreferrer"><span>WA</span><b>WhatsApp पर सीधे बात करें</b></a>
+              <a className="whatsappButton heroWhatsApp" href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer"><span>WA</span><b>WhatsApp पर सीधे बात करें</b></a>
             </div>
             <div className="checkoutTrust"><strong>SAFE CHECKOUT</strong><span>Google Pay • PhonePe • UPI • COD</span></div>
           </div>
@@ -721,7 +791,7 @@ export default function Home() {
         <div className="siteShell whatsappStripInner">
           <span className="liveDot" aria-hidden="true" />
           <div><strong>कोई सवाल है? अभी सीधे WhatsApp पर बात करें</strong><small>Product, COD, use और delivery की private सहायता</small></div>
-          <a href={supportWhatsappUrl} target="_blank" rel="noreferrer">WHATSAPP पर CHAT करें →</a>
+          <a href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer">WHATSAPP पर CHAT करें →</a>
         </div>
       </section>
 
@@ -735,10 +805,10 @@ export default function Home() {
           <h2 className="centerTitle">Bold wellness. Private shopping.</h2>
           <p className="privateStoreIntro">Men&apos;s wellness, couple care और intimate lifestyle से जुड़े products के लिए discreet guidance और private ordering.</p>
           <div className="wellnessCategories">
-            <a href={supportWhatsappUrl} target="_blank" rel="noreferrer"><b>01</b><strong>Men&apos;s Performance</strong><span>Stamina • Energy • Confidence</span></a>
-            <a href={supportWhatsappUrl} target="_blank" rel="noreferrer"><b>02</b><strong>Couple Wellness</strong><span>Connection • Comfort • Care</span></a>
-            <a href={supportWhatsappUrl} target="_blank" rel="noreferrer"><b>03</b><strong>Intimate Care</strong><span>Private advice on WhatsApp</span></a>
-            <a href={supportWhatsappUrl} target="_blank" rel="noreferrer"><b>04</b><strong>Ayurvedic Vitality</strong><span>Herbal daily wellness</span></a>
+            <a href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer"><b>01</b><strong>Men&apos;s Performance</strong><span>Stamina • Energy • Confidence</span></a>
+            <a href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer"><b>02</b><strong>Couple Wellness</strong><span>Connection • Comfort • Care</span></a>
+            <a href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer"><b>03</b><strong>Intimate Care</strong><span>Private advice on WhatsApp</span></a>
+            <a href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer"><b>04</b><strong>Ayurvedic Vitality</strong><span>Herbal daily wellness</span></a>
           </div>
 
           <div className="productGalleryHeading">
@@ -853,14 +923,14 @@ export default function Home() {
         <div className="siteShell footerGrid">
           <div><a className="wordmark footerMark" href="#home"><strong>AMRIT</strong><span>AYURVEDA</span></a><p>Men&apos;s wellness support inspired by Ayurveda and African herbs.</p></div>
           <div><h3>Quick Links</h3><a href="#home">Home</a><a href="#why">Why Choose</a><a href="#how-to-use">How To Use</a><a href="#faq">FAQ</a></div>
-          <div><h3>Support</h3><a href={supportWhatsappUrl}>WhatsApp Order</a><a href="#faq">Shipping</a><a href="#faq">Privacy</a><a href="#faq">Disclaimer</a></div>
-          <div><h3>Contact</h3><a href={`tel:+${phone}`}>+91 82906 95226</a><a href={supportWhatsappUrl}>Chat on WhatsApp</a></div>
+          <div><h3>Support</h3><a href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")}>WhatsApp Order</a><a href="#faq">Shipping</a><a href="#faq">Privacy</a><a href="#faq">Disclaimer</a></div>
+          <div><h3>Contact</h3><a href={`tel:+${phone}`} onClick={() => trackActivity("call_click", "Call click")}>+91 82906 95226</a><a href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")}>Chat on WhatsApp</a></div>
         </div>
         <div className="siteShell disclaimer">डिस्क्लेमर: यह प्रोडक्ट किसी बीमारी का निदान, इलाज, cure या रोकथाम करने के लिए प्रस्तुत नहीं किया गया है। परिणाम व्यक्ति के अनुसार अलग हो सकते हैं। © 2026 Amrit Ayurveda.</div>
       </footer>
 
       <button className="stickyBuy" onClick={() => buyCourse(selectedQty)}>BUY NOW • ₹{selectedCourse.price.toLocaleString("en-IN")}</button>
-      <a className="floatingWhatsapp" href={supportWhatsappUrl} target="_blank" rel="noreferrer" aria-label="WhatsApp पर सीधे चैट करें"><span>WA</span><b>WhatsApp Chat</b></a>
+      <a className="floatingWhatsapp" href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer" aria-label="WhatsApp पर सीधे चैट करें"><span>WA</span><b>WhatsApp Chat</b></a>
 
       {cartOpen && <div className="cartOverlay" onMouseDown={() => setCartOpen(false)}>
         <aside className="cartDrawer" onMouseDown={event => event.stopPropagation()} role="dialog" aria-modal="true" aria-label="Shopping cart and payment">
@@ -871,7 +941,7 @@ export default function Home() {
             <div className="cartItem">
               <span className={`cartProductThumb ${activeProduct.secondaryImage ? "double" : ""}`}><img src={activeProduct.primaryImage} alt={activeProduct.shortName}/>{activeProduct.secondaryImage && <img src={activeProduct.secondaryImage} alt=""/>}</span>
               <span><strong>{cartQty} × {activeProduct.cartDetail}</strong><small>MRP ₹{formatPrice(activeProduct.mrp)} • Online ₹{formatPrice(activeProduct.onlinePrice)}</small></span>
-              <button onClick={() => setCartQty(0)}>REMOVE</button>
+              <button onClick={() => { trackActivity("cart_remove", "Cart item removed"); setCartQty(0); }}>REMOVE</button>
             </div>
             <div className={`cartTotal ${paymentMethod === "upi" ? "discounted" : ""}`}>
               <span>{paymentMethod === "upi" ? "Online Payment Total" : "Cash on Delivery Total"}</span>
@@ -898,10 +968,10 @@ export default function Home() {
               <span className="detailsStep">STEP 2 • PAYMENT METHOD</span>
               <h3 id="payment-choice-title">Payment कैसे करना है?</h3>
               <div className="paymentChoiceGrid">
-                <button className={paymentMethod === "cod" ? "selected" : ""} onClick={() => setPaymentMethod("cod")} aria-pressed={paymentMethod === "cod"}>
+                <button className={paymentMethod === "cod" ? "selected" : ""} onClick={() => { trackActivity("payment_method", "COD selected"); setPaymentMethod("cod"); }} aria-pressed={paymentMethod === "cod"}>
                   <span className="methodIcon">COD</span><strong>Cash on Delivery</strong><small>Parcel मिलने पर payment</small><b>PAY ₹{formatPrice(codTotal)} ON DELIVERY</b>
                 </button>
-                <button className={paymentMethod === "upi" ? "selected" : ""} onClick={() => setPaymentMethod("upi")} aria-pressed={paymentMethod === "upi"}>
+                <button className={paymentMethod === "upi" ? "selected" : ""} onClick={() => { trackActivity("payment_method", "UPI selected"); setPaymentMethod("upi"); }} aria-pressed={paymentMethod === "upi"}>
                   <span className="methodIcon">UPI</span><strong>Online Payment</strong><small>GPay • PhonePe • Paytm • BHIM</small><b>{activeProduct.offerLabel} • SAVE ₹{formatPrice(onlineSavings)}</b>
                 </button>
               </div>
@@ -937,7 +1007,7 @@ export default function Home() {
               </section>
               <a className="receiptButton" href={customerDetailsValid ? paymentWhatsappUrl : "#delivery-details"} onClick={requireCustomerDetails} aria-disabled={!customerDetailsValid}>PAYMENT के बाद RECEIPT / UTR भेजें</a>
             </>}
-            <a className="directCartChat" href={supportWhatsappUrl} target="_blank" rel="noreferrer"><span>WA</span><b>Order से पहले WhatsApp पर बात करें</b></a>
+            <a className="directCartChat" href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer"><span>WA</span><b>Order से पहले WhatsApp पर बात करें</b></a>
             <small className="cartNote">UPI payment अपने-आप confirm नहीं होता। Payment के बाद screenshot या UTR WhatsApp पर भेजें।</small>
           </> : <div className="emptyCart"><h3>Your cart is empty</h3><p>अपना product या combo चुनें।</p><button className="redButton" onClick={() => { setCartOpen(false); document.querySelector("#products")?.scrollIntoView(); }}>CHOOSE PRODUCT</button></div>}
         </aside>
