@@ -46,7 +46,8 @@ async function submitWpForm(formName: string, fields: Record<string, string>) {
   });
 
   const submitJson = await submitRes.json().catch(() => ({}));
-  if (!submitRes.ok || submitJson?.success === false) {
+  const actionCompleted = submitJson?.data?.action_result?.status === "completed";
+  if (!submitRes.ok || submitJson?.success === false || !actionCompleted) {
     throw new Error(submitJson?.error?.message || "CRM form submission failed");
   }
   return submitJson;
