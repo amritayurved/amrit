@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./gallery-fix.css";
-import CrmOrderBridge from "./crm-order-bridge";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://amrit-ayurveda.rohitsangwan517.chatgpt.site"),
@@ -51,5 +50,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="hi"><body><CrmOrderBridge />{children}</body></html>;
+  return <html lang="hi"><body>{children}</body></html>;
 }
