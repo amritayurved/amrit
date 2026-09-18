@@ -1,0 +1,27 @@
+name: CRM integration self-test
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/crm-integration-selftest.yml"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify production CRM intake route
+        shell: bash
+        run: |
+          set -u
+          for i in {1..12}; do
+            raw="$(curl -sS -w $'\n%{http_code}' https://amrit-kohl.vercel.app/api/website-order || true)"
+            code="$(printf '%s' "$raw" | tail -n1)"
+            body="$(printf '%s' "$raw" | sed '$d')"
+            echo "attempt=$i status=$code body=$body"
+            if [ "$code" = "200" ] && printf '%s' "$body" | grep -q '"ok":true'; then
+              exit 0
+            fi
+            sleep 10
+          done
+          exit 1
