@@ -108,31 +108,3 @@ export async function POST(request: Request) {
     );
   }
 }
-
-
-
-export async function GET() {
-  try {
-    const result = await submitWpForm("website_order_test", {
-      customer: "TEST-CHECK",
-      phone: "9876543210",
-      address: "Backend integration test",
-      pincode: "141001",
-      product: "TAKAT POWER X",
-      quantity: "1",
-      payment: "COD",
-      amount: "1499",
-      order_id: "TEST-CHECK",
-      notes: "Temporary backend verification",
-      state: "",
-      district: "",
-      city: "",
-    });
-    return NextResponse.json({ ok: true, result });
-  } catch (error) {
-    return NextResponse.json(
-      { ok: false, error: error instanceof Error ? error.message : "Self-test failed" },
-      { status: 502 },
-    );
-  }
-}
