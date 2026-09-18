@@ -6,7 +6,6 @@ import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 const phone = "918290695226";
 const upiId = "8295820654@okbizaxis";
 const siteUrl = "https://amrit-ayurveda.rohitsangwan517.chatgpt.site";
-const CRM_PROJECT_ID = 26522;
 const supportWhatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent("नमस्ते, मुझे Amrit Ayurveda के products के बारे में जानकारी चाहिए।")}`;
 
 type ProductId = "takat-power-x" | "max-x7-x100-combo";
@@ -68,14 +67,6 @@ const upiAppTargets = {
 } as const;
 
 type UpiAppTarget = keyof typeof upiAppTargets;
-
-type CrmFormResult = { ok: boolean; data?: any };
-type CrmSapi = { submitForm: (formName: string, fields: Record<string, unknown>) => Promise<CrmFormResult> };
-declare global {
-  interface Window {
-    WP?: { sapi: (projectId: number) => CrmSapi };
-  }
-}
 
 function formatPrice(value: number) {
   return value.toLocaleString("en-IN", {
@@ -426,20 +417,16 @@ export default function Home() {
     return id;
   }
 
-  async function crmSapi() {
-    for (let i = 0; i < 50; i += 1) {
-      if (window.WP?.sapi) return window.WP.sapi(CRM_PROJECT_ID);
-      await new Promise(resolve => window.setTimeout(resolve, 100));
-    }
-    throw new Error("CRM form service unavailable");
-  }
-
   async function submitCrmForm(formName: string, fields: Record<string, unknown>) {
-    const sapi = await crmSapi();
-    const result = await sapi.submitForm(formName, fields);
-    if (!result?.ok) {
-      const message = result?.data?.error?.message || result?.data?.message || "CRM form submission failed";
-      throw new Error(String(message));
+    const endpoint = formName === "website_order" ? "/api/website-order" : "/api/website-activity";
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(fields),
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || result?.ok === false) {
+      throw new Error(String(result?.error || "CRM save failed"));
     }
     return result;
   }
