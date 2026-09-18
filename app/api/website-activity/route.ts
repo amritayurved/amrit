@@ -99,27 +99,3 @@ export async function POST(request: Request) {
     );
   }
 }
-
-// Temporary live self-test; removed after verification.
-export async function GET() {
-  try {
-    const result = await submitWpForm("website_activity_test", {
-      event_type: "system_test",
-      session_id: "crm-self-test",
-      label: "Server-side CRM bridge verification",
-      path: "/api/website-activity",
-      product: "",
-      quantity: "0",
-      order_ref: "",
-    });
-    return NextResponse.json({ ok: true, result });
-  } catch (error) {
-    return NextResponse.json(
-      {
-        ok: false,
-        error: error instanceof Error ? error.message : "Self-test failed",
-      },
-      { status: 502 },
-    );
-  }
-}
