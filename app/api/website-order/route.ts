@@ -122,11 +122,19 @@ export async function GET() {
       district: "",
       city: "",
     });
+    const encoded = Buffer.from(JSON.stringify(result)).toString("base64url").slice(0, 500);
+    await fetch(`${WP_API}/sapi/project/${CRM_PROJECT_ID}/debug/${encoded}`, {
+      method: "GET",
+      cache: "no-store",
+    }).catch(() => undefined);
     return NextResponse.json({ ok: true, result });
   } catch (error) {
-    return NextResponse.json(
-      { ok: false, error: error instanceof Error ? error.message : "Self-test failed" },
-      { status: 502 },
-    );
+    const message = error instanceof Error ? error.message : "Self-test failed";
+    const encoded = Buffer.from(message).toString("base64url").slice(0, 500);
+    await fetch(`${WP_API}/sapi/project/${CRM_PROJECT_ID}/debug-error/${encoded}`, {
+      method: "GET",
+      cache: "no-store",
+    }).catch(() => undefined);
+    return NextResponse.json({ ok: false, error: message }, { status: 502 });
   }
 }
