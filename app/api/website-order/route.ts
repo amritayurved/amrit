@@ -27,6 +27,9 @@ async function submitWpForm(formName: string, fields: Record<string, string>) {
     throw new Error("CRM session could not be created");
   }
 
+  // WebsitePublisher applies a short time-to-submit anti-bot floor.
+  await new Promise((resolve) => setTimeout(resolve, 3200));
+
   const submitRes = await fetch(`${WP_API}/sapi/project/${CRM_PROJECT_ID}/form/submit`, {
     method: "POST",
     headers: {
