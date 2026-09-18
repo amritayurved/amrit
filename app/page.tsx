@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState, type MouseEvent } from "react";
 const phone = "918290695226";
 const upiId = "8295820654@okbizaxis";
 const siteUrl = "https://amrit-ayurveda.rohitsangwan517.chatgpt.site";
-const crmOrderEndpoint = "https://amrit-ayurveda-crm.rohitsangwan517.chatgpt.site/api/website-orders";
+const crmOrderEndpoint = "/api/website-order";
 const supportWhatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent("नमस्ते, मुझे Amrit Ayurveda के products के बारे में जानकारी चाहिए।")}`;
 
 type ProductId = "takat-power-x" | "max-x7-x100-combo";
