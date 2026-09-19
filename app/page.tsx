@@ -270,6 +270,22 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const eventKey = "amrit-meta-viewcontent-home";
+    if (sessionStorage.getItem(eventKey) === "sent") return;
+    const timer = window.setTimeout(() => {
+      sendMetaBrowserEvent("ViewContent", {
+        value: storeProducts["takat-power-x"].codPrice,
+        currency: "INR",
+        content_name: storeProducts["takat-power-x"].name,
+        content_ids: ["takat-power-x"],
+        content_type: "product",
+      });
+      sessionStorage.setItem(eventKey, "sent");
+    }, 800);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
     if (carouselPaused || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const rotation = window.setInterval(() => {
       setActiveSlide(current => (current + 1) % heroSlides.length);
@@ -378,12 +394,43 @@ export default function Home() {
     return `upi://pay?${params.toString()}`;
   }, [activeProduct.shortName, cartQty, onlineTotal, paymentRef]);
 
+  function sendMetaBrowserEvent(
+    eventName: "ViewContent" | "AddToCart" | "InitiateCheckout" | "Contact",
+    data: Record<string, unknown> = {},
+    eventId?: string,
+  ) {
+    const tryFbq = () => {
+      const metaFbq = (window as typeof window & { fbq?: (...args: unknown[]) => void }).fbq;
+      if (typeof metaFbq !== "function") return false;
+      if (eventId) metaFbq("track", eventName, data, { eventID: eventId });
+      else metaFbq("track", eventName, data);
+      return true;
+    };
+
+    if (tryFbq()) return;
+
+    let attempts = 0;
+    const retryTimer = window.setInterval(() => {
+      attempts += 1;
+      if (tryFbq() || attempts >= 12) window.clearInterval(retryTimer);
+    }, 250);
+  }
+
   function buyCourse(qty: number) {
+    const orderRef = `${storeProducts["takat-power-x"].orderPrefix}${Date.now()}`;
+    sendMetaBrowserEvent("AddToCart", {
+      value: storeProducts["takat-power-x"].codPrice * qty,
+      currency: "INR",
+      content_name: storeProducts["takat-power-x"].name,
+      content_ids: ["takat-power-x"],
+      content_type: "product",
+      num_items: qty,
+    }, `${orderRef}-addtocart`);
     trackActivity("product_order_click", "TAKAT POWER X order button", "TAKAT POWER X", qty);
     setOrderSuccessOpen(false);
     setSavedOrderId("");
     setConfirmedOrder(null);
-    setPaymentRef(`${storeProducts["takat-power-x"].orderPrefix}${Date.now()}`);
+    setPaymentRef(orderRef);
     setSelectedQty(qty);
     setCartProductId("takat-power-x");
     setCartQty(qty);
@@ -391,11 +438,20 @@ export default function Home() {
   }
 
   function buyCombo() {
+    const orderRef = `${storeProducts["max-x7-x100-combo"].orderPrefix}${Date.now()}`;
+    sendMetaBrowserEvent("AddToCart", {
+      value: storeProducts["max-x7-x100-combo"].onlinePrice,
+      currency: "INR",
+      content_name: storeProducts["max-x7-x100-combo"].name,
+      content_ids: ["max-x7-x100-combo"],
+      content_type: "product",
+      num_items: 1,
+    }, `${orderRef}-addtocart`);
     trackActivity("product_order_click", "MAX X7 + X100 combo order button", "MAX X7 + X100 COMBO", 1);
     setOrderSuccessOpen(false);
     setSavedOrderId("");
     setConfirmedOrder(null);
-    setPaymentRef(`${storeProducts["max-x7-x100-combo"].orderPrefix}${Date.now()}`);
+    setPaymentRef(orderRef);
     setCartProductId("max-x7-x100-combo");
     setCartQty(1);
     setPaymentMethod("upi");
@@ -513,6 +569,14 @@ export default function Home() {
   function updateCustomer(field: keyof CustomerDetails, value: string) {
     if (!formStartedRef.current) {
       formStartedRef.current = true;
+      sendMetaBrowserEvent("InitiateCheckout", {
+        value: payableTotal,
+        currency: "INR",
+        content_name: activeProduct.name,
+        content_ids: [cartProductId],
+        content_type: "product",
+        num_items: Math.max(1, cartQty),
+      }, `${paymentRef}-checkout`);
       trackActivity("form_start", "Checkout delivery form started");
     }
     setCustomer(current => ({ ...current, [field]: value }));
