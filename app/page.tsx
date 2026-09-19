@@ -487,6 +487,27 @@ export default function Home() {
         website: "",
       });
       if (!result.ok) throw new Error("Order CRM में save नहीं हुआ");
+
+      const purchaseValue = method === "upi" ? onlineTotal : codTotal;
+      const purchaseEventKey = `amrit-meta-purchase-${paymentRef}`;
+      const metaFbq = (window as typeof window & { fbq?: (...args: unknown[]) => void }).fbq;
+      if (typeof metaFbq === "function" && localStorage.getItem(purchaseEventKey) !== "sent") {
+        metaFbq(
+          "track",
+          "Purchase",
+          {
+            value: purchaseValue,
+            currency: "INR",
+            content_name: activeProduct.name,
+            content_ids: [cartProductId],
+            content_type: "product",
+            num_items: cartQty,
+          },
+          { eventID: paymentRef },
+        );
+        localStorage.setItem(purchaseEventKey, "sent");
+      }
+
       localStorage.setItem("amrit-last-order-phone", customer.mobile);
       trackActivity(isReorder ? "reorder_submit" : "order_submit", isReorder ? "Reorder submitted" : "Order submitted");
       setSavedOrderId(paymentRef);
