@@ -1,7 +1,9 @@
+import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 
 const CRM_PROJECT_ID = 26522;
 const WP_API = "https://api.websitepublisher.ai";
+const META_PIXEL_ID = "1720516185901735";
 
 type OrderInput = {
   customer?: string;
@@ -15,6 +17,71 @@ type OrderInput = {
   order_id?: string;
   order_type?: string;
 };
+
+function sha256(value: string) {
+  return createHash("sha256").update(value.trim().toLowerCase()).digest("hex");
+}
+
+function getCookie(header: string, name: string) {
+  const match = header.split(";").map((part) => part.trim()).find((part) => part.startsWith(name + "="));
+  return match ? decodeURIComponent(match.slice(name.length + 1)) : "";
+}
+
+async function sendMetaPurchase(request: Request, fields: ReturnType<typeof normalizeOrder>) {
+  const accessToken = process.env.META_CAPI_ACCESS_TOKEN;
+  if (!accessToken) return { sent: false, reason: "META_CAPI_ACCESS_TOKEN missing" };
+
+  const cookieHeader = request.headers.get("cookie") || "";
+  const forwardedFor = request.headers.get("x-forwarded-for") || "";
+  const clientIp = forwardedFor.split(",")[0]?.trim() || undefined;
+  const userAgent = request.headers.get("user-agent") || undefined;
+  const origin = request.headers.get("origin") || "https://amrit-kohl.vercel.app";
+
+  const payload: Record<string, unknown> = {
+    data: [
+      {
+        event_name: "Purchase",
+        event_time: Math.floor(Date.now() / 1000),
+        event_id: fields.order_id || undefined,
+        action_source: "website",
+        event_source_url: origin,
+        user_data: {
+          ph: [sha256("91" + fields.phone)],
+          client_ip_address: clientIp,
+          client_user_agent: userAgent,
+          fbp: getCookie(cookieHeader, "_fbp") || undefined,
+          fbc: getCookie(cookieHeader, "_fbc") || undefined,
+        },
+        custom_data: {
+          value: Number(fields.amount),
+          currency: "INR",
+          content_name: fields.product,
+          content_type: "product",
+          num_items: Number(fields.quantity),
+        },
+      },
+    ],
+  };
+
+  const testEventCode = process.env.META_TEST_EVENT_CODE;
+  if (testEventCode) payload.test_event_code = testEventCode;
+
+  const response = await fetch(
+    `https://graph.facebook.com/v22.0/${META_PIXEL_ID}/events?access_token=${encodeURIComponent(accessToken)}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+    },
+  );
+
+  const json = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(String(json?.error?.message || "Meta CAPI request failed"));
+  }
+  return { sent: true, result: json };
+}
 
 async function submitWpForm(formName: string, fields: Record<string, string>) {
   const sessionRes = await fetch(`${WP_API}/sapi/project/${CRM_PROJECT_ID}/session`, {
@@ -114,7 +181,18 @@ export async function POST(request: Request) {
     const input = (await request.json()) as OrderInput;
     const fields = normalizeOrder(input);
     const result = await submitWpForm("website_order", fields);
-    return NextResponse.json({ ok: true, result });
+
+    let metaCapi: unknown = { sent: false, reason: "not attempted" };
+    try {
+      metaCapi = await sendMetaPurchase(request, fields);
+    } catch (error) {
+      metaCapi = {
+        sent: false,
+        error: error instanceof Error ? error.message : "Meta CAPI failed",
+      };
+    }
+
+    return NextResponse.json({ ok: true, result, metaCapi });
   } catch (error) {
     return NextResponse.json(
       {
