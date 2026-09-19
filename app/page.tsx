@@ -407,12 +407,40 @@ export default function Home() {
       return true;
     };
 
+    const sendBeaconFallback = () => {
+      const params = new URLSearchParams({
+        id: metaPixelId,
+        ev: eventName,
+        noscript: "1",
+        dl: window.location.href,
+        rl: document.referrer || "",
+        ts: String(Date.now()),
+      });
+      if (eventId) params.set("eid", eventId);
+      Object.entries(data).forEach(([key, value]) => {
+        const serialized = Array.isArray(value) || (value && typeof value === "object")
+          ? JSON.stringify(value)
+          : String(value ?? "");
+        params.set(`cd[${key}]`, serialized);
+      });
+      const beacon = new window.Image(1, 1);
+      beacon.referrerPolicy = "no-referrer-when-downgrade";
+      beacon.src = `https://www.facebook.com/tr?${params.toString()}`;
+    };
+
     if (tryFbq()) return;
 
     let attempts = 0;
     const retryTimer = window.setInterval(() => {
       attempts += 1;
-      if (tryFbq() || attempts >= 12) window.clearInterval(retryTimer);
+      if (tryFbq()) {
+        window.clearInterval(retryTimer);
+        return;
+      }
+      if (attempts >= 12) {
+        window.clearInterval(retryTimer);
+        sendBeaconFallback();
+      }
     }, 250);
   }
 
