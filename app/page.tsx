@@ -381,6 +381,9 @@ export default function Home() {
   function buyCourse(qty: number) {
     trackActivity("product_order_click", "TAKAT POWER X order button", "TAKAT POWER X", qty);
     setOrderSuccessOpen(false);
+    setSavedOrderId("");
+    setConfirmedOrder(null);
+    setPaymentRef(`${storeProducts["takat-power-x"].orderPrefix}${Date.now()}`);
     setSelectedQty(qty);
     setCartProductId("takat-power-x");
     setCartQty(qty);
@@ -390,6 +393,9 @@ export default function Home() {
   function buyCombo() {
     trackActivity("product_order_click", "MAX X7 + X100 combo order button", "MAX X7 + X100 COMBO", 1);
     setOrderSuccessOpen(false);
+    setSavedOrderId("");
+    setConfirmedOrder(null);
+    setPaymentRef(`${storeProducts["max-x7-x100-combo"].orderPrefix}${Date.now()}`);
     setCartProductId("max-x7-x100-combo");
     setCartQty(1);
     setPaymentMethod("upi");
