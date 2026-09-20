@@ -831,7 +831,7 @@ export default function Home() {
           <div className="navActions">
             <a className="headerWhatsApp" href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer"><span>WA</span> CHAT</a>
             <button className="menuButton" onClick={() => setMenuOpen(value => !value)} aria-expanded={menuOpen}>MENU</button>
-            <button className="cartTrigger" onClick={() => setCartOpen(true)} aria-label={`Cart में ${cartQty} item`}>CART <span>{cartQty}</span></button>
+            <a className="cartTrigger" href={`/checkout?product=${cartProductId}&qty=${Math.max(1, cartQty || selectedQty)}`} aria-label={`Cart में ${cartQty} item`}>CART <span>{cartQty}</span></a>
           </div>
         </div>
       </header>
@@ -900,7 +900,7 @@ export default function Home() {
               </button>)}
             </div>
             <div className="heroActions">
-              <button className="redButton heroBuy" onClick={() => buyCourse(selectedQty)}>BUY NOW • ₹{selectedCourse.price.toLocaleString("en-IN")}</button>
+              <a className="redButton heroBuy" href={`/checkout?product=takat-power-x&qty=${selectedQty}`}>BUY NOW • ₹{selectedCourse.price.toLocaleString("en-IN")}</a>
               <a className="whatsappButton heroWhatsApp" href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer"><span>WA</span><b>WhatsApp पर सीधे बात करें</b></a>
             </div>
             <div className="checkoutTrust"><strong>SAFE CHECKOUT</strong><span>Google Pay • PhonePe • UPI • COD</span></div>
@@ -980,7 +980,7 @@ export default function Home() {
                   <i>:</i>
                   <span className="timeBox"><b>{String(offerTimeLeft.seconds).padStart(2, "0")}</b><small>SEC</small></span>
                 </div>
-                <button className="redButton productOrderButton comboOrderButton" onClick={buyCombo}>COMBO ORDER करें • ₹1,499</button>
+                <a className="redButton productOrderButton comboOrderButton" href="/checkout?product=max-x7-x100-combo&qty=1">COMBO ORDER करें • ₹1,499</a>
               </div>
             </article>
           </div>
@@ -1031,7 +1031,7 @@ export default function Home() {
             <h2>Why Choose<br/><em>TAKAT POWER X?</em></h2>
             <p className="sectionLead">एक प्रीमियम आयुर्वेदिक पुरुष वेलनेस सपोर्ट, जिसे रोज़ की एनर्जी, स्टैमिना और शरीर की ताकत को सपोर्ट करने के लिए बनाया गया है।</p>
             <div className="trustCards">{trustPoints.map(item => <article key={item.index}><b>{item.index}</b><span><strong>{item.title}</strong><p>{item.text}</p></span></article>)}</div>
-            <button className="redButton sectionBuy" onClick={() => buyCourse(selectedQty)}>BUY NOW</button>
+            <a className="redButton sectionBuy" href={`/checkout?product=takat-power-x&qty=${selectedQty}`}>BUY NOW</a>
           </div>
           <div className="whyProduct"><img src="/takat-power-x.jpg" alt="TAKAT POWER X product packaging" loading="lazy"/><span>AMRIT AYURVEDA</span></div>
         </div>
@@ -1055,7 +1055,7 @@ export default function Home() {
             </div>
             <div className="dailyUseReminder"><span>DAILY ROUTINE</span><strong>बेहतर नियमितता के लिए इसका सेवन रोज़ाना करें।</strong></div>
             <p className="safetyNote">18+ वयस्कों के लिए। कोई दवा चल रही हो, एलर्जी या medical condition हो तो सेवन से पहले योग्य स्वास्थ्य विशेषज्ञ की सलाह लें। Product label पर दिए निर्देशों को प्राथमिकता दें।</p>
-            <button className="redButton sectionBuy centered" onClick={() => buyCourse(selectedQty)}>BUY NOW</button>
+            <a className="redButton sectionBuy centered" href={`/checkout?product=takat-power-x&qty=${selectedQty}`}>BUY NOW</a>
           </div>
         </div>
       </section>
@@ -1093,7 +1093,7 @@ export default function Home() {
             <article><b>03</b><strong>Private Wellness Choice</strong><span>Discreet delivery और WhatsApp assistance के साथ आसान order।</span></article>
           </div>
           <p className="resultDisclaimer">यह visual केवल illustrative lifestyle representation है—किसी व्यक्ति के actual medical या sexual before/after result का दावा नहीं। परिणाम व्यक्ति के अनुसार अलग हो सकते हैं।</p>
-          <button className="redButton sectionBuy centered" onClick={() => buyCourse(selectedQty)}>START YOUR WELLNESS ROUTINE</button>
+          <a className="redButton sectionBuy centered" href={`/checkout?product=takat-power-x&qty=${selectedQty}`}>START YOUR WELLNESS ROUTINE</a>
         </div>
       </section>
 
@@ -1130,7 +1130,7 @@ export default function Home() {
         <div className="siteShell disclaimer">डिस्क्लेमर: यह प्रोडक्ट किसी बीमारी का निदान, इलाज, cure या रोकथाम करने के लिए प्रस्तुत नहीं किया गया है। परिणाम व्यक्ति के अनुसार अलग हो सकते हैं। © 2026 Amrit Ayurveda.</div>
       </footer>
 
-      <button className="stickyBuy" onClick={() => buyCourse(selectedQty)}>BUY NOW • ₹{selectedCourse.price.toLocaleString("en-IN")}</button>
+      <a className="stickyBuy" href={`/checkout?product=takat-power-x&qty=${selectedQty}`}>BUY NOW • ₹{selectedCourse.price.toLocaleString("en-IN")}</a>
       <a className="floatingWhatsapp" href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer" aria-label="WhatsApp पर सीधे चैट करें"><span>WA</span><b>WhatsApp Chat</b></a>
 
       {cartOpen && <div className="cartOverlay" onMouseDown={() => setCartOpen(false)}>
