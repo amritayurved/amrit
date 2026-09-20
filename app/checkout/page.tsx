@@ -75,7 +75,7 @@ export default function CheckoutPage() {
 
       const result = await response.json().catch(() => ({}));
       if (!response.ok || result?.ok !== true) {
-        throw new Error(String(result?.error || "Main CRM save failed"));
+        throw new Error(String(result?.error || "Original CRM save failed"));
       }
 
       const code = result?.order?.orderCode || result?.order?.id || "Saved";
@@ -83,7 +83,7 @@ export default function CheckoutPage() {
       setMessage(
         result?.duplicate
           ? `✓ Order पहले से CRM में मौजूद है। Order: ${code}`
-          : `✓ Order सीधे Main CRM में save हो गया। Order: ${code}`,
+          : `✓ Order original CRM backend में save हो गया। Order: ${code}`,
       );
     } catch (error) {
       setMessage(
@@ -101,9 +101,9 @@ export default function CheckoutPage() {
       <div style={{maxWidth:620,margin:"0 auto"}}>
         <a href="/" style={{color:"#f0c36b",textDecoration:"none",fontWeight:700}}>← AMRIT AYURVEDA</a>
         <div style={{marginTop:18,background:"#171717",border:"1px solid #333",borderRadius:18,padding:20}}>
-          <div style={{fontSize:12,fontWeight:800,letterSpacing:1.2,color:"#f0c36b"}}>MAIN CRM DIRECT • V1</div>
+          <div style={{fontSize:12,fontWeight:800,letterSpacing:1.2,color:"#f0c36b"}}>ORIGINAL CRM DIRECT • V2</div>
           <h1 style={{fontSize:28,margin:"10px 0"}}>Order Checkout</h1>
-          <p style={{color:"#bbb",marginTop:0}}>यह order सीधे आपके main Amrit Ayurveda CRM में save होगा।</p>
+          <p style={{color:"#bbb",marginTop:0}}>यह order आपके original Amrit Ayurveda CRM backend में save होगा।</p>
 
           <form onSubmit={submitOrder} style={{display:"grid",gap:14}}>
             <label style={{display:"grid",gap:6}}>
@@ -145,7 +145,7 @@ export default function CheckoutPage() {
             </div>
 
             <button type="submit" disabled={saving} style={{padding:16,border:0,borderRadius:12,background:"#c62828",color:"#fff",fontWeight:900,fontSize:16}}>
-              {saving ? "MAIN CRM में SAVE हो रहा है…" : "COD ORDER CONFIRM करें"}
+              {saving ? "ORIGINAL CRM में SAVE हो रहा है…" : "COD ORDER CONFIRM करें"}
             </button>
 
             {message && (
