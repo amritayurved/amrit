@@ -157,19 +157,43 @@ function normalizeOrder(input: OrderInput) {
   }
 
   const amount = Number((unitAmount * quantity).toFixed(2));
+  const orderId = String(input.order_id || "").trim();
+  const notes = String(input.notes || "").trim();
+  const now = new Date();
+  const orderDate = now.toISOString().slice(0, 10);
+  const timestamp = now.toISOString();
 
   return {
     customer,
+    customer_name: customer,
     phone,
+    mobile: phone,
     address,
     pincode,
     product,
     quantity: String(quantity),
     payment,
+    payment_mode: payment,
     amount: String(amount),
-    order_id: String(input.order_id || "").trim(),
-    notes: String(input.notes || "").trim(),
+    order_value: String(amount),
+    unit_price: String(unitAmount),
+    total_amount: String(amount),
+    online_paid: payment === "Prepaid" ? String(amount) : "0",
+    balance_cod: payment === "Prepaid" ? "0" : String(amount),
+    payment_status: payment === "Prepaid" ? "Paid" : "Pending",
+    order_id: orderId,
+    order_code: orderId,
+    website_order_id: orderId,
+    order_date: orderDate,
+    created_at: timestamp,
+    updated_at: timestamp,
+    notes,
+    remark: notes,
     order_type: orderType,
+    source: orderType === "Reorder" ? "Website Reorder" : "Website",
+    status: "New",
+    sync_action: "create",
+    action: "create",
     state: "Unknown",
     district: "Unknown",
     city: "Unknown",
