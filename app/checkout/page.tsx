@@ -60,29 +60,43 @@ export default function CheckoutPage() {
     const orderId = `${productKey === "takat-power-x" ? "TPX" : "MAX"}${Date.now()}`;
 
     try {
-      const response = await fetch("/api/website-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          customer: name.trim(),
-          phone: cleanMobile,
-          address: address.trim(),
-          pincode: cleanPin,
-          product: product.name,
-          quantity: String(qty),
-          payment,
-          amount: String(total),
-          order_id: orderId,
-          notes: product.notes,
-          order_type: "Order",
-        }),
-      });
-      const result = await response.json().catch(() => ({}));
-      if (!response.ok || result?.ok === false) {
-        throw new Error(String(result?.error || "Order save failed"));
+      const wp = (window as typeof window & {
+        WP?: {
+          sapi?: (projectId: number) => {
+            submitForm: (
+              formName: string,
+              fields: Record<string, unknown>,
+            ) => Promise<{ ok: boolean; data?: any }>;
+          };
+        };
+      }).WP;
+
+      if (!wp?.sapi) {
+        throw new Error("CRM client load नहीं हुआ");
       }
 
-      setMessage(`✓ Order save हो गया। Order ID: ${orderId}`);
+      const sapi = wp.sapi(26522);
+      const result = await sapi.submitForm("website_order", {
+        customer: name.trim(),
+        phone: cleanMobile,
+        address: address.trim(),
+        pincode: cleanPin,
+        product: product.name,
+        quantity: String(qty),
+        payment,
+        amount: String(total),
+        order_id: orderId,
+        notes: product.notes,
+        order_type: "Order",
+        website: "",
+      });
+
+      if (!result?.ok) {
+        const msg = result?.data?.error?.message || result?.data?.message || "CRM intake failed";
+        throw new Error(String(msg));
+      }
+
+      setMessage(`✓ Order CRM intake में save हो गया। Order ID: ${orderId}`);
     } catch (error) {
       setMessage(error instanceof Error ? `Order save नहीं हुआ: ${error.message}` : "Order save नहीं हुआ।");
     } finally {
