@@ -15,6 +15,11 @@ export default function CheckoutRedirectPage() {
     if (product) target.searchParams.set("product", product);
     if (qty) target.searchParams.set("qty", qty);
 
+    ["fbclid", "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"].forEach(key => {
+      const value = source.searchParams.get(key) || sessionStorage.getItem(`amrit-${key}`);
+      if (value) target.searchParams.set(key, value);
+    });
+
     window.location.replace(target.toString());
   }, []);
 
