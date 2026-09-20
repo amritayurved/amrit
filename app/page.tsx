@@ -951,10 +951,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="authenticityAlert">
-        <div className="siteShell"><h2>असली TAKAT POWER X की पहचान करें</h2><p>Original product पर <strong>AMRIT AYURVEDA</strong> branding, TAKAT POWER X label, 25 Super Herbs और With Pure Shilajit की जानकारी देखें। केवल verified Amrit Ayurveda order channel से खरीदें।</p></div>
-      </section>
-
       <section className="privateStoreSection" id="private-store">
         <div className="siteShell">
           <span className="sectionKicker center">PRIVATE ADULT WELLNESS • 18+</span>
@@ -1020,15 +1016,6 @@ export default function Home() {
           <span className="sectionKicker center">GOT QUESTIONS?</span>
           <h2>Frequently Asked Questions</h2>
           <div className="faqAccordion">{faqs.map(([question, answer], index) => <details key={question} open={index === 0}><summary>{question}<span>+</span></summary><p>{answer}</p></details>)}</div>
-        </div>
-      </section>
-
-      <section className="promiseSection">
-        <div className="siteShell">
-          <span className="sectionKicker center">CUSTOMER PROMISE</span>
-          <h2 className="centerTitle">Clear Product. Private Delivery. Direct Support.</h2>
-          <div className="promiseGrid"><article><strong>Original Product</strong><p>आपको वही pack मिलेगा जो order के समय दिखाया गया है।</p></article><article><strong>Private Packaging</strong><p>बाहर से सादा और सुरक्षित पैकेजिंग रखी जाती है।</p></article><article><strong>Order Assistance</strong><p>WhatsApp पर quantity, address और delivery status की मदद।</p></article></div>
-          <a className="redButton sectionBuy centered" href={`/checkout?product=takat-power-x&qty=${selectedQty}`}>ORDER NOW</a>
         </div>
       </section>
 
