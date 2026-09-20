@@ -1135,6 +1135,7 @@ export default function Home() {
 
             <section className="customerDetails" id="delivery-details" aria-labelledby="delivery-details-title">
               <span className="detailsStep">STEP 1 • DELIVERY DETAILS</span>
+              <small style={{display:"block",fontWeight:800,letterSpacing:"0.08em",marginBottom:"8px"}}>CRM CONNECTED • V2</small>
               <h3 id="delivery-details-title">Parcel कहाँ भेजना है?</h3>
               <p>Payment या COD चुनने से पहले नीचे customer की सही जानकारी भरें।</p>
               <div className="customerFields">
