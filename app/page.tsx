@@ -509,6 +509,29 @@ export default function Home() {
   }
 
   async function submitCrmForm(formName: string, fields: Record<string, unknown>) {
+    const wp = (window as typeof window & {
+      WP?: {
+        sapi?: (projectId: number) => {
+          submitForm?: (name: string, payload: Record<string, unknown>) => Promise<{
+            ok: boolean;
+            data?: unknown;
+          }>;
+        };
+      };
+    }).WP;
+
+    const directSapi = wp?.sapi?.(26522);
+    if (directSapi?.submitForm) {
+      try {
+        const directResult = await directSapi.submitForm(formName, fields);
+        if (directResult?.ok) {
+          return { ok: true, result: directResult.data, route: "direct-sapi" };
+        }
+      } catch {
+        // Fall through to the same-origin API route below.
+      }
+    }
+
     const endpoint = formName === "website_order" ? "/api/website-order" : "/api/website-activity";
     const response = await fetch(endpoint, {
       method: "POST",
