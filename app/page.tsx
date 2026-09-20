@@ -1073,7 +1073,7 @@ export default function Home() {
           <span className="sectionKicker center">CUSTOMER PROMISE</span>
           <h2 className="centerTitle">Clear Product. Private Delivery. Direct Support.</h2>
           <div className="promiseGrid"><article><strong>Original Product</strong><p>आपको वही pack मिलेगा जो order के समय दिखाया गया है।</p></article><article><strong>Private Packaging</strong><p>बाहर से सादा और सुरक्षित पैकेजिंग रखी जाती है।</p></article><article><strong>Order Assistance</strong><p>WhatsApp पर quantity, address और delivery status की मदद।</p></article></div>
-          <button className="redButton sectionBuy centered" onClick={() => buyCourse(selectedQty)}>ORDER ON WHATSAPP</button>
+          <a className="redButton sectionBuy centered" href={`/checkout?product=takat-power-x&qty=${selectedQty}`}>ORDER NOW</a>
         </div>
       </section>
 
