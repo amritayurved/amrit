@@ -446,15 +446,8 @@ export default function Home() {
 
   function buyCourse(qty: number) {
     const orderRef = `${storeProducts["takat-power-x"].orderPrefix}${Date.now()}`;
-    sendMetaBrowserEvent("AddToCart", {
-      value: storeProducts["takat-power-x"].codPrice * qty,
-      currency: "INR",
-      content_name: storeProducts["takat-power-x"].name,
-      content_ids: ["takat-power-x"],
-      content_type: "product",
-      num_items: qty,
-    }, `${orderRef}-addtocart`);
-    trackActivity("product_order_click", "TAKAT POWER X order button", "TAKAT POWER X", qty);
+
+    // Open the cart first. Tracking must never block checkout.
     setOrderSuccessOpen(false);
     setSavedOrderId("");
     setConfirmedOrder(null);
@@ -463,19 +456,27 @@ export default function Home() {
     setCartProductId("takat-power-x");
     setCartQty(qty);
     setCartOpen(true);
+
+    try {
+      sendMetaBrowserEvent("AddToCart", {
+        value: storeProducts["takat-power-x"].codPrice * qty,
+        currency: "INR",
+        content_name: storeProducts["takat-power-x"].name,
+        content_ids: ["takat-power-x"],
+        content_type: "product",
+        num_items: qty,
+      }, `${orderRef}-addtocart`);
+    } catch {}
+
+    try {
+      trackActivity("product_order_click", "TAKAT POWER X order button", "TAKAT POWER X", qty);
+    } catch {}
   }
 
   function buyCombo() {
     const orderRef = `${storeProducts["max-x7-x100-combo"].orderPrefix}${Date.now()}`;
-    sendMetaBrowserEvent("AddToCart", {
-      value: storeProducts["max-x7-x100-combo"].onlinePrice,
-      currency: "INR",
-      content_name: storeProducts["max-x7-x100-combo"].name,
-      content_ids: ["max-x7-x100-combo"],
-      content_type: "product",
-      num_items: 1,
-    }, `${orderRef}-addtocart`);
-    trackActivity("product_order_click", "MAX X7 + X100 combo order button", "MAX X7 + X100 COMBO", 1);
+
+    // Open the cart first. Tracking must never block checkout.
     setOrderSuccessOpen(false);
     setSavedOrderId("");
     setConfirmedOrder(null);
@@ -484,6 +485,21 @@ export default function Home() {
     setCartQty(1);
     setPaymentMethod("upi");
     setCartOpen(true);
+
+    try {
+      sendMetaBrowserEvent("AddToCart", {
+        value: storeProducts["max-x7-x100-combo"].onlinePrice,
+        currency: "INR",
+        content_name: storeProducts["max-x7-x100-combo"].name,
+        content_ids: ["max-x7-x100-combo"],
+        content_type: "product",
+        num_items: 1,
+      }, `${orderRef}-addtocart`);
+    } catch {}
+
+    try {
+      trackActivity("product_order_click", "MAX X7 + X100 combo order button", "MAX X7 + X100 COMBO", 1);
+    } catch {}
   }
 
   function confirmAdultEntry() {
