@@ -101,25 +101,6 @@
   filter: saturate(1.34) contrast(1.08) brightness(1.06);
 }
 
-/* Earlier gallery photos restored as premium inset visuals */
-.customGallerySlot::after {
-  content: "";
-  position: absolute;
-  right: 14px;
-  bottom: 14px;
-  z-index: 4;
-  width: 34%;
-  aspect-ratio: 4 / 5;
-  border: 2px solid rgba(255,255,255,.82);
-  border-radius: 14px;
-  background-size: cover;
-  background-position: center;
-  box-shadow: 0 14px 35px rgba(0,0,0,.62), 0 0 0 4px rgba(241,164,0,.14);
-}
-.customGallerySlot:nth-child(1)::after { background-image: url('/my-photos/amrit-gallery-1.webp'); }
-.customGallerySlot:nth-child(2)::after { background-image: url('/my-photos/amrit-gallery-2.webp'); }
-.customGallerySlot:nth-child(3)::after { background-image: url('/my-photos/amrit-gallery-3.webp'); }
-
 .customGallerySlot.hasPhoto { border-style: solid !important; }
 .customGalleryPlaceholder { color: #c7baa9 !important; }
 .customGalleryPlaceholder b { color: #f1a400 !important; }
@@ -140,10 +121,5 @@
     min-height: 0;
     aspect-ratio: 4 / 5.35;
     border-radius: 20px !important;
-  }
-  .customGallerySlot::after {
-    width: 31%;
-    right: 12px;
-    bottom: 12px;
   }
 }
