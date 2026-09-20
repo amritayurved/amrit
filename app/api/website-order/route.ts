@@ -206,6 +206,34 @@ export async function POST(request: Request) {
     const fields = normalizeOrder(input);
     const result = await submitWpForm("website_order", fields);
 
+    let sheetBackup: unknown = { sent: false, reason: "not attempted" };
+    try {
+      sheetBackup = await submitWpForm("order_sheet_sync", {
+        order_code: fields.order_code || fields.order_id,
+        customer_name: fields.customer,
+        mobile: fields.phone,
+        address: fields.address,
+        state: fields.state,
+        district: fields.district,
+        city: fields.city,
+        pincode: fields.pincode,
+        payment_mode: fields.payment,
+        status: fields.status,
+        amount: fields.amount,
+        product: fields.product,
+        quantity: fields.quantity,
+        order_id: fields.order_id,
+        order_date: fields.order_date,
+        order_type: fields.order_type,
+        notes: fields.notes,
+      });
+    } catch (error) {
+      sheetBackup = {
+        sent: false,
+        error: error instanceof Error ? error.message : "Sheet backup failed",
+      };
+    }
+
     let metaCapi: unknown = { sent: false, reason: "not attempted" };
     try {
       metaCapi = await sendMetaPurchase(request, fields);
@@ -216,7 +244,7 @@ export async function POST(request: Request) {
       };
     }
 
-    return NextResponse.json({ ok: true, result, metaCapi });
+    return NextResponse.json({ ok: true, result, sheetBackup, metaCapi });
   } catch (error) {
     return NextResponse.json(
       {
