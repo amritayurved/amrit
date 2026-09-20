@@ -256,6 +256,14 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    ["fbclid", "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"].forEach(key => {
+      const value = params.get(key);
+      if (value) sessionStorage.setItem(`amrit-${key}`, value);
+    });
+  }, []);
+
+  useEffect(() => {
     if (!ageGateOpen) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
