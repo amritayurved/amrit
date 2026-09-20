@@ -48,7 +48,7 @@ const storeProducts = {
     shortName: "TAKAT POWER X",
     primaryImage: "/takat-power-x.jpg",
     secondaryImage: "",
-    cartDetail: "250g Bottle",
+    cartDetail: "150g Bottle",
     mrp: 2500,
     codPrice: 1499,
     onlinePrice: 1349.10,
@@ -142,12 +142,12 @@ const structuredData = {
       description: "25 super herbs और pure shilajit वाला पुरुषों का आयुर्वेदिक वेलनेस सपोर्ट।",
       brand: { "@type": "Brand", name: "Amrit Ayurveda" },
       category: "Ayurvedic Men's Wellness Support",
-      weight: { "@type": "QuantitativeValue", value: 250, unitCode: "GRM" },
+      weight: { "@type": "QuantitativeValue", value: 150, unitCode: "GRM" },
       offers: {
         "@type": "Offer",
         url: siteUrl,
         priceCurrency: "INR",
-        price: "1499",
+        price: "999",
         availability: "https://schema.org/InStock",
         itemCondition: "https://schema.org/NewCondition",
       },
@@ -174,9 +174,9 @@ const structuredData = {
 };
 
 const courses = [
-  { qty: 1, title: "TAKAT POWER X", detail: "1 × 250g Bottle", price: 1499, mrp: 2500 },
-  { qty: 2, title: "2-Month Course", detail: "2 × 250g Bottles", price: 2998, mrp: 5000 },
-  { qty: 3, title: "3-Month Course", detail: "3 × 250g Bottles", price: 4497, mrp: 7500 },
+  { qty: 1, title: "TAKAT POWER X", detail: "1 × 150g Bottle", price: 999, mrp: 1500 },
+  { qty: 2, title: "2-Month Course", detail: "2 × 150g Bottles", price: 1500, mrp: 2500 },
+  { qty: 3, title: "3-Month Course", detail: "3 × 150g Bottles", price: 2500, mrp: 5000 },
 ];
 
 const trustPoints = [
@@ -189,7 +189,7 @@ const trustPoints = [
 const faqs = [
   ["TAKAT POWER X क्या है?", "TAKAT POWER X वयस्क पुरुषों के लिए एक सामान्य आयुर्वेदिक वेलनेस सपोर्ट है। पैक पर 25 सुपर हर्ब्स और शुद्ध शिलाजीत का उल्लेख है।"],
   ["TAKAT POWER X का सेवन कैसे करें?", "रोज़ शाम खाना खाने के 30 मिनट बाद 1 चम्मच लें। इसे पानी में अच्छी तरह घोलकर या हल्के गर्म दूध के साथ पिएँ। रोज़ाना नियमित रूप से सेवन करें और निर्धारित मात्रा से अधिक न लें।"],
-  ["इसकी कीमत क्या है?", "एक 250g बोतल का MRP ₹2,500 है। Cash on Delivery price ₹1,499 है और Online Payment पर 10% discount के बाद कीमत ₹1,349.10 है।"],
+  ["इसकी कीमत क्या है?", "एक 150g बोतल का offer price ₹999 है। Online Payment पर 10% discount उपलब्ध है।"],
   ["ऑर्डर कैसे करें?", "अपना course चुनें और BUY NOW दबाएँ। आप Google Pay, PhonePe, Paytm, BharatPe, BHIM UPI, किसी अन्य UPI app या Cash on Delivery से ऑर्डर कर सकते हैं। UPI payment के बाद receipt या UTR WhatsApp पर भेजें।"],
   ["क्या Cash on Delivery उपलब्ध है?", "हाँ, सेवा-योग्य पिन कोड पर Cash on Delivery उपलब्ध है। उपलब्धता WhatsApp पर confirm की जाएगी।"],
   ["पैकिंग कैसी होगी?", "ऑर्डर सादा, सुरक्षित और गोपनीय पैकिंग में भेजा जाएगा।"],
@@ -948,13 +948,13 @@ export default function Home() {
 
           <div className="productShowcaseGrid">
             <article className="productShowcaseCard takatShowcase">
-              <div className="singleProductVisual"><img src="/takat-power-x.jpg" alt="TAKAT POWER X 250g bottle" loading="lazy"/></div>
+              <div className="singleProductVisual"><img src="/takat-power-x.jpg" alt="TAKAT POWER X 150g bottle" loading="lazy"/></div>
               <div className="productShowcaseContent">
                 <span className="productType">POWDER • DAILY WELLNESS</span>
                 <h3>TAKAT POWER X</h3>
-                <p>25 Super Herbs और Pure Shilajit वाला 250g पुरुष wellness support.</p>
+                <p>25 Super Herbs और Pure Shilajit वाला 150g पुरुष wellness support.</p>
                 <div className="showcaseUse"><b>रोज़ाना उपयोग</b><span>भोजन के 30 मिनट बाद 1 चम्मच पानी या हल्के गर्म दूध के साथ।</span></div>
-                <div className="showcasePrice"><s>MRP ₹2,500</s><strong>COD ₹1,499</strong><small>Online payment पर extra 10% off</small></div>
+                <div className="showcasePrice"><s>MRP ₹1,500</s><strong>COD ₹999</strong><small>Online payment पर extra 10% off</small></div>
                 <button className="redButton productOrderButton" onClick={() => buyCourse(1)}>TAKAT POWER X ORDER करें</button>
               </div>
             </article>
