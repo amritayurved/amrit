@@ -16,7 +16,6 @@ const customGalleryPhotos = [
   "/my-photos/photo-1.jpg",
   "/my-photos/photo-2.jpg",
   "/my-photos/photo-3.jpg",
-  "https://raw.githubusercontent.com/amritayurved/amrit/315d07b4d947a30f32a2a11c8f7143fe8cb55139/public/my-photos/photo-4.jpg",
 ] as const;
 
 
