@@ -445,61 +445,12 @@ export default function Home() {
   }
 
   function buyCourse(qty: number) {
-    const orderRef = `${storeProducts["takat-power-x"].orderPrefix}${Date.now()}`;
-
-    // Open the cart first. Tracking must never block checkout.
-    setOrderSuccessOpen(false);
-    setSavedOrderId("");
-    setConfirmedOrder(null);
-    setPaymentRef(orderRef);
-    setSelectedQty(qty);
-    setCartProductId("takat-power-x");
-    setCartQty(qty);
-    setCartOpen(true);
-
-    try {
-      sendMetaBrowserEvent("AddToCart", {
-        value: storeProducts["takat-power-x"].codPrice * qty,
-        currency: "INR",
-        content_name: storeProducts["takat-power-x"].name,
-        content_ids: ["takat-power-x"],
-        content_type: "product",
-        num_items: qty,
-      }, `${orderRef}-addtocart`);
-    } catch {}
-
-    try {
-      trackActivity("product_order_click", "TAKAT POWER X order button", "TAKAT POWER X", qty);
-    } catch {}
+    const safeQty = Math.max(1, Math.min(10, Number(qty) || 1));
+    window.location.assign(`/checkout?product=takat-power-x&qty=${safeQty}`);
   }
 
   function buyCombo() {
-    const orderRef = `${storeProducts["max-x7-x100-combo"].orderPrefix}${Date.now()}`;
-
-    // Open the cart first. Tracking must never block checkout.
-    setOrderSuccessOpen(false);
-    setSavedOrderId("");
-    setConfirmedOrder(null);
-    setPaymentRef(orderRef);
-    setCartProductId("max-x7-x100-combo");
-    setCartQty(1);
-    setPaymentMethod("upi");
-    setCartOpen(true);
-
-    try {
-      sendMetaBrowserEvent("AddToCart", {
-        value: storeProducts["max-x7-x100-combo"].onlinePrice,
-        currency: "INR",
-        content_name: storeProducts["max-x7-x100-combo"].name,
-        content_ids: ["max-x7-x100-combo"],
-        content_type: "product",
-        num_items: 1,
-      }, `${orderRef}-addtocart`);
-    } catch {}
-
-    try {
-      trackActivity("product_order_click", "MAX X7 + X100 combo order button", "MAX X7 + X100 COMBO", 1);
-    } catch {}
+    window.location.assign("/checkout?product=max-x7-x100-combo&qty=1");
   }
 
   function confirmAdultEntry() {
@@ -724,11 +675,7 @@ export default function Home() {
 
   async function confirmCodOrder(event: MouseEvent<HTMLAnchorElement>) {
     event.preventDefault();
-    if (!customerDetailsValid) {
-      requireCustomerDetails(event);
-      return;
-    }
-    await submitWebsiteOrder("cod");
+    window.location.assign(`/checkout?product=${cartProductId}&qty=${Math.max(1, cartQty || selectedQty)}`);
   }
 
   function requireCustomerDetails(event: MouseEvent<HTMLAnchorElement>) {
