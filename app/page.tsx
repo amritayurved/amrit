@@ -16,6 +16,30 @@ const customGalleryPhotos = [
   "/my-photos/photo-1.jpg",
   "/my-photos/photo-2.jpg",
   "/my-photos/photo-3.jpg",
+  "https://raw.githubusercontent.com/amritayurved/amrit/315d07b4d947a30f32a2a11c8f7143fe8cb55139/public/my-photos/photo-4.jpg",
+] as const;
+
+const wellnessBenefitCards = [
+  {
+    image: "/hero-man.webp",
+    title: "Daily Energy Support",
+    text: "व्यस्त दिनचर्या में रोज़ की ऊर्जा और active lifestyle को support करें।",
+  },
+  {
+    image: "/hero-herbs.webp",
+    title: "Ayurvedic Wellness",
+    text: "25 Super Herbs और Pure Shilajit वाला thoughtfully crafted blend।",
+  },
+  {
+    image: "/romantic-couple-premium.webp",
+    title: "Confidence & Connection",
+    text: "Positive mindset और partner के साथ comfortable connection पर focus करें।",
+  },
+  {
+    image: "/takat-power-x.jpg",
+    title: "Simple Daily Routine",
+    text: "रोज़ शाम भोजन के 30 मिनट बाद 1 चम्मच पानी या हल्के गर्म दूध के साथ।",
+  },
 ] as const;
 
 const storeProducts = {
@@ -865,18 +889,49 @@ export default function Home() {
 
       <div className="privacyStrip"><div className="siteShell"><strong>सुरक्षित और गोपनीय डिलीवरी</strong><span>आपकी जानकारी और पैकिंग पूरी तरह private रखी जाती है।</span></div></div>
 
-      <section className="customGallerySection" aria-label="Photo gallery">
+      <section className="benefitProofSection" aria-labelledby="benefit-proof-title">
         <div className="siteShell">
+          <span className="sectionKicker center">TAKAT POWER X • BENEFITS</span>
+          <h2 className="centerTitle" id="benefit-proof-title">रोज़ की ताकत, स्टैमिना और कॉन्फिडेंस के लिए Wellness Support</h2>
+          <p className="benefitProofIntro">TAKAT POWER X एक आयुर्वेदिक wellness formulation है, जिसे पुरुषों की daily energy, stamina और confidence को support करने के लिए तैयार किया गया है।</p>
+
+          <div className="benefitProofLabels" aria-hidden="true"><strong>DAILY ROUTINE</strong><strong>WELLNESS SUPPORT</strong></div>
+          <div className="benefitProofGrid">
+            {wellnessBenefitCards.map(benefit => (
+              <article className="benefitProofCard" key={benefit.title}>
+                <div className="benefitProofImage">
+                  <Image src={benefit.image} alt="" fill sizes="(max-width: 720px) 50vw, 25vw" />
+                </div>
+                <div><strong>{benefit.title}</strong><p>{benefit.text}</p></div>
+              </article>
+            ))}
+          </div>
+
+          <div className="benefitFormulaPanel">
+            <div className="benefitProductVisual"><Image src="/takat-power-x.jpg" alt="TAKAT POWER X product pack" fill sizes="(max-width: 720px) 42vw, 260px" /></div>
+            <div>
+              <span>AMRIT AYURVEDA</span>
+              <h3>TAKAT POWER X</h3>
+              <p>अफ़्रीकन हर्ब्स, 25 Super Herbs और Pure Shilajit के साथ premium पुरुष wellness support।</p>
+              <ul><li>Daily energy और stamina support</li><li>Confidence-focused wellness routine</li><li>Private packing और WhatsApp assistance</li></ul>
+            </div>
+          </div>
+          <p className="benefitProofDisclaimer">यह सामान्य wellness support है। परिणाम व्यक्ति के अनुसार अलग हो सकते हैं।</p>
+        </div>
+      </section>
+
+      <section className="customGallerySection" aria-labelledby="custom-gallery-title">
+        <div className="siteShell">
+          <span className="sectionKicker center">YOUR PHOTO SPACE</span>
+          <h2 className="centerTitle" id="custom-gallery-title">आपकी फोटो गैलरी</h2>
+          <p className="customGalleryIntro">आपकी 4 photos फिर से website पर दिखाई जाएँगी।</p>
           <div className="customGalleryGrid">
             {customGalleryPhotos.map((src, index) => (
-              <div className="customGallerySlot" key={src}>
-                <Image
+              <div className="customGallerySlot hasPhoto" key={src}>
+                <img
                   src={src}
                   alt={`Amrit Ayurveda gallery photo ${index + 1}`}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 960px) 50vw, 25vw"
-                  onLoad={event => event.currentTarget.parentElement?.classList.add("hasPhoto")}
-                  onError={event => event.currentTarget.parentElement?.classList.remove("hasPhoto")}
+                  loading="lazy"
                 />
                 <span className="customGalleryPlaceholder"><b>{String(index + 1).padStart(2, "0")}</b>PHOTO SLOT</span>
               </div>
@@ -951,6 +1006,10 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="authenticityAlert">
+        <div className="siteShell"><h2>असली TAKAT POWER X की पहचान करें</h2><p>Original product पर <strong>AMRIT AYURVEDA</strong> branding, TAKAT POWER X label, 25 Super Herbs और With Pure Shilajit की जानकारी देखें। केवल verified Amrit Ayurveda order channel से खरीदें।</p></div>
+      </section>
+
       <section className="privateStoreSection" id="private-store">
         <div className="siteShell">
           <span className="sectionKicker center">PRIVATE ADULT WELLNESS • 18+</span>
@@ -1016,6 +1075,15 @@ export default function Home() {
           <span className="sectionKicker center">GOT QUESTIONS?</span>
           <h2>Frequently Asked Questions</h2>
           <div className="faqAccordion">{faqs.map(([question, answer], index) => <details key={question} open={index === 0}><summary>{question}<span>+</span></summary><p>{answer}</p></details>)}</div>
+        </div>
+      </section>
+
+      <section className="promiseSection">
+        <div className="siteShell">
+          <span className="sectionKicker center">CUSTOMER PROMISE</span>
+          <h2 className="centerTitle">Clear Product. Private Delivery. Direct Support.</h2>
+          <div className="promiseGrid"><article><strong>Original Product</strong><p>आपको वही pack मिलेगा जो order के समय दिखाया गया है।</p></article><article><strong>Private Packaging</strong><p>बाहर से सादा और सुरक्षित पैकेजिंग रखी जाती है।</p></article><article><strong>Order Assistance</strong><p>WhatsApp पर quantity, address और delivery status की मदद।</p></article></div>
+          <a className="redButton sectionBuy centered" href={`/checkout?product=takat-power-x&qty=${selectedQty}`}>ORDER NOW</a>
         </div>
       </section>
 
