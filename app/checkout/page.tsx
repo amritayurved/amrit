@@ -109,7 +109,7 @@ export default function CheckoutPage() {
       <div style={{maxWidth:620,margin:"0 auto"}}>
         <a href="/" style={{color:"#f0c36b",textDecoration:"none",fontWeight:700}}>← AMRIT AYURVEDA</a>
         <div style={{marginTop:18,background:"#171717",border:"1px solid #333",borderRadius:18,padding:20}}>
-          <div style={{fontSize:12,fontWeight:800,letterSpacing:1.2,color:"#f0c36b"}}>SECURE CHECKOUT • CRM CONNECTED V3</div>
+          <div style={{fontSize:12,fontWeight:800,letterSpacing:1.2,color:"#f0c36b"}}>SECURE CHECKOUT • CRM CONNECTED V4</div>
           <h1 style={{fontSize:28,margin:"10px 0"}}>Order Checkout</h1>
           <p style={{color:"#bbb",marginTop:0}}>Details भरें और order सीधे Amrit Ayurveda CRM intake में save करें।</p>
 
