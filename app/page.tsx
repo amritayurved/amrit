@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 
 const phone = "918290695226";
 const upiId = "8295820654@okbizaxis";
-const siteUrl = "https://amrit-ayurveda.rohitsangwan517.chatgpt.site";
+const siteUrl = "https://amrit-kohl.vercel.app";
 const metaPixelId = "1720516185901735";
 const supportWhatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent("नमस्ते, मुझे Amrit Ayurveda के products के बारे में जानकारी चाहिए।")}`;
 
