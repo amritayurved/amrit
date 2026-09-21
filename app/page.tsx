@@ -266,6 +266,16 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const timer = window.setTimeout(() => {
+      sendMetaBrowserEvent("PageView", {
+        page_location: window.location.href,
+        page_title: document.title,
+      });
+    }, 300);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
     if (!ageGateOpen) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -405,7 +415,7 @@ export default function Home() {
   }, [activeProduct.shortName, cartQty, onlineTotal, paymentRef]);
 
   function sendMetaBrowserEvent(
-    eventName: "ViewContent" | "AddToCart" | "InitiateCheckout" | "Contact",
+    eventName: "PageView" | "ViewContent" | "AddToCart" | "InitiateCheckout" | "Contact",
     data: Record<string, unknown> = {},
     eventId?: string,
   ) {
