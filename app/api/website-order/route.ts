@@ -42,7 +42,7 @@ function normalize(input: OrderInput) {
     unitAmount = payment === "Prepaid" ? 1499 : 2500;
     prefix = "MX";
   } else if (product === "TAKAT POWER X") {
-    unitAmount = payment === "Prepaid" ? 1349.1 : 1499;
+    unitAmount = payment === "Prepaid" ? 899.1 : 999;
     prefix = "TPX";
   } else {
     throw new Error("Unknown product");
