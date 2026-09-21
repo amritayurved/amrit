@@ -267,10 +267,17 @@ export default function Home() {
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      sendMetaBrowserEvent("PageView", {
-        page_location: window.location.href,
-        page_title: document.title,
+      const params = new URLSearchParams({
+        id: metaPixelId,
+        ev: "PageView",
+        noscript: "1",
+        dl: window.location.href,
+        rl: document.referrer || "",
+        ts: String(Date.now()),
       });
+      const beacon = new window.Image(1, 1);
+      beacon.referrerPolicy = "no-referrer-when-downgrade";
+      beacon.src = `https://www.facebook.com/tr?${params.toString()}`;
     }, 300);
     return () => window.clearTimeout(timer);
   }, []);
