@@ -108,10 +108,6 @@ export default function CheckoutPage() {
     const q = Number(params.get("qty") || 1);
     if (Number.isFinite(q)) setQty(Math.max(1, Math.min(10, q)));
 
-    const pageTimer = window.setTimeout(() => {
-      sendMetaEvent("PageView");
-    }, 250);
-
     const checkoutTimer = window.setTimeout(() => {
       sendMetaEvent("InitiateCheckout", {
         content_ids: [resolvedProduct],
@@ -121,7 +117,6 @@ export default function CheckoutPage() {
     }, 700);
 
     return () => {
-      window.clearTimeout(pageTimer);
       window.clearTimeout(checkoutTimer);
     };
   }, []);
