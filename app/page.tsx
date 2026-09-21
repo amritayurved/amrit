@@ -266,13 +266,6 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      sendMetaBrowserEvent("PageView");
-    }, 300);
-    return () => window.clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
     if (!ageGateOpen) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
