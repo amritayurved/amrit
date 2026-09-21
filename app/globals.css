@@ -708,3 +708,144 @@ footer { padding:75px 0 105px; background:#050505; border-top:1px solid #2b2b2b;
   z-index:1;
 }
 .customGallerySlot.hasPhoto .customGalleryPlaceholder { opacity:0; }
+
+
+/* Scroll-triggered TAKAT POWER X offer popup */
+.scrollOfferOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(4, 4, 4, .68);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  animation: scrollOfferFade .22s ease-out both;
+}
+.scrollOfferCard {
+  width: min(100%, 370px);
+  position: relative;
+  overflow: hidden;
+  padding: 29px 22px 21px;
+  border: 1.5px solid #d8a734;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 13% 12%, rgba(255, 212, 112, .23), transparent 35%),
+    radial-gradient(circle at 90% 88%, rgba(56, 168, 93, .12), transparent 34%),
+    linear-gradient(155deg, #fffdf8 0%, #fffaf0 58%, #fff7e8 100%);
+  color: #17140e;
+  text-align: center;
+  box-shadow: 0 26px 80px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .65) inset;
+  animation: scrollOfferRise .3s cubic-bezier(.2,.8,.2,1) both;
+}
+.scrollOfferCard::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 5px;
+  background: linear-gradient(90deg, #a40f18, #e0aa35, #2c8d50);
+}
+.scrollOfferClose {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #ece9e2;
+  color: #5f5a50;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+.scrollOfferBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 13px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ff3f2f, #c8161f);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  box-shadow: 0 8px 20px rgba(201, 23, 31, .25);
+}
+.scrollOfferLead {
+  margin: 0;
+  color: #268348;
+  font-size: 17px;
+  font-weight: 900;
+}
+.scrollOfferCard h2 {
+  margin: 4px 0 14px;
+  color: #c18a24;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 20px;
+  line-height: 1.15;
+}
+.scrollOfferPrice {
+  margin: 0;
+  color: #5f5a50;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.scrollOfferPrice strong {
+  color: #241e14;
+  font-weight: 900;
+}
+.scrollOfferPrice b {
+  color: #18753b;
+  font-size: 15px;
+}
+.scrollOfferCod {
+  margin: 8px 0 15px;
+  color: #258347;
+  font-size: 12px;
+  font-weight: 900;
+}
+.scrollOfferButton {
+  width: 100%;
+  min-height: 50px;
+  padding: 13px 18px;
+  border: 1px solid #d8b151;
+  border-radius: 14px;
+  background: linear-gradient(100deg, #0b0b0b, #17130b 70%, #352711);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  box-shadow: 0 13px 28px rgba(0, 0, 0, .28), inset 0 0 22px rgba(218, 175, 80, .08);
+  cursor: pointer;
+}
+.scrollOfferButton:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+.scrollOfferTrust {
+  display: block;
+  margin-top: 12px;
+  color: #7e7668;
+  font-size: 8px;
+  line-height: 1.4;
+}
+@keyframes scrollOfferFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes scrollOfferRise {
+  from { opacity: 0; transform: translateY(16px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (max-width: 480px) {
+  .scrollOfferOverlay { padding: 16px; }
+  .scrollOfferCard { width: min(100%, 350px); padding: 27px 18px 19px; border-radius: 19px; }
+  .scrollOfferLead { font-size: 16px; }
+  .scrollOfferCard h2 { font-size: 19px; }
+  .scrollOfferButton { min-height: 48px; font-size: 12px; }
+}
