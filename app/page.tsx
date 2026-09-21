@@ -503,48 +503,6 @@ export default function Home() {
   }
 
   async function submitCrmForm(formName: string, fields: Record<string, unknown>) {
-    if (formName === "website_order") {
-      try {
-        const sessionResponse = await fetch("/sapi/project/26522/session", {
-          method: "GET",
-          headers: { Accept: "application/json" },
-          cache: "no-store",
-        });
-        const sessionJson = await sessionResponse.json().catch(() => ({}));
-        const session = sessionJson?.data;
-
-        if (sessionResponse.ok && session?.session_id && session?.csrf_token) {
-          await new Promise(resolve => window.setTimeout(resolve, 3200));
-
-          const directResponse = await fetch("/sapi/project/26522/form/submit", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-Session-Id": String(session.session_id),
-              "X-CSRF-Token": String(session.csrf_token),
-            },
-            body: JSON.stringify({
-              form_name: formName,
-              fields: { ...fields, website: "" },
-              _csrf: session.csrf_token,
-            }),
-          });
-          const directResult = await directResponse.json().catch(() => ({}));
-          const actionStatus = directResult?.data?.action_result?.status;
-
-          if (
-            directResponse.ok &&
-            directResult?.success !== false &&
-            (!actionStatus || actionStatus === "completed")
-          ) {
-            return { ok: true, result: directResult, route: "direct-sapi" };
-          }
-        }
-      } catch {
-        // Fall through to the same-origin API route below.
-      }
-    }
-
     const endpoint = formName === "website_order" ? "/api/website-order" : "/api/website-activity";
     const response = await fetch(endpoint, {
       method: "POST",
