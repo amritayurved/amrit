@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 
-const CRM_SHEET_WEBHOOK =
-  "https://script.google.com/macros/s/AKfycbwJjF425vLFuwXylNLUGywy__0qqHdGEp0LRS7I1sekSYSrimgnFou6gS9a9Ae6h4qVCA/exec";
+const CRM_PROJECT_ID = 26522;
+const WP_API = "https://api.websitepublisher.ai";
+const CRM_FORM = "website_order";
 
 type OrderInput = {
   customer?: string;
@@ -15,6 +16,7 @@ type OrderInput = {
   district?: string;
   city?: string;
   notes?: string;
+  order_type?: string;
 };
 
 function normalize(input: OrderInput) {
@@ -29,6 +31,7 @@ function normalize(input: OrderInput) {
   const district = String(input.district || "Unknown").trim() || "Unknown";
   const city = String(input.city || "Unknown").trim() || "Unknown";
   const notes = String(input.notes || "").trim();
+  const orderType = String(input.order_type || "Order").trim() || "Order";
 
   if (customer.length < 2) throw new Error("Customer name is required");
   if (!/^[6-9]\d{9}$/.test(phone)) throw new Error("Valid 10-digit mobile is required");
@@ -50,81 +53,105 @@ function normalize(input: OrderInput) {
 
   const amount = Number((unitAmount * quantity).toFixed(2));
   const orderCode = `${prefix}${Date.now()}`;
-  const now = new Date().toISOString();
 
   return {
-    order_code: orderCode,
-    order_id: orderCode,
-    customer_name: customer,
-    customer,
-    mobile: phone,
-    phone,
-    address,
-    state,
-    district,
-    city,
-    village: city,
-    pincode,
-    payment_mode: payment,
-    payment,
-    payment_status: "Pending",
-    status: "New",
-    amount: String(amount),
-    order_value: String(amount),
-    product,
-    quantity: String(quantity),
-    notes,
-    remark: notes,
-    order_type: "Order",
-    source: "Website",
-    created_at: now,
-    updated_at: now,
+    orderCode,
+    fields: {
+      customer,
+      phone,
+      address,
+      state,
+      district,
+      city,
+      pincode,
+      product,
+      quantity: String(quantity),
+      payment,
+      amount: String(amount),
+      order_id: orderCode,
+      notes,
+      order_type: orderType,
+      website: "amrit-kohl.vercel.app",
+    },
   };
+}
+
+async function submitToCrm(fields: Record<string, string>) {
+  const sessionResponse = await fetch(
+    `${WP_API}/sapi/project/${CRM_PROJECT_ID}/session`,
+    {
+      method: "GET",
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+    },
+  );
+
+  const sessionJson = await sessionResponse.json().catch(() => ({}));
+  const session = sessionJson?.data;
+
+  if (!sessionResponse.ok || !session?.session_id || !session?.csrf_token) {
+    throw new Error("CRM session unavailable");
+  }
+
+  // WebsitePublisher form sessions may need a short readiness window before submit.
+  await new Promise((resolve) => setTimeout(resolve, 3200));
+
+  const submitResponse = await fetch(
+    `${WP_API}/sapi/project/${CRM_PROJECT_ID}/form/submit`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "X-Session-Id": String(session.session_id),
+        "X-CSRF-Token": String(session.csrf_token),
+      },
+      body: JSON.stringify({
+        form_name: CRM_FORM,
+        fields,
+        _csrf: session.csrf_token,
+      }),
+      cache: "no-store",
+    },
+  );
+
+  const submitJson = await submitResponse.json().catch(() => ({}));
+  const actionStatus = submitJson?.data?.action_result?.status;
+
+  if (
+    !submitResponse.ok ||
+    submitJson?.success === false ||
+    submitJson?.ok === false ||
+    (actionStatus && actionStatus !== "completed")
+  ) {
+    throw new Error("CRM order submission failed");
+  }
+
+  return submitJson;
 }
 
 export async function POST(request: Request) {
   try {
     const input = (await request.json()) as OrderInput;
-    const payload = normalize(input);
-
-    const response = await fetch(CRM_SHEET_WEBHOOK, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json,text/plain,*/*",
-      },
-      body: JSON.stringify(payload),
-      redirect: "follow",
-      cache: "no-store",
-    });
-
-    const text = await response.text();
-    let result: any = {};
-    try {
-      result = text ? JSON.parse(text) : {};
-    } catch {
-      result = { message: text };
-    }
-
-    if (!response.ok || result?.ok === false || result?.success === false) {
-      throw new Error(
-        String(result?.error || result?.message || `CRM Sheet webhook failed (HTTP ${response.status})`)
-      );
-    }
+    const { orderCode, fields } = normalize(input);
+    const crmResult = await submitToCrm(fields);
 
     return NextResponse.json({
       ok: true,
-      order: {
-        orderCode: payload.order_code,
-      },
-      destination: "amrit-crm-google-sheet",
-      webhookResult: result,
+      order: { orderCode },
+      destination: "amrit-crm",
+      crmResult,
     });
   } catch (error) {
+    console.error(
+      "website-order failed:",
+      error instanceof Error ? error.message : String(error),
+    );
+
     return NextResponse.json(
       {
         ok: false,
-        error: error instanceof Error ? error.message : "Order save failed",
+        error: "Order save नहीं हुआ। कृपया दोबारा कोशिश करें।",
       },
       { status: 502 },
     );
