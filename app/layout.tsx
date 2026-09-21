@@ -56,7 +56,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="hi">
       <head>
-        <script src="https://cdn.websitepublisher.ai/js/sapi-client.js"></script>
         <Script
           id="meta-pixel"
           strategy="afterInteractive"
