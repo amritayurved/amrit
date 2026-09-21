@@ -38,6 +38,56 @@ function money(value: number) {
   });
 }
 
+function sendMetaEvent(
+  eventName: "PageView" | "InitiateCheckout" | "Purchase",
+  data: Record<string, unknown> = {},
+  eventId?: string,
+) {
+  const tryFbq = () => {
+    const fbq = (window as typeof window & { fbq?: (...args: unknown[]) => void }).fbq;
+    if (typeof fbq !== "function") return false;
+    if (eventId) fbq("track", eventName, data, { eventID: eventId });
+    else fbq("track", eventName, data);
+    return true;
+  };
+
+  const fallback = () => {
+    const params = new URLSearchParams({
+      id: PIXEL_ID,
+      ev: eventName,
+      noscript: "1",
+      dl: window.location.href,
+      rl: document.referrer || "",
+      ts: String(Date.now()),
+    });
+    if (eventId) params.set("eid", eventId);
+    Object.entries(data).forEach(([key, value]) => {
+      const serialized = Array.isArray(value) || (value && typeof value === "object")
+        ? JSON.stringify(value)
+        : String(value ?? "");
+      params.set(`cd[${key}]`, serialized);
+    });
+    const img = new window.Image(1, 1);
+    img.referrerPolicy = "no-referrer-when-downgrade";
+    img.src = `https://www.facebook.com/tr?${params.toString()}`;
+  };
+
+  if (tryFbq()) return;
+
+  let attempts = 0;
+  const retry = window.setInterval(() => {
+    attempts += 1;
+    if (tryFbq()) {
+      window.clearInterval(retry);
+      return;
+    }
+    if (attempts >= 12) {
+      window.clearInterval(retry);
+      fallback();
+    }
+  }, 250);
+}
+
 export default function CheckoutPage() {
   const [productId, setProductId] = useState<ProductId>("takat-power-x");
   const [qty, setQty] = useState(1);
@@ -53,33 +103,27 @@ export default function CheckoutPage() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const p = params.get("product");
+    const resolvedProduct = p === "max-x7-x100-combo" ? "max-x7-x100-combo" : "takat-power-x";
     if (p === "max-x7-x100-combo" || p === "takat-power-x") setProductId(p);
     const q = Number(params.get("qty") || 1);
     if (Number.isFinite(q)) setQty(Math.max(1, Math.min(10, q)));
 
-    const pageParams = new URLSearchParams({
-      id: PIXEL_ID,
-      ev: "PageView",
-      noscript: "1",
-      dl: window.location.href,
-      rl: document.referrer || "",
-      ts: String(Date.now()),
-    });
-    const img = new window.Image(1, 1);
-    img.src = `https://www.facebook.com/tr?${pageParams.toString()}`;
+    const pageTimer = window.setTimeout(() => {
+      sendMetaEvent("PageView");
+    }, 250);
 
-    const timer = window.setTimeout(() => {
-      const fbq = (window as typeof window & { fbq?: (...args: unknown[]) => void }).fbq;
-      if (typeof fbq === "function") {
-        fbq("track", "InitiateCheckout", {
-          content_ids: [p === "max-x7-x100-combo" ? "max-x7-x100-combo" : "takat-power-x"],
-          content_type: "product",
-          currency: "INR",
-        });
-      }
-    }, 500);
+    const checkoutTimer = window.setTimeout(() => {
+      sendMetaEvent("InitiateCheckout", {
+        content_ids: [resolvedProduct],
+        content_type: "product",
+        currency: "INR",
+      }, `checkout-${Date.now()}`);
+    }, 700);
 
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.clearTimeout(pageTimer);
+      window.clearTimeout(checkoutTimer);
+    };
   }, []);
 
   const product = PRODUCTS[productId];
@@ -131,17 +175,14 @@ export default function CheckoutPage() {
       const id = String(result?.order?.orderCode || `AMRIT-${Date.now()}`);
       setOrderId(id);
 
-      const fbq = (window as typeof window & { fbq?: (...args: unknown[]) => void }).fbq;
-      if (typeof fbq === "function") {
-        fbq("track", "Purchase", {
-          value: total,
-          currency: "INR",
-          content_name: product.name,
-          content_ids: [productId],
-          content_type: "product",
-          num_items: qty,
-        }, { eventID: id });
-      }
+      sendMetaEvent("Purchase", {
+        value: total,
+        currency: "INR",
+        content_name: product.name,
+        content_ids: [productId],
+        content_type: "product",
+        num_items: qty,
+      }, id);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Order save नहीं हुआ। दोबारा try करें।");
     } finally {
