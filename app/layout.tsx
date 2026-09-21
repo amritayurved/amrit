@@ -58,7 +58,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <Script
           id="meta-pixel"
-          strategy="afterInteractive"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               !function(f,b,e,v,n,t,s){
@@ -70,6 +70,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)
               }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
               fbq('init','${META_PIXEL_ID}');
+              fbq('track','PageView');
             `,
           }}
         />
