@@ -79,8 +79,6 @@ export default function OrderSuccessPage() {
     const parsed = raw ? JSON.parse(raw) as SuccessOrder : null;
     setOrder(parsed);
 
-    const pageTimer = window.setTimeout(() => sendMetaEvent("PageView"), 250);
-
     if (parsed?.id) {
       const purchaseKey = `amrit-success-purchase-${parsed.id}`;
       if (localStorage.getItem(purchaseKey) !== "sent") {
@@ -96,13 +94,12 @@ export default function OrderSuccessPage() {
           localStorage.setItem(purchaseKey, "sent");
         }, 700);
         return () => {
-          window.clearTimeout(pageTimer);
           window.clearTimeout(purchaseTimer);
         };
       }
     }
 
-    return () => window.clearTimeout(pageTimer);
+    return undefined;
   }, []);
 
   return (
