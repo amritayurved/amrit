@@ -849,3 +849,231 @@ footer { padding:75px 0 105px; background:#050505; border-top:1px solid #2b2b2b;
   .scrollOfferCard h2 { font-size: 19px; }
   .scrollOfferButton { min-height: 48px; font-size: 12px; }
 }
+
+
+/* Compact in-page COD order popup for TAKAT POWER X */
+.quickOrderOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10150;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(2,2,2,.76);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  animation: quickOrderFade .2s ease-out both;
+}
+.quickOrderCard {
+  width: min(100%, 470px);
+  max-height: min(92vh, 820px);
+  position: relative;
+  overflow: auto;
+  border: 1px solid #d8aa4e;
+  border-radius: 22px;
+  background: #fff;
+  color: #1c251e;
+  box-shadow: 0 30px 100px #000c, 0 0 0 1px #ffffff59 inset;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  animation: quickOrderPop .27s cubic-bezier(.2,.8,.2,1) both;
+}
+.quickOrderClose {
+  width: 31px;
+  height: 31px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 8;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #ffffff42;
+  border-radius: 50%;
+  background: #070707c9;
+  color: #fff;
+  font-size: 19px;
+  line-height: 1;
+}
+.quickOrderVisual {
+  height: 184px;
+  position: relative;
+  overflow: hidden;
+  background: #12090b;
+}
+.quickOrderModel {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center 28%;
+  filter: saturate(1.07) contrast(1.04);
+}
+.quickOrderShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,#050505d9 0,#0505054d 48%,#05050526 74%),linear-gradient(0deg,#050505a8 0,transparent 52%);
+}
+.quickOrderProduct {
+  width: 104px;
+  height: 124px;
+  position: absolute;
+  left: 16px;
+  bottom: -9px;
+  z-index: 3;
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid #e0b75c;
+  border-radius: 12px 12px 0 0;
+  background: #111;
+  box-shadow: 0 13px 30px #000b;
+}
+.quickOrderBrand {
+  position: absolute;
+  left: 132px;
+  right: 42px;
+  bottom: 17px;
+  z-index: 4;
+  text-align: left;
+  text-shadow: 0 2px 10px #000;
+}
+.quickOrderBrand small,.quickOrderBrand strong { display:block; }
+.quickOrderBrand small { color:#e8bd65; font-size:8px; font-weight:900; letter-spacing:.16em; }
+.quickOrderBrand strong { margin-top:4px; color:#fff; font-family:Georgia,serif; font-size:24px; line-height:1; }
+.quickOrderBody { padding:15px 15px 18px; background:linear-gradient(180deg,#fff,#fffdf8 70%,#fffaf0); }
+.quickOrderIntro { text-align:center; }
+.quickOrderIntro h2 { margin:0; color:#2b7041; font-family:Georgia,serif; font-size:18px; line-height:1.2; }
+.quickOrderIntro p { margin:5px 0 0; color:#8d7c62; font-size:9px; }
+.quickOrderAssurance {
+  display:grid;
+  gap:4px;
+  margin-top:12px;
+  padding:11px 12px;
+  border:1px solid #bcd7c3;
+  border-radius:11px;
+  background:#f0f8f2;
+}
+.quickOrderAssurance strong { color:#3a7850; font-size:10px; }
+.quickOrderAssurance span { color:#617168; font-size:8px; line-height:1.45; }
+.quickPackGrid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:11px; }
+.quickPackGrid button {
+  min-height:72px;
+  position:relative;
+  padding:10px 5px 7px;
+  border:1px solid #d9dee0;
+  border-radius:10px;
+  background:#fff;
+  color:#506057;
+  text-align:center;
+  box-shadow:0 5px 14px #0b2d1510;
+}
+.quickPackGrid button.selected {
+  border:2px solid #3b7048;
+  background:linear-gradient(180deg,#f9fff9,#eef8f0);
+  box-shadow:0 7px 18px #2c6f3d1a;
+}
+.quickPackGrid button i {
+  position:absolute;
+  left:50%;
+  top:-8px;
+  transform:translateX(-50%);
+  padding:3px 7px;
+  border-radius:999px;
+  background:#e34040;
+  color:#fff;
+  font-size:6px;
+  font-style:normal;
+  font-weight:900;
+  white-space:nowrap;
+}
+.quickPackGrid button:nth-child(3) i { background:#32734a; }
+.quickPackGrid span,.quickPackGrid strong,.quickPackGrid small { display:block; }
+.quickPackGrid span { font-size:9px; font-weight:900; }
+.quickPackGrid strong { margin-top:3px; color:#376f48; font-size:16px; }
+.quickPackGrid small { margin-top:3px; color:#8b918d; font-size:7px; }
+.quickOrderSummary {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:11px;
+  padding:11px 12px;
+  border:1px solid #e6dcc5;
+  border-radius:10px;
+  background:linear-gradient(90deg,#f7f8f2,#fff8e7);
+}
+.quickOrderSummary span { color:#4b6756; font-size:9px; font-weight:800; }
+.quickOrderSummary strong { color:#3d694a; font-size:16px; }
+.quickOrderFields { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+.quickOrderFields label { display:grid; gap:5px; }
+.quickOrderFields label.wide { grid-column:1 / -1; }
+.quickOrderFields span { color:#49554e; font-size:9px; font-weight:900; }
+.quickOrderFields input,.quickOrderFields textarea {
+  width:100%;
+  min-height:43px;
+  padding:10px 11px;
+  border:1px solid #d4d9dd;
+  border-radius:9px;
+  outline:none;
+  background:#fff;
+  color:#1e2922;
+  font-size:13px;
+  resize:vertical;
+}
+.quickOrderFields textarea { min-height:66px; }
+.quickOrderFields input:focus,.quickOrderFields textarea:focus {
+  border-color:#49845c;
+  box-shadow:0 0 0 3px #49845c16;
+}
+.quickOrderError {
+  margin:10px 0 0;
+  padding:9px 11px;
+  border:1px solid #e5a7a7;
+  border-radius:9px;
+  background:#fff2f2;
+  color:#a32525;
+  font-size:9px;
+  font-weight:800;
+}
+.quickOrderTrust { display:flex; justify-content:center; flex-wrap:wrap; gap:7px; margin-top:12px; }
+.quickOrderTrust span {
+  padding:5px 8px;
+  border:1px solid #dee2df;
+  border-radius:999px;
+  background:#f7f8f7;
+  color:#637068;
+  font-size:7px;
+  font-weight:800;
+}
+.quickOrderSubmit {
+  width:100%;
+  min-height:48px;
+  margin-top:12px;
+  padding:12px 15px;
+  border:0;
+  border-radius:12px;
+  background:linear-gradient(90deg,#2f653e,#3d764c,#2f653e);
+  color:#fff;
+  font-size:12px;
+  font-weight:900;
+  box-shadow:0 12px 24px #2b65372d;
+}
+.quickOrderSubmit:disabled { opacity:.65; cursor:wait; }
+.quickOrderPrivacy { display:block; margin-top:9px; color:#a0a5a1; font-size:7px; line-height:1.45; text-align:center; }
+.quickOrderSticky { border:0; }
+@keyframes quickOrderFade { from{opacity:0} to{opacity:1} }
+@keyframes quickOrderPop { from{opacity:0;transform:translateY(16px) scale(.975)} to{opacity:1;transform:translateY(0) scale(1)} }
+
+@media (max-width: 520px) {
+  .quickOrderOverlay { padding:10px; align-items:center; }
+  .quickOrderCard { width:min(100%,430px); max-height:94vh; border-radius:18px; }
+  .quickOrderVisual { height:164px; }
+  .quickOrderProduct { width:92px; height:112px; left:13px; }
+  .quickOrderBrand { left:118px; bottom:14px; }
+  .quickOrderBrand strong { font-size:21px; }
+  .quickOrderBody { padding:13px 12px 15px; }
+  .quickPackGrid { gap:6px; }
+  .quickOrderFields { grid-template-columns:1fr; gap:9px; }
+  .quickOrderFields label.wide { grid-column:auto; }
+  .quickOrderFields input,.quickOrderFields textarea { font-size:16px; }
+}
