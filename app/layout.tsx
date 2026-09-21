@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 import "./gallery-fix.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://amrit-ayurveda.rohitsangwan517.chatgpt.site"),
+  metadataBase: new URL("https://amrit-kohl.vercel.app"),
   title: "TAKAT POWER X & MAX X7 + X100 Combo | Amrit Ayurveda",
   description: "Amrit Ayurveda पुरुष wellness store—TAKAT POWER X और MAX X7 Capsule + MAX X100 Oil Combo। Limited-time online offer ₹1,499 और private delivery।",
   keywords: [
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Amrit Ayurveda | TAKAT POWER X & MAX Combo",
     description: "TAKAT POWER X और MAX X7 Capsule + MAX X100 Oil Combo—limited-time online offer ₹1,499।",
-    url: "https://amrit-ayurveda.rohitsangwan517.chatgpt.site",
+    url: "https://amrit-kohl.vercel.app",
     siteName: "Amrit Ayurveda",
     locale: "hi_IN",
     type: "website",
@@ -56,9 +57,22 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="hi">
       <head>
         <script src="https://cdn.websitepublisher.ai/js/sapi-client.js"></script>
-        <script
+        <Script
+          id="meta-pixel"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
-            __html: `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${META_PIXEL_ID}');fbq('track','PageView');`,
+            __html: `
+              !function(f,b,e,v,n,t,s){
+                if(f.fbq)return;
+                n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                if(!f._fbq)f._fbq=n;
+                n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];
+                t=b.createElement(e);t.async=!0;t.src=v;
+                s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)
+              }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init','${META_PIXEL_ID}');
+              fbq('track','PageView');
+            `,
           }}
         />
       </head>
