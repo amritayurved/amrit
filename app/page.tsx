@@ -245,6 +245,8 @@ export default function Home() {
   const [savedOrderId, setSavedOrderId] = useState("");
   const [confirmedOrder, setConfirmedOrder] = useState<ConfirmedOrder | null>(null);
   const [orderSuccessOpen, setOrderSuccessOpen] = useState(false);
+  const [scrollOfferOpen, setScrollOfferOpen] = useState(false);
+  const [scrollOfferDismissed, setScrollOfferDismissed] = useState(false);
   const [offerTimeLeft, setOfferTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [customer, setCustomer] = useState<CustomerDetails>({
     name: "",
@@ -271,6 +273,38 @@ export default function Home() {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = previousOverflow; };
   }, [ageGateOpen]);
+
+  useEffect(() => {
+    if (ageGateOpen || scrollOfferDismissed || cartOpen || orderSuccessOpen) return;
+
+    const openOfferOnScroll = () => {
+      if (window.scrollY < 90) return;
+      setScrollOfferOpen(true);
+      window.removeEventListener("scroll", openOfferOnScroll);
+    };
+
+    window.addEventListener("scroll", openOfferOnScroll, { passive: true });
+    return () => window.removeEventListener("scroll", openOfferOnScroll);
+  }, [ageGateOpen, scrollOfferDismissed, cartOpen, orderSuccessOpen]);
+
+  useEffect(() => {
+    if (!scrollOfferOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setScrollOfferOpen(false);
+        setScrollOfferDismissed(true);
+      }
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [scrollOfferOpen]);
 
   useEffect(() => {
     const rotation = window.setInterval(() => {
@@ -471,6 +505,17 @@ export default function Home() {
   function leaveAdultStore() {
     if (window.history.length > 1) window.history.back();
     else window.location.replace("https://www.google.com/");
+  }
+
+  function closeScrollOffer() {
+    setScrollOfferOpen(false);
+    setScrollOfferDismissed(true);
+  }
+
+  function orderFromScrollOffer() {
+    setScrollOfferOpen(false);
+    setScrollOfferDismissed(true);
+    window.location.assign("/checkout?product=takat-power-x&qty=1");
   }
 
   function activitySessionId() {
@@ -727,6 +772,21 @@ export default function Home() {
           <small className="orderHelpNote">सहायता के लिए WhatsApp विकल्प वेबसाइट पर उपलब्ध है।</small>
         </section>
       </div>}
+      {scrollOfferOpen && !ageGateOpen && !cartOpen && !orderSuccessOpen && (
+        <div className="scrollOfferOverlay" role="dialog" aria-modal="true" aria-labelledby="scroll-offer-title" onClick={closeScrollOffer}>
+          <section className="scrollOfferCard" onClick={event => event.stopPropagation()}>
+            <button className="scrollOfferClose" type="button" aria-label="ऑफर बंद करें" onClick={closeScrollOffer}>×</button>
+            <span className="scrollOfferBadge">⚡ LIMITED STOCK</span>
+            <p className="scrollOfferLead">रुकिए! जाने से पहले</p>
+            <h2 id="scroll-offer-title">यह ऑफर मत छोड़िए</h2>
+            <p className="scrollOfferPrice"><strong>TAKAT POWER X</strong> अब सिर्फ <b>₹999</b> में</p>
+            <p className="scrollOfferCod">✅ Cash on Delivery उपलब्ध</p>
+            <button className="scrollOfferButton" type="button" onClick={orderFromScrollOffer}>अभी ऑर्डर करें ₹999 COD</button>
+            <small className="scrollOfferTrust">🔒 100% Discreet Packaging · Free Delivery</small>
+          </section>
+        </div>
+      )}
+
       <div className="saleTicker" aria-label="वर्तमान ऑफर">
         <div><span>MAX X7 + X100 COMBO • ONLINE ₹1,499 • LIMITED TIME OFFER • PRIVATE DELIVERY</span><span>MAX X7 + X100 COMBO • ONLINE ₹1,499 • LIMITED TIME OFFER • PRIVATE DELIVERY</span></div>
       </div>
