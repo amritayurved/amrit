@@ -175,6 +175,17 @@ export default function CheckoutPage() {
       const id = String(result?.order?.orderCode || `AMRIT-${Date.now()}`);
       setOrderId(id);
 
+      const successPayload = {
+        id,
+        productId,
+        productName: product.name,
+        quantity: qty,
+        total,
+        payment,
+        upiUrl: payment === "Prepaid" ? upiUrl : "",
+      };
+      sessionStorage.setItem("amrit-order-success", JSON.stringify(successPayload));
+
       sendMetaEvent("Purchase", {
         value: total,
         currency: "INR",
@@ -183,6 +194,8 @@ export default function CheckoutPage() {
         content_type: "product",
         num_items: qty,
       }, id);
+
+      window.location.assign("/order-success");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Order save नहीं हुआ। दोबारा try करें।");
     } finally {
