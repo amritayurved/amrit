@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 const CRM_PROJECT_ID = 26522;
 const WP_API = "https://api.websitepublisher.ai";
-const CRM_FORM = "website_order";
+const CRM_FORM = "website_order_v2";
 
 type OrderInput = {
   customer?: string;
