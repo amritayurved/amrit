@@ -38,6 +38,44 @@ function money(value: number) {
   });
 }
 
+async function submitDirectlyToCrm(fields: Record<string, string>) {
+  const projectId = 26522;
+  const sessionResponse = await fetch(
+    `https://api.websitepublisher.ai/sapi/project/${projectId}/session?fresh=${Date.now()}`,
+    { credentials: "include", cache: "no-store" },
+  );
+  const sessionJson = await sessionResponse.json().catch(() => ({}));
+  const session = sessionJson?.data;
+  if (!sessionResponse.ok || !session?.session_id || !session?.csrf_token) {
+    throw new Error("CRM session unavailable");
+  }
+
+  await new Promise((resolve) => window.setTimeout(resolve, 3200));
+
+  const submitResponse = await fetch(
+    `https://api.websitepublisher.ai/sapi/project/${projectId}/form/submit`,
+    {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Session-Id": String(session.session_id),
+        "X-CSRF-Token": String(session.csrf_token),
+      },
+      body: JSON.stringify({
+        form_name: "website_order_v2",
+        fields,
+        _csrf: session.csrf_token,
+      }),
+    },
+  );
+  const submitJson = await submitResponse.json().catch(() => ({}));
+  if (!submitResponse.ok || submitJson?.success !== true || submitJson?.data?.submits_remaining === 0) {
+    throw new Error("CRM order submission failed");
+  }
+  return submitJson;
+}
+
 function sendMetaEvent(
   eventName: "PageView" | "InitiateCheckout" | "Purchase",
   data: Record<string, unknown> = {},
@@ -145,29 +183,40 @@ export default function CheckoutPage() {
 
     setSaving(true);
     try {
-      const response = await fetch("/api/website-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          customer: name.trim(),
-          phone: mobile,
-          address: address.trim(),
-          pincode,
-          product: product.name,
-          quantity: String(qty),
-          payment,
-          state: "Unknown",
-          district: "Unknown",
-          city: "Unknown",
-          notes: `${product.detail} • Main domain checkout`,
-        }),
-      });
-      const result = await response.json().catch(() => ({}));
-      if (!response.ok || result?.ok === false) {
-        throw new Error(String(result?.error || "Order save failed"));
+      const orderCode = `${productId === "max-x7-x100-combo" ? "MX" : "TPX"}${Date.now()}`;
+      const orderFields = {
+        customer: name.trim(),
+        phone: mobile,
+        address: address.trim(),
+        pincode,
+        product: product.name,
+        quantity: String(qty),
+        payment,
+        amount: String(total),
+        state: "Unknown",
+        district: "Unknown",
+        city: "Unknown",
+        notes: `${product.detail} • Main domain checkout`,
+        order_type: "Order",
+        order_id: orderCode,
+        website: window.location.hostname,
+      };
+
+      let result: Record<string, unknown> = {};
+      try {
+        const response = await fetch("/api/website-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(orderFields),
+        });
+        result = await response.json().catch(() => ({}));
+        if (!response.ok || result?.ok === false) throw new Error("Server bridge unavailable");
+      } catch {
+        await submitDirectlyToCrm(orderFields);
       }
 
-      const id = String(result?.order?.orderCode || `AMRIT-${Date.now()}`);
+      const resultOrder = result?.order as { orderCode?: string } | undefined;
+      const id = String(resultOrder?.orderCode || orderCode);
       setOrderId(id);
 
       const successPayload = {
