@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-const PIXEL_ID = "1720516185901735";
 
 type SuccessOrder = {
   id: string;
@@ -21,54 +20,8 @@ function money(value: number) {
   });
 }
 
-function sendMetaEvent(
-  eventName: "PageView" | "Purchase",
-  data: Record<string, unknown> = {},
-  eventId?: string,
-) {
-  const tryFbq = () => {
-    const fbq = (window as typeof window & { fbq?: (...args: unknown[]) => void }).fbq;
-    if (typeof fbq !== "function") return false;
-    if (eventId) fbq("track", eventName, data, { eventID: eventId });
-    else fbq("track", eventName, data);
-    return true;
-  };
-
-  const fallback = () => {
-    const params = new URLSearchParams({
-      id: PIXEL_ID,
-      ev: eventName,
-      noscript: "1",
-      dl: window.location.href,
-      rl: document.referrer || "",
-      ts: String(Date.now()),
-    });
-    if (eventId) params.set("eid", eventId);
-    Object.entries(data).forEach(([key, value]) => {
-      const serialized = Array.isArray(value) || (value && typeof value === "object")
-        ? JSON.stringify(value)
-        : String(value ?? "");
-      params.set(`cd[${key}]`, serialized);
-    });
-    const img = new window.Image(1, 1);
-    img.referrerPolicy = "no-referrer-when-downgrade";
-    img.src = `https://www.facebook.com/tr?${params.toString()}`;
-  };
-
-  if (tryFbq()) return;
-
-  let attempts = 0;
-  const retry = window.setInterval(() => {
-    attempts += 1;
-    if (tryFbq()) {
-      window.clearInterval(retry);
-      return;
-    }
-    if (attempts >= 12) {
-      window.clearInterval(retry);
-      fallback();
-    }
-  }, 250);
+function sendMetaEvent(..._args: unknown[]) {
+  // Meta analytics intentionally disabled. CRM order confirmation is unaffected.
 }
 
 export default function OrderSuccessPage() {
