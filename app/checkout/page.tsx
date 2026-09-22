@@ -202,21 +202,8 @@ export default function CheckoutPage() {
         website: window.location.hostname,
       };
 
-      let result: Record<string, unknown> = {};
-      try {
-        const response = await fetch("/api/website-order", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(orderFields),
-        });
-        result = await response.json().catch(() => ({}));
-        if (!response.ok || result?.ok === false) throw new Error("Server bridge unavailable");
-      } catch {
-        await submitDirectlyToCrm(orderFields);
-      }
-
-      const resultOrder = result?.order as { orderCode?: string } | undefined;
-      const id = String(resultOrder?.orderCode || orderCode);
+      await submitDirectlyToCrm(orderFields);
+      const id = orderCode;
       setOrderId(id);
 
       const successPayload = {
