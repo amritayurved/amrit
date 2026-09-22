@@ -639,57 +639,8 @@ export default function Home() {
     }).catch(() => undefined);
   }
 
-  function sendMetaPurchase(value: number, eventId: string) {
-    const purchaseEventKey = `amrit-meta-purchase-${eventId}`;
-    if (localStorage.getItem(purchaseEventKey) === "sent") return;
-
-    const eventData = {
-      value,
-      currency: "INR",
-      content_name: activeProduct.name,
-      content_ids: [cartProductId],
-      content_type: "product",
-      num_items: cartQty,
-    };
-
-    const tryFbq = () => {
-      const metaFbq = (window as typeof window & { fbq?: (...args: unknown[]) => void }).fbq;
-      if (typeof metaFbq !== "function") return false;
-      metaFbq("track", "Purchase", eventData, { eventID: eventId });
-      localStorage.setItem(purchaseEventKey, "sent");
-      return true;
-    };
-
-    if (tryFbq()) return;
-
-    let attempts = 0;
-    const retryTimer = window.setInterval(() => {
-      attempts += 1;
-      if (tryFbq()) {
-        window.clearInterval(retryTimer);
-        return;
-      }
-
-      if (attempts >= 12) {
-        window.clearInterval(retryTimer);
-        const params = new URLSearchParams({
-          id: metaPixelId,
-          ev: "Purchase",
-          noscript: "1",
-          eid: eventId,
-          dl: window.location.href,
-          "cd[value]": value.toFixed(2),
-          "cd[currency]": "INR",
-          "cd[content_name]": activeProduct.name,
-          "cd[content_type]": "product",
-          "cd[num_items]": String(cartQty),
-        });
-        const beacon = new window.Image(1, 1);
-        beacon.referrerPolicy = "no-referrer-when-downgrade";
-        beacon.src = `https://www.facebook.com/tr?${params.toString()}`;
-        localStorage.setItem(purchaseEventKey, "sent");
-      }
-    }, 250);
+  function sendMetaPurchase(..._args: unknown[]) {
+    // Meta analytics intentionally disabled. Purchase remains recorded in CRM only.
   }
 
   function updateCustomer(field: keyof CustomerDetails, value: string) {
