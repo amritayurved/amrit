@@ -4,7 +4,6 @@ import Image from "next/image";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import styles from "./meta.module.css";
 
-const META_PIXEL_ID = "1720516185901735";
 const UPI_ID = "8295820654@okbizaxis";
 const ONLINE_PRICE = 1499;
 const COD_PRICE = 2500;
@@ -16,15 +15,8 @@ type SavedOrder = {
   payment: PaymentMethod;
 };
 
-function fireMetaEvent(
-  name: "ViewContent" | "InitiateCheckout" | "Purchase" | "Lead",
-  data: Record<string, unknown> = {},
-  eventId?: string,
-) {
-  const fbq = (window as typeof window & { fbq?: (...args: unknown[]) => void }).fbq;
-  if (typeof fbq !== "function") return;
-  if (eventId) fbq("track", name, data, { eventID: eventId });
-  else fbq("track", name, data);
+function fireMetaEvent(..._args: unknown[]) {
+  // Meta analytics intentionally disabled. Orders continue to the CRM only.
 }
 
 function makeOrderId() {
