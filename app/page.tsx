@@ -263,6 +263,11 @@ export default function Home() {
     address: "",
     pincode: "",
   });
+  const [callbackOpen, setCallbackOpen] = useState(false);
+  const [callbackName, setCallbackName] = useState("");
+  const [callbackMobile, setCallbackMobile] = useState("");
+  const [callbackSaving, setCallbackSaving] = useState(false);
+  const [callbackMessage, setCallbackMessage] = useState("");
   const [offerTimeLeft, setOfferTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [customer, setCustomer] = useState<CustomerDetails>({
     name: "",
@@ -474,6 +479,38 @@ export default function Home() {
     // Meta analytics intentionally disabled. Website/CRM functionality remains unchanged.
   }
 
+  async function submitCallbackLead() {
+    const mobile = callbackMobile.replace(/\D/g, "").slice(0, 10);
+    if (!/^[6-9]\d{9}$/.test(mobile)) {
+      setCallbackMessage("कृपया सही 10-digit mobile number डालें।");
+      return;
+    }
+
+    setCallbackSaving(true);
+    setCallbackMessage("");
+    try {
+      const result = await submitCrmForm("website_callback_lead", {
+        name: callbackName.trim(),
+        mobile,
+        session_id: activitySessionId(),
+        path: window.location.pathname,
+        source: "Website Callback Lead",
+        product: activeProduct.shortName,
+        utm_source: sessionStorage.getItem("amrit-utm_source") || "",
+        utm_campaign: sessionStorage.getItem("amrit-utm_campaign") || "",
+        fbclid: sessionStorage.getItem("amrit-fbclid") || "",
+      });
+      if (!result?.ok) throw new Error("Lead save failed");
+      setCallbackMessage("✓ आपका नंबर save हो गया। हमारी टीम आपको call करेगी।");
+      setCallbackMobile("");
+      trackActivity("callback_lead_submit", "Website callback lead submitted");
+    } catch {
+      setCallbackMessage("Lead save नहीं हुआ। Internet check करके दोबारा try करें।");
+    } finally {
+      setCallbackSaving(false);
+    }
+  }
+
   function openQuickOrder(qty = 1) {
     const safeQty = Math.max(1, Math.min(3, Number(qty) || 1));
     setQuickOrderQty(safeQty);
@@ -607,7 +644,11 @@ export default function Home() {
   }
 
   async function submitCrmForm(formName: string, fields: Record<string, unknown>) {
-    const endpoint = formName === "website_order" ? "/api/website-order" : "/api/website-activity";
+    const endpoint = formName === "website_order"
+      ? "/api/website-order"
+      : formName === "website_callback_lead"
+        ? "/api/website-lead"
+        : "/api/website-activity";
     const response = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -1196,6 +1237,27 @@ export default function Home() {
 
       <button className="stickyBuy quickOrderSticky" type="button" onClick={() => openQuickOrder(selectedQty)}>BUY NOW • ₹{selectedCourse.price.toLocaleString("en-IN")}</button>
       <a className="floatingWhatsapp" href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer" aria-label="WhatsApp पर सीधे चैट करें"><span>WA</span><b>WhatsApp Chat</b></a>
+      <button
+        className="floatingCallback"
+        type="button"
+        onClick={() => { setCallbackOpen(true); setCallbackMessage(""); trackActivity("callback_open", "Call Me Back opened"); }}
+        aria-label="Call Me Back form खोलें"
+      ><span>☎</span><b>Call Me Back</b></button>
+      {callbackOpen && !ageGateOpen && (
+        <div className="callbackOverlay" role="dialog" aria-modal="true" aria-labelledby="callback-title" onMouseDown={() => { if (!callbackSaving) setCallbackOpen(false); }}>
+          <section className="callbackCard" onMouseDown={event => event.stopPropagation()}>
+            <button className="callbackClose" type="button" aria-label="बंद करें" onClick={() => { if (!callbackSaving) setCallbackOpen(false); }}>×</button>
+            <span className="sectionKicker center">FREE CALLBACK</span>
+            <h2 id="callback-title">क्या हम आपको Call करें?</h2>
+            <p>सिर्फ अपना mobile number डालें। हमारी Amrit Ayurveda team आपको product और order की जानकारी के लिए call करेगी।</p>
+            <label className="callbackField"><span>नाम (Optional)</span><input type="text" autoComplete="name" value={callbackName} onChange={event => setCallbackName(event.target.value.slice(0, 80))} placeholder="आपका नाम" /></label>
+            <label className="callbackField"><span>Mobile Number *</span><input type="tel" inputMode="numeric" autoComplete="tel" maxLength={10} value={callbackMobile} onChange={event => { setCallbackMobile(event.target.value.replace(/\D/g, "").slice(0, 10)); setCallbackMessage(""); }} placeholder="10 digit mobile number" /></label>
+            {callbackMessage && <p className={callbackMessage.startsWith("✓") ? "callbackMessage success" : "callbackMessage"} role="status">{callbackMessage}</p>}
+            <button className="callbackSubmit" type="button" disabled={callbackSaving} onClick={() => void submitCallbackLead()}>{callbackSaving ? "SAVING…" : "CALL ME BACK"}</button>
+            <small>यह lead CRM के “Website Leads” section में New Lead के रूप में save होगी। यह order नहीं माना जाएगा।</small>
+          </section>
+        </div>
+      )}
 
       {cartOpen && <div className="cartOverlay" onMouseDown={() => setCartOpen(false)}>
         <aside className="cartDrawer" onMouseDown={event => event.stopPropagation()} role="dialog" aria-modal="true" aria-label="Shopping cart and payment">
