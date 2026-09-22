@@ -255,6 +255,7 @@ export default function Home() {
   const [scrollOfferDismissed, setScrollOfferDismissed] = useState(false);
   const [quickOrderOpen, setQuickOrderOpen] = useState(false);
   const [quickOrderQty, setQuickOrderQty] = useState(1);
+  const quickOrderRef = useRef<{ key: string; id: string } | null>(null);
   const [quickOrderSaving, setQuickOrderSaving] = useState(false);
   const [quickOrderError, setQuickOrderError] = useState("");
   const [quickCustomer, setQuickCustomer] = useState<CustomerDetails>({
@@ -558,7 +559,9 @@ export default function Home() {
     }
 
     const selectedPack = quickOrderPacks.find(pack => pack.qty === quickOrderQty) ?? quickOrderPacks[0];
-    const orderId = `TPX${Date.now()}`;
+    const key = JSON.stringify([quickCustomer, selectedPack.qty]);
+    if (quickOrderRef.current?.key !== key) quickOrderRef.current = { key, id: crypto.randomUUID() };
+    const orderId = quickOrderRef.current.id;
     setQuickOrderSaving(true);
     setQuickOrderError("");
 
@@ -574,6 +577,7 @@ export default function Home() {
         pincode: quickCustomer.pincode,
         product: "TAKAT POWER X",
         quantity: String(selectedPack.qty),
+        pack: "quick-cod",
         payment: "COD",
         amount: String(selectedPack.price),
         order_id: orderId,
@@ -595,7 +599,7 @@ export default function Home() {
       }, orderId);
 
       setConfirmedOrder({
-        id: orderId,
+        id: String(result.order.orderCode),
         customerName: quickCustomer.name.trim(),
         productName: "TAKAT POWER X",
         quantity: selectedPack.qty,
