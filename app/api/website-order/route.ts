@@ -78,7 +78,7 @@ function normalize(input: OrderInput) {
 
 async function submitToCrm(fields: Record<string, string>) {
   const sessionResponse = await fetch(
-    `${WP_API}/sapi/project/${CRM_PROJECT_ID}/session`,
+    `${WP_API}/sapi/project/${CRM_PROJECT_ID}/session?fresh=${Date.now()}`,
     {
       method: "GET",
       headers: { Accept: "application/json" },
@@ -117,12 +117,14 @@ async function submitToCrm(fields: Record<string, string>) {
 
   const submitJson = await submitResponse.json().catch(() => ({}));
   const actionStatus = submitJson?.data?.action_result?.status;
+  const submitsRemaining = submitJson?.data?.submits_remaining;
 
   if (
     !submitResponse.ok ||
     submitJson?.success === false ||
     submitJson?.ok === false ||
-    (actionStatus && actionStatus !== "completed")
+    (actionStatus && actionStatus !== "completed") ||
+    submitsRemaining === 0
   ) {
     throw new Error("CRM order submission failed");
   }
