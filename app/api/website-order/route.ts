@@ -86,6 +86,7 @@ async function submitToCrm(fields: Record<string, string>) {
     },
   );
 
+  const sessionCookie = sessionResponse.headers.get("set-cookie")?.split(";")[0] || "";
   const sessionJson = await sessionResponse.json().catch(() => ({}));
   const session = sessionJson?.data;
 
@@ -105,6 +106,7 @@ async function submitToCrm(fields: Record<string, string>) {
         Accept: "application/json",
         "X-Session-Id": String(session.session_id),
         "X-CSRF-Token": String(session.csrf_token),
+        ...(sessionCookie ? { Cookie: sessionCookie } : {}),
       },
       body: JSON.stringify({
         form_name: CRM_FORM,
