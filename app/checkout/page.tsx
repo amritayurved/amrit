@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const PIXEL_ID = "1720516185901735";
 const UPI_ID = "8295820654@okbizaxis";
@@ -39,41 +39,16 @@ function money(value: number) {
 }
 
 async function submitDirectlyToCrm(fields: Record<string, string>) {
-  const projectId = 26522;
-  const sessionResponse = await fetch(
-    `https://api.websitepublisher.ai/sapi/project/${projectId}/session?fresh=${Date.now()}`,
-    { credentials: "include", cache: "no-store" },
-  );
-  const sessionJson = await sessionResponse.json().catch(() => ({}));
-  const session = sessionJson?.data;
-  if (!sessionResponse.ok || !session?.session_id || !session?.csrf_token) {
-    throw new Error("CRM session unavailable");
+  const response = await fetch("/api/website-order", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(fields),
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok || result?.ok !== true || !result?.order?.orderCode) {
+    throw new Error(result?.error || "Order save नहीं हुआ। कृपया दोबारा कोशिश करें।");
   }
-
-  await new Promise((resolve) => window.setTimeout(resolve, 3200));
-
-  const submitResponse = await fetch(
-    `https://api.websitepublisher.ai/sapi/project/${projectId}/form/submit`,
-    {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Session-Id": String(session.session_id),
-        "X-CSRF-Token": String(session.csrf_token),
-      },
-      body: JSON.stringify({
-        form_name: "website_order_v2",
-        fields,
-        _csrf: session.csrf_token,
-      }),
-    },
-  );
-  const submitJson = await submitResponse.json().catch(() => ({}));
-  if (!submitResponse.ok || submitJson?.success !== true || submitJson?.data?.submits_remaining === 0) {
-    throw new Error("CRM order submission failed");
-  }
-  return submitJson;
+  return result;
 }
 
 function sendMetaEvent(
@@ -137,6 +112,7 @@ export default function CheckoutPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [orderId, setOrderId] = useState("");
+  const pendingOrder = useRef<{ key: string; id: string } | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -183,7 +159,11 @@ export default function CheckoutPage() {
 
     setSaving(true);
     try {
-      const orderCode = `${productId === "max-x7-x100-combo" ? "MX" : "TPX"}${Date.now()}`;
+      const orderKey = JSON.stringify([productId, qty, payment, name.trim(), mobile, address.trim(), pincode]);
+      if (pendingOrder.current?.key !== orderKey) {
+        pendingOrder.current = { key: orderKey, id: crypto.randomUUID() };
+      }
+      const orderCode = pendingOrder.current.id;
       const orderFields = {
         customer: name.trim(),
         phone: mobile,
@@ -202,8 +182,8 @@ export default function CheckoutPage() {
         website: window.location.hostname,
       };
 
-      await submitDirectlyToCrm(orderFields);
-      const id = orderCode;
+      const result = await submitDirectlyToCrm(orderFields);
+      const id = String(result.order.orderCode);
       setOrderId(id);
 
       const successPayload = {

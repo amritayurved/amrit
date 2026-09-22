@@ -788,7 +788,7 @@ export default function Home() {
       trackActivity(isReorder ? "reorder_submit" : "order_submit", isReorder ? "Reorder submitted" : "Order submitted");
       setSavedOrderId(paymentRef);
       setConfirmedOrder({
-        id: paymentRef,
+        id: String(result.order.orderCode),
         customerName: customer.name.trim(),
         productName: activeProduct.shortName,
         quantity: cartQty,
