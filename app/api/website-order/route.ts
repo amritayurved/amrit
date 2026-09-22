@@ -128,6 +128,7 @@ async function submitToCrm(fields: Record<string, string>) {
     (actionStatus && actionStatus !== "completed") ||
     submitsRemaining === 0
   ) {
+    console.error("CRM submit response:", submitResponse.status, JSON.stringify(submitJson));
     throw new Error("CRM order submission failed");
   }
 
