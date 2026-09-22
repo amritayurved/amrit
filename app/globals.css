@@ -1077,3 +1077,24 @@ footer { padding:75px 0 105px; background:#050505; border-top:1px solid #2b2b2b;
   .quickOrderFields label.wide { grid-column:auto; }
   .quickOrderFields input,.quickOrderFields textarea { font-size:16px; }
 }
+
+
+/* Website callback lead */
+.floatingCallback{position:fixed;right:18px;bottom:126px;z-index:45;display:flex;align-items:center;gap:8px;min-height:46px;padding:8px 13px;border:1px solid #e2b95d;border-radius:999px;background:linear-gradient(135deg,#fff8e8,#fff);color:#38280d;font-weight:900;box-shadow:0 14px 34px #0005}
+.floatingCallback span{width:30px;height:30px;display:grid;place-items:center;border-radius:50%;background:#c9962f;color:#fff}
+.floatingCallback b{font-size:10px;letter-spacing:.03em}
+.callbackOverlay{position:fixed;inset:0;z-index:10250;display:grid;place-items:center;padding:16px;background:#000c;backdrop-filter:blur(7px)}
+.callbackCard{width:min(420px,100%);position:relative;padding:28px 22px 22px;border:1px solid #d9b65f;border-radius:22px;background:linear-gradient(160deg,#fffdf7,#fff7e8);color:#211a0f;box-shadow:0 30px 90px #0009;text-align:center}
+.callbackClose{width:32px;height:32px;position:absolute;right:10px;top:10px;border:0;border-radius:50%;background:#eee8db;color:#5d513d;font-size:21px}
+.callbackCard h2{margin:8px 0 9px;font-family:Georgia,serif;font-size:27px;color:#2d2517}
+.callbackCard>p{margin:0 auto 16px;max-width:340px;color:#6d6250;font-size:12px;line-height:1.6}
+.callbackField{display:grid;gap:6px;margin-top:10px;text-align:left}
+.callbackField span{color:#665a46;font-size:9px;font-weight:900;letter-spacing:.05em}
+.callbackField input{width:100%;min-height:48px;padding:11px 12px;border:1px solid #d8cfbf;border-radius:11px;outline:none;background:#fff;color:#1d1a15;font-size:16px}
+.callbackField input:focus{border-color:#ba8e2c;box-shadow:0 0 0 3px #ba8e2c18}
+.callbackSubmit{width:100%;min-height:50px;margin-top:14px;border:0;border-radius:12px;background:linear-gradient(90deg,#2d6b45,#3b8455);color:#fff;font-weight:900;box-shadow:0 12px 24px #275c3a2e}
+.callbackSubmit:disabled{opacity:.6;cursor:wait}
+.callbackMessage{margin:10px 0 0!important;padding:9px 10px;border:1px solid #e5aaaa;border-radius:9px;background:#fff1f1;color:#a62c2c!important;font-size:10px!important;font-weight:800}
+.callbackMessage.success{border-color:#afd4bd;background:#eff9f2;color:#247044!important}
+.callbackCard>small{display:block;margin-top:10px;color:#8f8575;font-size:8px;line-height:1.5}
+@media(max-width:520px){.floatingCallback{right:12px;bottom:122px;padding:7px}.floatingCallback b{display:none}.floatingCallback span{width:34px;height:34px}.callbackCard{padding:26px 16px 19px;border-radius:18px}}
