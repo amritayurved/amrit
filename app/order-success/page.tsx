@@ -20,8 +20,13 @@ function money(value: number) {
   });
 }
 
-function sendMetaEvent(..._args: unknown[]) {
-  // Meta analytics intentionally disabled. CRM order confirmation is unaffected.
+type MetaWindow = Window & { fbq?: (...args: unknown[]) => void };
+
+function sendMetaEvent(name: string, params: Record<string, unknown>, eventId: string) {
+  const fbq = (window as MetaWindow).fbq;
+  if (!fbq) return false;
+  fbq("track", name, params, { eventID: eventId });
+  return true;
 }
 
 export default function OrderSuccessPage() {
@@ -35,8 +40,10 @@ export default function OrderSuccessPage() {
     if (parsed?.id) {
       const purchaseKey = `amrit-success-purchase-${parsed.id}`;
       if (localStorage.getItem(purchaseKey) !== "sent") {
-        const purchaseTimer = window.setTimeout(() => {
-          sendMetaEvent("Purchase", {
+        let attempts = 0;
+        const purchaseTimer = window.setInterval(() => {
+          attempts += 1;
+          const sent = sendMetaEvent("Purchase", {
             value: Number(parsed.total || 0),
             currency: "INR",
             content_name: parsed.productName,
@@ -44,10 +51,15 @@ export default function OrderSuccessPage() {
             content_type: "product",
             num_items: Number(parsed.quantity || 1),
           }, parsed.id);
-          localStorage.setItem(purchaseKey, "sent");
-        }, 700);
+          if (sent) {
+            localStorage.setItem(purchaseKey, "sent");
+            window.clearInterval(purchaseTimer);
+          } else if (attempts >= 20) {
+            window.clearInterval(purchaseTimer);
+          }
+        }, 500);
         return () => {
-          window.clearTimeout(purchaseTimer);
+          window.clearInterval(purchaseTimer);
         };
       }
     }
