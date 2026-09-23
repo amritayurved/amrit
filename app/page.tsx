@@ -582,7 +582,7 @@ export default function Home() {
       if (!result?.ok) throw new Error("CRM save failed");
 
       localStorage.setItem("amrit-last-order-phone", quickCustomer.mobile);
-      sendMetaPurchase(selectedPack.price, orderId);
+      sendMetaPurchase(selectedPack.price, orderId, "TAKAT POWER X", "takat-power-x", selectedPack.qty);
 
       setConfirmedOrder({
         id: String(result.order.orderCode),
@@ -676,7 +676,7 @@ export default function Home() {
     }).catch(() => undefined);
   }
 
-  function sendMetaPurchase(value: number, orderId: string) {
+  function sendMetaPurchase(value: number, orderId: string, productName = activeProduct.name, productId = cartProductId, quantity = Math.max(1, cartQty)) {
     const sentKey = `amrit-meta-purchase-${orderId}`;
     if (localStorage.getItem(sentKey) === "sent") return;
     let attempts = 0;
@@ -685,10 +685,10 @@ export default function Home() {
       const sent = sendMetaBrowserEvent("Purchase", {
         value,
         currency: "INR",
-        content_name: activeProduct.name,
-        content_ids: [cartProductId],
+        content_name: productName,
+        content_ids: [productId],
         content_type: "product",
-        num_items: Math.max(1, cartQty),
+        num_items: quantity,
       }, orderId);
       if (sent) {
         localStorage.setItem(sentKey, "sent");
