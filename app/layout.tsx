@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import MetaPageView from "./meta-page-view";
 import "./globals.css";
 import "./gallery-fix.css";
 
@@ -32,12 +33,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)
               }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
               fbq('init', '${META_PIXEL_ID}');
-              fbq('track', 'PageView');
             `,
           }}
         />
       </head>
       <body>
+        <MetaPageView />
         {children}
         <noscript>
           <img
