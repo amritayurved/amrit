@@ -91,3 +91,5 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+// redeploy after META_CAPI_ACCESS_TOKEN configuration
