@@ -14,8 +14,8 @@ export default function PoliciesPage() {
   return (
     <main style={{ minHeight: "100vh", background: "#fffdf8", color: "#18231b", fontFamily: "system-ui, sans-serif" }}>
       <div style={{ width: "min(900px, calc(100% - 32px))", margin: "0 auto", padding: "28px 0 70px" }}>
-        <Link href="/meta" style={{ color: "#275f3b", fontWeight: 800, textDecoration: "none" }}>
-          ← TAKAT POWER X
+        <Link href="/" style={{ color: "#275f3b", fontWeight: 800, textDecoration: "none" }}>
+          ← Amrit Ayurveda
         </Link>
 
         <h1 style={{ margin: "28px 0 8px", fontFamily: "Georgia, serif", fontSize: "clamp(2.4rem,7vw,4.6rem)", color: "#173d27" }}>

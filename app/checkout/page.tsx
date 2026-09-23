@@ -12,21 +12,18 @@ const PRODUCTS: Record<ProductId, {
   detail: string;
   cod: number;
   prepaid: number;
-  image: string;
 }> = {
   "takat-power-x": {
     name: "TAKAT POWER X",
     detail: "150g Bottle",
     cod: 999,
     prepaid: 899.10,
-    image: "/takat-power-x.jpg",
   },
   "max-x7-x100-combo": {
     name: "MAX X7 Capsule + MAX X100 Oil Combo",
     detail: "30 Capsule Bottle + Massage Oil",
     cod: 2500,
     prepaid: 1499,
-    image: "/max-x7-capsule.webp",
   },
 };
 
@@ -50,10 +47,6 @@ async function submitDirectlyToCrm(fields: Record<string, string>) {
   return result;
 }
 
-function sendMetaEvent(..._args: unknown[]) {
-  // Meta analytics intentionally disabled. Checkout still saves orders to the CRM.
-}
-
 export default function CheckoutPage() {
   const [productId, setProductId] = useState<ProductId>("takat-power-x");
   const [qty, setQty] = useState(1);
@@ -70,22 +63,9 @@ export default function CheckoutPage() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const p = params.get("product");
-    const resolvedProduct = p === "max-x7-x100-combo" ? "max-x7-x100-combo" : "takat-power-x";
     if (p === "max-x7-x100-combo" || p === "takat-power-x") setProductId(p);
     const q = Number(params.get("qty") || 1);
     if (Number.isFinite(q)) setQty(Math.max(1, Math.min(10, q)));
-
-    const checkoutTimer = window.setTimeout(() => {
-      sendMetaEvent("InitiateCheckout", {
-        content_ids: [resolvedProduct],
-        content_type: "product",
-        currency: "INR",
-      }, `checkout-${Date.now()}`);
-    }, 700);
-
-    return () => {
-      window.clearTimeout(checkoutTimer);
-    };
   }, []);
 
   const product = PRODUCTS[productId];
@@ -129,7 +109,7 @@ export default function CheckoutPage() {
         state: "Unknown",
         district: "Unknown",
         city: "Unknown",
-        notes: `${product.detail} • Main domain checkout`,
+        notes: `${product.detail} • Website checkout`,
         order_type: "Order",
         order_id: orderCode,
         website: window.location.hostname,
@@ -150,15 +130,6 @@ export default function CheckoutPage() {
       };
       sessionStorage.setItem("amrit-order-success", JSON.stringify(successPayload));
 
-      sendMetaEvent("Purchase", {
-        value: total,
-        currency: "INR",
-        content_name: product.name,
-        content_ids: [productId],
-        content_type: "product",
-        num_items: qty,
-      }, id);
-
       window.location.assign("/order-success");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Order save नहीं हुआ। दोबारा try करें।");
@@ -172,7 +143,7 @@ export default function CheckoutPage() {
       <main style={{minHeight:"100vh",background:"#0b0b0d",color:"#fff",display:"grid",placeItems:"center",padding:20,fontFamily:"Arial,sans-serif"}}>
         <section style={{width:"100%",maxWidth:560,background:"#17171b",border:"1px solid #333",borderRadius:22,padding:24,textAlign:"center"}}>
           <div style={{fontSize:44}}>✓</div>
-          <h1 style={{margin:"8px 0"}}>Order Confirmed</h1>
+          <h1 style={{margin:"8px 0"}}>Order Received</h1>
           <p style={{opacity:.8}}>Order ID: <b>{orderId}</b></p>
           <p><b>{product.name}</b> × {qty}</p>
           <p style={{fontSize:28,fontWeight:900}}>₹{money(total)}</p>
@@ -195,11 +166,11 @@ export default function CheckoutPage() {
       <section style={{maxWidth:720,margin:"0 auto"}}>
         <a href="/" style={{color:"#fff",textDecoration:"none"}}>← Amrit Ayurveda</a>
         <div style={{marginTop:16,background:"#17171b",border:"1px solid #333",borderRadius:22,padding:20}}>
-          <p style={{margin:0,fontSize:12,fontWeight:900,letterSpacing:1.5,color:"#e0b15a"}}>SECURE MAIN-DOMAIN CHECKOUT</p>
+          <p style={{margin:0,fontSize:12,fontWeight:900,letterSpacing:1.5,color:"#e0b15a"}}>ORDER DETAILS</p>
           <h1 style={{margin:"8px 0 18px"}}>अपना Order Confirm करें</h1>
 
           <div style={{display:"flex",gap:14,alignItems:"center",background:"#101014",padding:14,borderRadius:16}}>
-            <img src={product.image} alt={product.name} style={{width:78,height:78,objectFit:"contain",borderRadius:12,background:"#fff"}} />
+            <div role="img" aria-label="उत्पाद की तस्वीर के लिए स्थान" style={{width:78,height:78,flexShrink:0,borderRadius:12,background:"#2b3130",border:"1px dashed #697b73"}} />
             <div style={{flex:1}}>
               <b>{product.name}</b>
               <div style={{opacity:.75,fontSize:13,marginTop:4}}>{product.detail}</div>
@@ -233,7 +204,7 @@ export default function CheckoutPage() {
           </button>
 
           <p style={{fontSize:12,opacity:.65,lineHeight:1.5,marginTop:12}}>
-            यह checkout केवल amrit-kohl.vercel.app पर चलता है। आपकी order details सीधे Amrit Ayurveda CRM intake में भेजी जाती हैं।
+            आपकी order details Amrit Ayurveda के order system में भेजी जाती हैं।
           </p>
         </div>
       </section>

@@ -37,7 +37,7 @@ export default function OrderSuccessPage() {
     const parsed = raw ? JSON.parse(raw) as SuccessOrder : null;
     setOrder(parsed);
 
-    if (parsed?.id) {
+    if (parsed?.id && parsed.payment === "COD") {
       const purchaseKey = `amrit-success-purchase-${parsed.id}`;
       if (localStorage.getItem(purchaseKey) !== "sent") {
         let attempts = 0;
@@ -46,10 +46,6 @@ export default function OrderSuccessPage() {
           const sent = sendMetaEvent("Purchase", {
             value: Number(parsed.total || 0),
             currency: "INR",
-            content_name: parsed.productName,
-            content_ids: [parsed.productId],
-            content_type: "product",
-            num_items: Number(parsed.quantity || 1),
           }, parsed.id);
           if (sent) {
             localStorage.setItem(purchaseKey, "sent");
@@ -71,7 +67,7 @@ export default function OrderSuccessPage() {
     <main style={{minHeight:"100vh",background:"#0b0b0d",color:"#fff",display:"grid",placeItems:"center",padding:20,fontFamily:"Arial,sans-serif"}}>
       <section style={{width:"100%",maxWidth:560,background:"#17171b",border:"1px solid #333",borderRadius:22,padding:24,textAlign:"center"}}>
         <div style={{fontSize:48}}>✓</div>
-        <h1 style={{margin:"8px 0"}}>Order Confirmed</h1>
+        <h1 style={{margin:"8px 0"}}>Order Received</h1>
         <p style={{opacity:.75}}>आपका order सफलतापूर्वक receive हो गया है।</p>
 
         {order ? (
@@ -92,7 +88,7 @@ export default function OrderSuccessPage() {
             )}
           </>
         ) : (
-          <p>Order confirmation सुरक्षित हो चुका है।</p>
+          <p>Order जानकारी उपलब्ध नहीं है।</p>
         )}
 
         <a href="/" style={{display:"block",marginTop:18,color:"#fff"}}>← Website पर वापस जाएँ</a>
