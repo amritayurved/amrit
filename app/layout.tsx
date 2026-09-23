@@ -19,6 +19,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       fbq('init', '1720516185901735');
       fbq('track', 'PageView');
     `}</Script>
-    <noscript><img height="1" width="1" style={{ display: "none" }} src="https://www.facebook.com/tr?id=3143912892480883&ev=PageView&noscript=1" alt="" /></noscript>
+    <noscript><img height="1" width="1" style={{ display: "none" }} src="https://www.facebook.com/tr?id=1720516185901735&ev=PageView&noscript=1" alt="" /></noscript>
   </body></html>;
 }
