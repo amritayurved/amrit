@@ -77,17 +77,17 @@ export default function PixelTestPage() {
         : "NOT READY ❌";
 
   return (
-    <main style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: 24, fontFamily: "Arial, sans-serif", background: "#f6f7f7" }}>
-      <section style={{ width: "100%", maxWidth: 620, background: "#fff", border: "1px solid #ddd", borderRadius: 16, padding: 24 }}>
+    <main style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: 24, fontFamily: "Arial, sans-serif", background: "#f6f7f7", color: "#111" }}>
+      <section style={{ width: "100%", maxWidth: 620, background: "#fff", color: "#111", border: "1px solid #ddd", borderRadius: 16, padding: 24, lineHeight: 1.6 }}>
         <h1>Meta Pixel Diagnostic</h1>
         <p><b>Pixel ID:</b> {META_PIXEL_ID}</p>
-        <p><b>Meta tracking endpoint:</b> {endpointText}</p>
-        <p><b>fbq library:</b> {fbqText}</p>
+        <div style={{padding:12,border:"1px solid #ddd",borderRadius:10,margin:"12px 0",background:"#fafafa",color:"#111"}}><b>1. Meta tracking endpoint:</b><br/><span style={{fontSize:20,fontWeight:800,color:"#111"}}>{endpointText}</span></div>
+        <div style={{padding:12,border:"1px solid #ddd",borderRadius:10,margin:"12px 0",background:"#fafafa",color:"#111"}}><b>2. fbq library:</b><br/><span style={{fontSize:20,fontWeight:800,color:"#111"}}>{fbqText}</span></div>
 
-        <button onClick={fireFbq} style={{ padding: "12px 16px", marginRight: 10, marginBottom: 10 }}>
+        <button onClick={fireFbq} style={{ padding: "12px 16px", marginRight: 10, marginBottom: 10, color:"#111", background:"#eee", border:"1px solid #bbb", borderRadius:8 }}>
           Fire PageView
         </button>
-        <button onClick={sendDirectPixel} style={{ padding: "12px 16px", marginBottom: 10 }}>
+        <button onClick={sendDirectPixel} style={{ padding: "12px 16px", marginBottom: 10, color:"#111", background:"#eee", border:"1px solid #bbb", borderRadius:8 }}>
           Retry direct test
         </button>
 
