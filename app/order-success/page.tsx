@@ -37,7 +37,7 @@ export default function OrderSuccessPage() {
     const parsed = raw ? JSON.parse(raw) as SuccessOrder : null;
     setOrder(parsed);
 
-    if (parsed?.id) {
+    if (parsed?.id && parsed.payment === "COD") {
       const purchaseKey = `amrit-success-purchase-${parsed.id}`;
       if (localStorage.getItem(purchaseKey) !== "sent") {
         let attempts = 0;
