@@ -23,7 +23,7 @@ const PRODUCTS: Record<ProductId, {
   },
   "max-x7-x100-combo": {
     name: "MAX X7 Capsule + MAX X100 Oil Combo",
-    detail: "30 Capsule Bottle + Massage Oil",
+    detail: "30 capsules + oil",
     cod: 2500,
     prepaid: 1499,
     image: "/max-x7-capsule.webp",
@@ -199,7 +199,7 @@ export default function CheckoutPage() {
           <h1 style={{margin:"8px 0 18px"}}>अपना Order Confirm करें</h1>
 
           <div style={{display:"flex",gap:14,alignItems:"center",background:"#101014",padding:14,borderRadius:16}}>
-            <img src={product.image} alt={product.name} style={{width:78,height:78,objectFit:"contain",borderRadius:12,background:"#fff"}} />
+            <div role="img" aria-label="तस्वीर के लिए खाली स्थान" style={{width:78,height:78,minWidth:78,border:"1px dashed #888",borderRadius:12,display:"grid",placeItems:"center",fontSize:12,textAlign:"center",padding:6}}>तस्वीर का स्थान</div>
             <div style={{flex:1}}>
               <b>{product.name}</b>
               <div style={{opacity:.75,fontSize:13,marginTop:4}}>{product.detail}</div>
