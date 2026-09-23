@@ -14,10 +14,7 @@ export async function POST(request: NextRequest) {
 
   if (!accessToken) {
     return NextResponse.json(
-      {
-        ok: false,
-        error: "META_CAPI_ACCESS_TOKEN is not configured in Vercel.",
-      },
+      { ok: false, error: "META_CAPI_ACCESS_TOKEN is not configured in Vercel." },
       { status: 503 }
     );
   }
@@ -25,9 +22,7 @@ export async function POST(request: NextRequest) {
   let body: { eventId?: string; sourceUrl?: string } = {};
   try {
     body = await request.json();
-  } catch {
-    // Keep defaults.
-  }
+  } catch {}
 
   const eventId = body.eventId || crypto.randomUUID();
   const sourceUrl =
@@ -51,9 +46,7 @@ export async function POST(request: NextRequest) {
     ],
   };
 
-  if (testEventCode) {
-    payload.test_event_code = testEventCode;
-  }
+  if (testEventCode) payload.test_event_code = testEventCode;
 
   try {
     const response = await fetch(
@@ -87,63 +80,6 @@ export async function POST(request: NextRequest) {
         ok: false,
         error: error instanceof Error ? error.message : "Unknown Meta request error",
       },
-      { status: 502 }
-    );
-  }
-}
-
-// redeploy after META_CAPI_ACCESS_TOKEN configuration
-
-
-export async function GET(request: NextRequest) {
-  if (request.nextUrl.searchParams.get("diagnostic") !== "1") {
-    return NextResponse.json({ ok: false }, { status: 404 });
-  }
-
-  const accessToken = process.env.META_CAPI_ACCESS_TOKEN;
-  if (!accessToken) {
-    return NextResponse.json(
-      { ok: false, error: "META_CAPI_ACCESS_TOKEN is not configured in Vercel." },
-      { status: 503 }
-    );
-  }
-
-  const eventId = "capi-diagnostic-" + Date.now();
-  const payload = {
-    data: [
-      {
-        event_name: "PageView",
-        event_time: Math.floor(Date.now() / 1000),
-        event_id: eventId,
-        action_source: "website",
-        event_source_url: "https://amrit-kohl.vercel.app/",
-        user_data: {
-          client_ip_address: getClientIp(request),
-          client_user_agent: request.headers.get("user-agent") || "",
-        },
-      },
-    ],
-  };
-
-  try {
-    const response = await fetch(
-      `https://graph.facebook.com/${PIXEL_ID}/events?access_token=${encodeURIComponent(accessToken)}`,
-      {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(payload),
-        cache: "no-store",
-      }
-    );
-
-    const result = await response.json().catch(() => ({}));
-    return NextResponse.json(
-      { ok: response.ok, status: response.status, eventId, result },
-      { status: response.ok ? 200 : 502 }
-    );
-  } catch (error) {
-    return NextResponse.json(
-      { ok: false, error: error instanceof Error ? error.message : "Unknown Meta request error" },
       { status: 502 }
     );
   }
