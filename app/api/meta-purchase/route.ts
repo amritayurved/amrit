@@ -75,8 +75,6 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const accessToken = process.env.META_CAPI_ACCESS_TOKEN;
-  const testEventCode = process.env.META_TEST_EVENT_CODE;
-
   if (!accessToken) {
     return NextResponse.json(
       { ok: false, error: "META_CAPI_ACCESS_TOKEN is not configured in Vercel." },
@@ -128,7 +126,6 @@ export async function POST(request: NextRequest) {
     ],
   };
 
-  if (testEventCode) payload.test_event_code = testEventCode;
 
   try {
     const response = await fetch(
@@ -153,7 +150,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       ok: true,
       eventId,
-      testMode: Boolean(testEventCode),
+      testMode: false,
       result,
     });
   } catch (error) {
