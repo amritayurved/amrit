@@ -1,485 +1,1390 @@
-export default function HomePage() {
+"use client";
+
+import Image from "next/image";
+import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+
+const phone = "918290695226";
+const upiId = "8295820654@okbizaxis";
+const siteUrl = "https://amrit-kohl.vercel.app";
+const supportWhatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent("नमस्ते, मुझे Amrit Ayurveda के products के बारे में जानकारी चाहिए।")}`;
+
+type ProductId = "takat-power-x" | "max-x7-x100-combo";
+const comboOfferDurationMs = 3 * 24 * 60 * 60 * 1000;
+const comboOfferStorageKey = "amrit-combo-offer-ends-at";
+const customGalleryPhotos = [
+  "/my-photos/photo-1.jpg",
+  "/my-photos/photo-2.jpg",
+  "/my-photos/photo-3.jpg",
+] as const;
+
+
+
+const storeProducts = {
+  "takat-power-x": {
+    name: "TAKAT POWER X",
+    shortName: "TAKAT POWER X",
+    primaryImage: "/takat-power-x.jpg",
+    secondaryImage: "",
+    cartDetail: "150g Bottle",
+    mrp: 1500,
+    codPrice: 999,
+    onlinePrice: 899.10,
+    offerLabel: "10% OFF",
+    orderPrefix: "TPX",
+  },
+  "max-x7-x100-combo": {
+    name: "MAX X7 Capsule + MAX X100 Oil Combo",
+    shortName: "MAX X7 + X100 COMBO",
+    primaryImage: "/max-x7-capsule.webp",
+    secondaryImage: "/max-x100-oil.webp",
+    cartDetail: "30 Capsule Bottle + Massage Oil",
+    mrp: 2500,
+    codPrice: 2500,
+    onlinePrice: 1499,
+    offerLabel: "LIMITED TIME OFFER",
+    orderPrefix: "MAX",
+  },
+} as const;
+const upiAppTargets = {
+  googlePay: {
+    packageName: "com.google.android.apps.nbu.paisa.user",
+    storeUrl: "https://play.google.com/store/apps/details?id=com.google.android.apps.nbu.paisa.user",
+  },
+  phonePe: {
+    packageName: "com.phonepe.app",
+    storeUrl: "https://play.google.com/store/apps/details?id=com.phonepe.app",
+  },
+  paytm: {
+    packageName: "net.one97.paytm",
+    storeUrl: "https://play.google.com/store/apps/details?id=net.one97.paytm",
+  },
+  bharatPe: {
+    packageName: "com.postpe.app",
+    storeUrl: "https://play.google.com/store/apps/details?id=com.postpe.app",
+  },
+  bhim: {
+    packageName: "in.org.npci.upiapp",
+    storeUrl: "https://play.google.com/store/apps/details?id=in.org.npci.upiapp",
+  },
+} as const;
+
+type UpiAppTarget = keyof typeof upiAppTargets;
+
+function formatPrice(value: number) {
+  return value.toLocaleString("en-IN", {
+    minimumFractionDigits: Number.isInteger(value) ? 0 : 2,
+    maximumFractionDigits: 2,
+  });
+}
+
+type CustomerDetails = {
+  name: string;
+  mobile: string;
+  address: string;
+  pincode: string;
+};
+
+type ConfirmedOrder = {
+  id: string;
+  customerName: string;
+  productName: string;
+  quantity: number;
+  total: number;
+  method: "COD" | "UPI";
+};
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
+      name: "Amrit Ayurveda",
+      url: siteUrl,
+      telephone: "+91 82906 95226",
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      url: siteUrl,
+      name: "Amrit Ayurveda",
+      inLanguage: "hi-IN",
+      publisher: { "@id": `${siteUrl}/#organization` },
+    },
+    {
+      "@type": "Product",
+      "@id": `${siteUrl}/#takat-power-x`,
+      name: "TAKAT POWER X",
+      image: [`${siteUrl}/takat-power-x.jpg`, `${siteUrl}/takat-lifestyle.png`],
+      description: "25 super herbs और pure shilajit वाला पुरुषों का आयुर्वेदिक वेलनेस सपोर्ट।",
+      brand: { "@type": "Brand", name: "Amrit Ayurveda" },
+      category: "Ayurvedic Men's Wellness Support",
+      weight: { "@type": "QuantitativeValue", value: 150, unitCode: "GRM" },
+      offers: {
+        "@type": "Offer",
+        url: siteUrl,
+        priceCurrency: "INR",
+        price: "999",
+        availability: "https://schema.org/InStock",
+        itemCondition: "https://schema.org/NewCondition",
+      },
+    },
+    {
+      "@type": "Product",
+      "@id": `${siteUrl}/#max-x7-x100-combo`,
+      name: "MAX X7 Capsule + MAX X100 Oil Combo",
+      image: [`${siteUrl}/max-x7-capsule.webp`, `${siteUrl}/max-x100-oil.webp`],
+      description: "MAX X7 Ayurvedic capsule और MAX X100 massage oil का daily wellness combo।",
+      brand: { "@type": "Brand", name: "Amrit Ayurveda" },
+      category: "Ayurvedic Men's Wellness Combo",
+      offers: {
+        "@type": "Offer",
+        url: `${siteUrl}/#products`,
+        priceCurrency: "INR",
+        price: "1499",
+        availability: "https://schema.org/InStock",
+        itemCondition: "https://schema.org/NewCondition",
+        priceValidUntil: "2026-12-31",
+      },
+    },
+  ],
+};
+
+const courses = [
+  { qty: 1, title: "TAKAT POWER X", detail: "1 × 150g Bottle", price: 999, mrp: 1500 },
+  { qty: 2, title: "2-Month Course", detail: "2 × 150g Bottles", price: 1500, mrp: 2500 },
+  { qty: 3, title: "3-Month Course", detail: "3 × 150g Bottles", price: 2500, mrp: 5000 },
+];
+
+const quickOrderPacks = [
+  { qty: 1, title: "1 Pack", detail: "1 महीने का कोर्स", price: 999, badge: "" },
+  { qty: 2, title: "2 Packs", detail: "2 महीने का कोर्स", price: 1699, badge: "BEST SELLER" },
+  { qty: 3, title: "3 Packs", detail: "3 महीने का कोर्स", price: 1999, badge: "BEST VALUE" },
+] as const;
+
+const trustPoints = [
+  { index: "01", title: "25 Super Herbs Blend", text: "अफ़्रीकन हर्ब्स, शिलाजीत और चुनी हुई पारंपरिक सामग्री का पुरुष वेलनेस फॉर्मूला।" },
+  { index: "02", title: "Made for Modern Men", text: "व्यस्त दिनचर्या में रोज़ की एनर्जी, स्टैमिना और कॉन्फिडेंस को सपोर्ट करने के लिए।" },
+  { index: "03", title: "Discreet Delivery", text: "पूरे भारत में सुरक्षित और गोपनीय पैकिंग के साथ डिलीवरी।" },
+  { index: "04", title: "WhatsApp Assistance", text: "ऑर्डर, उपयोग और डिलीवरी से जुड़ी जानकारी के लिए सीधी सहायता।" },
+];
+
+const faqs = [
+  ["TAKAT POWER X क्या है?", "TAKAT POWER X वयस्क पुरुषों के लिए एक सामान्य आयुर्वेदिक वेलनेस सपोर्ट है। पैक पर 25 सुपर हर्ब्स और शुद्ध शिलाजीत का उल्लेख है।"],
+  ["TAKAT POWER X का सेवन कैसे करें?", "रोज़ शाम खाना खाने के 30 मिनट बाद 1 चम्मच लें। इसे पानी में अच्छी तरह घोलकर या हल्के गर्म दूध के साथ पिएँ। रोज़ाना नियमित रूप से सेवन करें और निर्धारित मात्रा से अधिक न लें।"],
+  ["इसकी कीमत क्या है?", "एक 150g बोतल का offer price ₹999 है। Online Payment पर 10% discount उपलब्ध है।"],
+  ["ऑर्डर कैसे करें?", "अपना course चुनें और BUY NOW दबाएँ। आप Google Pay, PhonePe, Paytm, BharatPe, BHIM UPI, किसी अन्य UPI app या Cash on Delivery से ऑर्डर कर सकते हैं। UPI payment के बाद receipt या UTR WhatsApp पर भेजें।"],
+  ["क्या Cash on Delivery उपलब्ध है?", "हाँ, सेवा-योग्य पिन कोड पर Cash on Delivery उपलब्ध है। उपलब्धता WhatsApp पर confirm की जाएगी।"],
+  ["पैकिंग कैसी होगी?", "ऑर्डर सादा, सुरक्षित और गोपनीय पैकिंग में भेजा जाएगा।"],
+  ["क्या यह किसी बीमारी का इलाज है?", "नहीं। यह सामान्य वेलनेस सपोर्ट के लिए प्रस्तुत प्रोडक्ट है और किसी बीमारी के इलाज, रोकथाम या cure का दावा नहीं करता।"],
+  ["MAX X7 Capsule + MAX X100 Oil Combo का उपयोग कैसे करें?", "रोज़ खाना खाने के बाद 1 MAX X7 capsule लें। MAX X100 oil से रोज़ नियमित रूप से हल्की मालिश करें। Product label पर दिए निर्देशों को प्राथमिकता दें।"],
+  ["MAX Combo की कीमत क्या है?", "MRP ₹2,500 है। Limited Time Online Payment Offer में MAX X7 Capsule + MAX X100 Oil Combo ₹1,499 में उपलब्ध है।"],
+];
+
+const testimonialSamples = [
+  { name: "Rahul S.", city: "Delhi", text: "Packing पूरी तरह private थी और WhatsApp पर order process बहुत आसान रहा।" },
+  { name: "Amit K.", city: "Jaipur", text: "Product सही condition में मिला। इस्तेमाल की जानकारी भी साफ़ तरीके से समझाई गई।" },
+  { name: "Vikas R.", city: "Lucknow", text: "Daily wellness routine में शामिल करना आसान लगा और support team ने जल्दी जवाब दिया।" },
+  { name: "Mohit P.", city: "Chandigarh", text: "Delivery discreet थी। पैक पर Amrit Ayurveda branding और seal सही मिली।" },
+  { name: "Sandeep N.", city: "Gurugram", text: "Course चुनने और payment करने में कोई परेशानी नहीं हुई। अच्छा buying experience रहा।" },
+  { name: "Arjun M.", city: "Pune", text: "Routine, balanced diet और sleep के साथ wellness पर focus करना आसान हुआ।" },
+  { name: "Deepak T.", city: "Bhopal", text: "Product presentation premium लगी और WhatsApp assistance काफी helpful रही।" },
+  { name: "Nitin J.", city: "Surat", text: "Private parcel समय पर मिला। Order से delivery तक communication clear रहा।" },
+  { name: "Harish K.", city: "Indore", text: "Instructions simple हैं और daily routine में इसे manage करना convenient लगा।" },
+  { name: "Akash D.", city: "New Delhi", text: "COD confirm करने से लेकर parcel मिलने तक पूरा process smooth रहा।" },
+  { name: "Manoj L.", city: "Patna", text: "Packaging भरोसेमंद लगी और product के बारे में पूछे सवालों का जवाब जल्दी मिला।" },
+  { name: "Gaurav B.", city: "Noida", text: "Wellness support के लिए एक straightforward option लगा। Service experience अच्छा रहा।" },
+];
+
+const heroSlides = [
+  {
+    src: "/product-model-premium.webp",
+    alt: "TAKAT POWER X के साथ adult Indian wellness model",
+    eyebrow: "BOLD • PREMIUM • PRIVATE",
+    title: "Confidence, Presented Beautifully",
+    text: "Amrit Ayurveda का premium पुरुष wellness experience",
+    tone: "ruby",
+  },
+  {
+    src: "/romantic-couple-premium.webp",
+    alt: "खुश adult Indian couple की romantic wellness lifestyle",
+    eyebrow: "ROMANCE • WELLNESS",
+    title: "Closer Moments, Better Confidence",
+    text: "Couple wellness को tasteful, private और premium अंदाज़ में",
+    tone: "gold",
+  },
+  {
+    src: "/couple-silhouette-premium.webp",
+    alt: "adult romantic couple की elegant silhouette",
+    eyebrow: "PRIVATE MOMENTS",
+    title: "A Quiet Spark Between Two",
+    text: "Discreet delivery, personal support और confident wellness",
+    tone: "ruby",
+  },
+  {
+    src: "/hero-premium.webp",
+    alt: "TAKAT POWER X का प्रीमियम आयुर्वेदिक product display",
+    eyebrow: "25 SUPER HERBS",
+    title: "Premium Ayurvedic Wellness",
+    text: "अफ़्रीकन हर्ब्स और शुद्ध शिलाजीत का thoughtfully crafted blend",
+    tone: "gold",
+  },
+];
+
+export default function Home() {
+  const formStartedRef = useRef(false);
+  const [ageGateOpen, setAgeGateOpen] = useState(false);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [carouselPaused, setCarouselPaused] = useState(false);
+  const [selectedQty, setSelectedQty] = useState(1);
+  const [cartQty, setCartQty] = useState(0);
+  const [cartProductId, setCartProductId] = useState<ProductId>("takat-power-x");
+  const [cartOpen, setCartOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<"cod" | "upi">("cod");
+  const [paymentRef, setPaymentRef] = useState("TPX-PENDING");
+  const [reviewStart, setReviewStart] = useState(0);
+  const [detailsError, setDetailsError] = useState(false);
+  const [orderSaving, setOrderSaving] = useState(false);
+  const [orderError, setOrderError] = useState("");
+  const [savedOrderId, setSavedOrderId] = useState("");
+  const [confirmedOrder, setConfirmedOrder] = useState<ConfirmedOrder | null>(null);
+  const [orderSuccessOpen, setOrderSuccessOpen] = useState(false);
+  const [scrollOfferOpen, setScrollOfferOpen] = useState(false);
+  const [scrollOfferDismissed, setScrollOfferDismissed] = useState(false);
+  const [quickOrderOpen, setQuickOrderOpen] = useState(false);
+  const [quickOrderQty, setQuickOrderQty] = useState(1);
+  const quickOrderRef = useRef<{ key: string; id: string } | null>(null);
+  const [quickOrderSaving, setQuickOrderSaving] = useState(false);
+  const [quickOrderError, setQuickOrderError] = useState("");
+  const [quickCustomer, setQuickCustomer] = useState<CustomerDetails>({
+    name: "",
+    mobile: "",
+    address: "",
+    pincode: "",
+  });
+  const [callbackOpen, setCallbackOpen] = useState(false);
+  const [callbackName, setCallbackName] = useState("");
+  const [callbackMobile, setCallbackMobile] = useState("");
+  const [callbackSaving, setCallbackSaving] = useState(false);
+  const [callbackMessage, setCallbackMessage] = useState("");
+  const [offerTimeLeft, setOfferTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [customer, setCustomer] = useState<CustomerDetails>({
+    name: "",
+    mobile: "",
+    address: "",
+    pincode: "",
+  });
+
+  useEffect(() => {
+    if (localStorage.getItem("amrit-age-confirmed") === "yes") setAgeGateOpen(false);
+  }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    ["fbclid", "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"].forEach(key => {
+      const value = params.get(key);
+      if (value) sessionStorage.setItem(`amrit-${key}`, value);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!ageGateOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, [ageGateOpen]);
+
+  useEffect(() => {
+    if (ageGateOpen || scrollOfferDismissed || cartOpen || orderSuccessOpen || quickOrderOpen) return;
+
+    const openOfferOnScroll = () => {
+      if (window.scrollY < 90) return;
+      setScrollOfferOpen(true);
+      window.removeEventListener("scroll", openOfferOnScroll);
+    };
+
+    window.addEventListener("scroll", openOfferOnScroll, { passive: true });
+    return () => window.removeEventListener("scroll", openOfferOnScroll);
+  }, [ageGateOpen, scrollOfferDismissed, cartOpen, orderSuccessOpen, quickOrderOpen]);
+
+  useEffect(() => {
+    if (!scrollOfferOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setScrollOfferOpen(false);
+        setScrollOfferDismissed(true);
+      }
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [scrollOfferOpen]);
+
+  useEffect(() => {
+    if (!quickOrderOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && !quickOrderSaving) setQuickOrderOpen(false);
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [quickOrderOpen, quickOrderSaving]);
+
+  useEffect(() => {
+    const rotation = window.setInterval(() => {
+      setReviewStart(current => (current + 1) % testimonialSamples.length);
+    }, 4000);
+    return () => window.clearInterval(rotation);
+  }, []);
+
+  useEffect(() => {
+    const eventKey = "amrit-meta-viewcontent-home";
+    if (sessionStorage.getItem(eventKey) === "sent") return;
+    const timer = window.setTimeout(() => {
+      sendMetaBrowserEvent("ViewContent", {
+        value: storeProducts["takat-power-x"].codPrice,
+        currency: "INR",
+        content_name: storeProducts["takat-power-x"].name,
+        content_ids: ["takat-power-x"],
+        content_type: "product",
+      });
+      sessionStorage.setItem(eventKey, "sent");
+    }, 800);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (carouselPaused || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const rotation = window.setInterval(() => {
+      setActiveSlide(current => (current + 1) % heroSlides.length);
+    }, 4600);
+    return () => window.clearInterval(rotation);
+  }, [carouselPaused]);
+
+  useEffect(() => {
+    const saved = Number(localStorage.getItem("amrit-cart-qty") || 0);
+    if (Number.isFinite(saved) && saved > 0) setCartQty(saved);
+    const savedProduct = localStorage.getItem("amrit-cart-product");
+    if (savedProduct === "takat-power-x" || savedProduct === "max-x7-x100-combo") setCartProductId(savedProduct);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("amrit-cart-qty", String(cartQty));
+    localStorage.setItem("amrit-cart-product", cartProductId);
+    if (cartQty > 0) setPaymentRef(`${storeProducts[cartProductId].orderPrefix}${Date.now()}`);
+  }, [cartProductId, cartQty]);
+
+  useEffect(() => {
+    if (!cartOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setCartOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [cartOpen]);
+
+  useEffect(() => {
+    if (cartOpen && cartQty > 0) {
+      trackActivity("cart_open", "Cart opened");
+    }
+  }, [cartOpen]);
+
+  useEffect(() => {
+    const now = Date.now();
+    const savedEndsAt = Number(localStorage.getItem(comboOfferStorageKey));
+    let offerEndsAt = Number.isFinite(savedEndsAt)
+      && savedEndsAt > now
+      && savedEndsAt - now <= comboOfferDurationMs
+      ? savedEndsAt
+      : now + comboOfferDurationMs;
+
+    localStorage.setItem(comboOfferStorageKey, String(offerEndsAt));
+
+    const updateOfferTimer = () => {
+      let remaining = offerEndsAt - Date.now();
+
+      if (remaining <= 0) {
+        offerEndsAt = Date.now() + comboOfferDurationMs;
+        localStorage.setItem(comboOfferStorageKey, String(offerEndsAt));
+        remaining = offerEndsAt - Date.now();
+      }
+
+      setOfferTimeLeft({
+        days: Math.floor(remaining / 86400000),
+        hours: Math.floor((remaining % 86400000) / 3600000),
+        minutes: Math.floor((remaining % 3600000) / 60000),
+        seconds: Math.floor((remaining % 60000) / 1000),
+      });
+    };
+    updateOfferTimer();
+    const timer = window.setInterval(updateOfferTimer, 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const selectedCourse = courses.find(course => course.qty === selectedQty) ?? courses[0];
+  const activeProduct = storeProducts[cartProductId];
+  const codTotal = cartQty * activeProduct.codPrice;
+  const onlineTotal = Number((cartQty * activeProduct.onlinePrice).toFixed(2));
+  const onlineSavings = Number((codTotal - onlineTotal).toFixed(2));
+  const payableTotal = paymentMethod === "upi" ? onlineTotal : codTotal;
+  const customerDetailsValid = customer.name.trim().length >= 2
+    && /^[6-9]\d{9}$/.test(customer.mobile)
+    && customer.address.trim().length >= 5
+    && /^\d{6}$/.test(customer.pincode);
+  const customerMessage = `Customer Name: ${customer.name}\nMobile: ${customer.mobile}\nHome Address: ${customer.address}\nPIN Code: ${customer.pincode}`;
+  const whatsappUrl = useMemo(() => {
+    const qty = cartQty || selectedQty;
+    const regularTotal = qty * activeProduct.codPrice;
+    const discountedTotal = Number((qty * activeProduct.onlinePrice).toFixed(2));
+    const paymentLabel = paymentMethod === "cod" ? "Cash on Delivery (parcel मिलने पर payment)" : "UPI payment";
+    const orderTotal = paymentMethod === "upi" ? discountedTotal : regularTotal;
+    const discountLine = paymentMethod === "upi" ? `\nOnline Offer: ${activeProduct.offerLabel}` : "";
+    const message = `नमस्ते, मुझे ${activeProduct.name} ऑर्डर करना है।\n\n${customerMessage}\n\nQuantity: ${qty}\nPack: ${activeProduct.cartDetail}\nTotal: ₹${formatPrice(orderTotal)}${discountLine}\nPayment: ${paymentLabel}\nकृपया ऑर्डर confirm करें।`;
+    return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  }, [activeProduct, cartQty, customerMessage, paymentMethod, selectedQty]);
+  const paymentWhatsappUrl = useMemo(() => {
+    const message = `नमस्ते, मैंने ${activeProduct.name} के लिए UPI payment किया है।\n\n${customerMessage}\n\nQuantity: ${cartQty}\nPack: ${activeProduct.cartDetail}\nMRP/COD Amount: ₹${formatPrice(codTotal)}\nOnline Offer: ${activeProduct.offerLabel}\nPaid Amount: ₹${formatPrice(onlineTotal)}\nPayment reference: ${paymentRef}\nमैं payment screenshot/UTR भेज रहा हूँ। कृपया order confirm करें।`;
+    return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  }, [activeProduct, cartQty, codTotal, customerMessage, onlineTotal, paymentRef]);
+  const upiPaymentUrl = useMemo(() => {
+    const params = new URLSearchParams({
+      pa: upiId,
+      pn: "AMRIT AYURVEDA",
+      tn: `Amrit Ayurveda ${activeProduct.shortName} ${paymentRef} - Qty ${cartQty}`,
+      am: onlineTotal.toFixed(2),
+      cu: "INR",
+    });
+    return `upi://pay?${params.toString()}`;
+  }, [activeProduct.shortName, cartQty, onlineTotal, paymentRef]);
+
+  function sendMetaBrowserEvent(..._args: unknown[]) {
+    // Meta analytics intentionally disabled. Website/CRM functionality remains unchanged.
+  }
+
+  async function submitCallbackLead() {
+    const mobile = callbackMobile.replace(/\D/g, "").slice(0, 10);
+    if (!/^[6-9]\d{9}$/.test(mobile)) {
+      setCallbackMessage("कृपया सही 10-digit mobile number डालें।");
+      return;
+    }
+
+    setCallbackSaving(true);
+    setCallbackMessage("");
+    try {
+      const result = await submitCrmForm("website_callback_lead", {
+        name: callbackName.trim(),
+        mobile,
+        session_id: activitySessionId(),
+        path: window.location.pathname,
+        source: "Website Callback Lead",
+        product: activeProduct.shortName,
+        utm_source: sessionStorage.getItem("amrit-utm_source") || "",
+        utm_campaign: sessionStorage.getItem("amrit-utm_campaign") || "",
+        fbclid: sessionStorage.getItem("amrit-fbclid") || "",
+      });
+      if (!result?.ok) throw new Error("Lead save failed");
+      setCallbackMessage("✓ आपका नंबर save हो गया। हमारी टीम आपको call करेगी।");
+      setCallbackMobile("");
+      trackActivity("callback_lead_submit", "Website callback lead submitted");
+    } catch {
+      setCallbackMessage("Lead save नहीं हुआ। Internet check करके दोबारा try करें।");
+    } finally {
+      setCallbackSaving(false);
+    }
+  }
+
+  function openQuickOrder(qty = 1) {
+    const safeQty = Math.max(1, Math.min(3, Number(qty) || 1));
+    setQuickOrderQty(safeQty);
+    setQuickOrderError("");
+    setScrollOfferOpen(false);
+    setScrollOfferDismissed(true);
+    setQuickOrderOpen(true);
+    sendMetaBrowserEvent("InitiateCheckout", {
+      value: quickOrderPacks.find(pack => pack.qty === safeQty)?.price ?? 999,
+      currency: "INR",
+      content_name: "TAKAT POWER X",
+      content_ids: ["takat-power-x"],
+      content_type: "product",
+      num_items: safeQty,
+    }, `TPX-QUICK-${Date.now()}`);
+  }
+
+  function buyCourse(qty: number) {
+    openQuickOrder(qty);
+  }
+
+  function updateQuickCustomer(field: keyof CustomerDetails, value: string) {
+    setQuickCustomer(current => ({ ...current, [field]: value }));
+    setQuickOrderError("");
+  }
+
+  async function submitQuickCodOrder() {
+    const valid = quickCustomer.name.trim().length >= 2
+      && /^[6-9]\d{9}$/.test(quickCustomer.mobile)
+      && quickCustomer.address.trim().length >= 5
+      && /^\d{6}$/.test(quickCustomer.pincode);
+
+    if (!valid) {
+      setQuickOrderError("कृपया नाम, 10-digit mobile, पूरा address और 6-digit PIN code सही भरें।");
+      return;
+    }
+
+    const selectedPack = quickOrderPacks.find(pack => pack.qty === quickOrderQty) ?? quickOrderPacks[0];
+    const key = JSON.stringify([quickCustomer, selectedPack.qty]);
+    if (quickOrderRef.current?.key !== key) quickOrderRef.current = { key, id: crypto.randomUUID() };
+    const orderId = quickOrderRef.current.id;
+    setQuickOrderSaving(true);
+    setQuickOrderError("");
+
+    try {
+      const isReorder = localStorage.getItem("amrit-last-order-phone") === quickCustomer.mobile;
+      const result = await submitCrmForm("website_order", {
+        customer: quickCustomer.name.trim(),
+        phone: quickCustomer.mobile,
+        address: quickCustomer.address.trim(),
+        state: "Unknown",
+        district: "Unknown",
+        city: "Unknown",
+        pincode: quickCustomer.pincode,
+        product: "TAKAT POWER X",
+        quantity: String(selectedPack.qty),
+        pack: "quick-cod",
+        payment: "COD",
+        amount: String(selectedPack.price),
+        order_id: orderId,
+        notes: `${selectedPack.title} • ${selectedPack.detail} • Quick COD popup`,
+        order_type: isReorder ? "Reorder" : "Order",
+        website: "",
+      });
+
+      if (!result?.ok) throw new Error("CRM save failed");
+
+      localStorage.setItem("amrit-last-order-phone", quickCustomer.mobile);
+      sendMetaBrowserEvent("Purchase", {
+        value: selectedPack.price,
+        currency: "INR",
+        content_name: "TAKAT POWER X",
+        content_ids: ["takat-power-x"],
+        content_type: "product",
+        num_items: selectedPack.qty,
+      }, orderId);
+
+      setConfirmedOrder({
+        id: String(result.order.orderCode),
+        customerName: quickCustomer.name.trim(),
+        productName: "TAKAT POWER X",
+        quantity: selectedPack.qty,
+        total: selectedPack.price,
+        method: "COD",
+      });
+      setQuickOrderOpen(false);
+      setOrderSuccessOpen(true);
+      setQuickCustomer({ name: "", mobile: "", address: "", pincode: "" });
+    } catch {
+      setQuickOrderError("Order save नहीं हुआ। Internet check करके दोबारा try करें।");
+    } finally {
+      setQuickOrderSaving(false);
+    }
+  }
+
+  function buyCombo() {
+    window.location.assign("/checkout?product=max-x7-x100-combo&qty=1");
+  }
+
+  function confirmAdultEntry() {
+    localStorage.setItem("amrit-age-confirmed", "yes");
+    setAgeGateOpen(false);
+  }
+
+  function leaveAdultStore() {
+    if (window.history.length > 1) window.history.back();
+    else window.location.replace("https://www.google.com/");
+  }
+
+  function closeScrollOffer() {
+    setScrollOfferOpen(false);
+    setScrollOfferDismissed(true);
+  }
+
+  function orderFromScrollOffer() {
+    setScrollOfferOpen(false);
+    setScrollOfferDismissed(true);
+    openQuickOrder(1);
+  }
+
+  function activitySessionId() {
+    const key = "amrit-website-activity-session";
+    let id = sessionStorage.getItem(key);
+    if (!id) {
+      id = typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : "sess-" + Date.now() + "-" + Math.random().toString(36).slice(2, 10);
+      sessionStorage.setItem(key, id);
+    }
+    return id;
+  }
+
+  async function submitCrmForm(formName: string, fields: Record<string, unknown>) {
+    const endpoint = formName === "website_order"
+      ? "/api/website-order"
+      : formName === "website_callback_lead"
+        ? "/api/website-lead"
+        : "/api/website-activity";
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(fields),
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || result?.ok === false) {
+      throw new Error(String(result?.error || "CRM save failed"));
+    }
+    return result;
+  }
+
+  function trackActivity(
+    eventType: string,
+    label: string,
+    product = activeProduct.shortName,
+    quantity = Math.max(1, cartQty || 1),
+    orderRef = paymentRef,
+  ) {
+    void submitCrmForm("website_activity", {
+      event_type: eventType,
+      session_id: activitySessionId(),
+      label,
+      path: window.location.pathname,
+      product,
+      quantity: String(quantity),
+      order_ref: orderRef,
+      website: "",
+    }).catch(() => undefined);
+  }
+
+  function sendMetaPurchase(..._args: unknown[]) {
+    // Meta analytics intentionally disabled. Purchase remains recorded in CRM only.
+  }
+
+  function updateCustomer(field: keyof CustomerDetails, value: string) {
+    if (!formStartedRef.current) {
+      formStartedRef.current = true;
+      sendMetaBrowserEvent("InitiateCheckout", {
+        value: payableTotal,
+        currency: "INR",
+        content_name: activeProduct.name,
+        content_ids: [cartProductId],
+        content_type: "product",
+        num_items: Math.max(1, cartQty),
+      }, `${paymentRef}-checkout`);
+      trackActivity("form_start", "Checkout delivery form started");
+    }
+    setCustomer(current => ({ ...current, [field]: value }));
+    setDetailsError(false);
+    setOrderError("");
+  }
+
+  async function submitWebsiteOrder(method: "cod" | "upi") {
+    if (savedOrderId === paymentRef) {
+      setOrderSuccessOpen(true);
+      return true;
+    }
+    setOrderSaving(true);
+    setOrderError("");
+    try {
+      const isReorder = localStorage.getItem("amrit-last-order-phone") === customer.mobile;
+      const result = await submitCrmForm("website_order", {
+        customer: customer.name.trim(),
+        phone: customer.mobile,
+        address: customer.address.trim(),
+        state: "Unknown",
+        district: "Unknown",
+        city: "Unknown",
+        pincode: customer.pincode,
+        product: activeProduct.name,
+        quantity: String(cartQty),
+        payment: method === "upi" ? "Prepaid" : "COD",
+        amount: String(method === "upi" ? onlineTotal : codTotal),
+        order_id: paymentRef,
+        notes: activeProduct.cartDetail,
+        order_type: isReorder ? "Reorder" : "Order",
+        website: "",
+      });
+      if (!result.ok) throw new Error("Order CRM में save नहीं हुआ");
+
+      const purchaseValue = method === "upi" ? onlineTotal : codTotal;
+      sendMetaPurchase(purchaseValue, paymentRef);
+
+      localStorage.setItem("amrit-last-order-phone", customer.mobile);
+      trackActivity(isReorder ? "reorder_submit" : "order_submit", isReorder ? "Reorder submitted" : "Order submitted");
+      setSavedOrderId(paymentRef);
+      setConfirmedOrder({
+        id: String(result.order.orderCode),
+        customerName: customer.name.trim(),
+        productName: activeProduct.shortName,
+        quantity: cartQty,
+        total: method === "upi" ? onlineTotal : codTotal,
+        method: method.toUpperCase() as "COD" | "UPI",
+      });
+      setOrderSuccessOpen(true);
+      return true;
+    } catch {
+      setOrderError("Order save नहीं हुआ। Internet check करके दोबारा try करें।");
+      return false;
+    } finally {
+      setOrderSaving(false);
+    }
+  }
+
+  async function confirmCodOrder(event: MouseEvent<HTMLAnchorElement>) {
+    event.preventDefault();
+    window.location.assign(`/checkout?product=${cartProductId}&qty=${Math.max(1, cartQty || selectedQty)}`);
+  }
+
+  function requireCustomerDetails(event: MouseEvent<HTMLAnchorElement>) {
+    if (customerDetailsValid) return;
+    event.preventDefault();
+    setDetailsError(true);
+    document.querySelector("#delivery-details")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  async function openSpecificUpiApp(event: MouseEvent<HTMLAnchorElement>, app: UpiAppTarget) {
+    if (!customerDetailsValid) {
+      requireCustomerDetails(event);
+      return;
+    }
+
+    event.preventDefault();
+    if (!(await submitWebsiteOrder("upi"))) return;
+    if (!/Android/i.test(window.navigator.userAgent)) {
+      window.location.assign(upiPaymentUrl);
+      return;
+    }
+    const target = upiAppTargets[app];
+    const paymentQuery = upiPaymentUrl.slice("upi://pay?".length);
+    const appIntentUrl = `intent://pay?${paymentQuery}#Intent;scheme=upi;package=${target.packageName};S.browser_fallback_url=${encodeURIComponent(target.storeUrl)};end`;
+    window.location.assign(appIntentUrl);
+  }
+
+  async function beginUpiOrder(event: MouseEvent<HTMLAnchorElement>) {
+    event.preventDefault();
+    if (!customerDetailsValid) {
+      requireCustomerDetails(event);
+      return;
+    }
+    if (await submitWebsiteOrder("upi")) window.location.assign(upiPaymentUrl);
+  }
+
+  function showPreviousSlide() {
+    setActiveSlide(current => (current - 1 + heroSlides.length) % heroSlides.length);
+  }
+
+  function showNextSlide() {
+    setActiveSlide(current => (current + 1) % heroSlides.length);
+  }
+
   return (
-    <main className="tpx-page">
-      <div className="shipping-strip">
-        <span>🌿 Free Shipping on All Orders</span>
-        <span>Cash on Delivery Available</span>
-        <span>100% Ayurvedic</span>
-      </div>
+    <main className="siteRoot">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      {ageGateOpen && <div className="ageGateOverlay" role="dialog" aria-modal="true" aria-labelledby="age-gate-title">
+        <section className="ageGateCard">
+          <span className="ageSeal">18+</span>
+          <p className="sectionKicker center">PRIVATE ADULT WELLNESS</p>
+          <h2 id="age-gate-title">यह website केवल वयस्कों के लिए है</h2>
+          <p>आगे बढ़कर आप पुष्टि करते हैं कि आपकी उम्र 18 वर्ष या उससे अधिक है। सभी visuals tasteful wellness presentation हैं।</p>
+          <button className="redButton" onClick={confirmAdultEntry}>हाँ, मेरी उम्र 18+ है — ENTER</button>
+          <button className="ageExit" onClick={leaveAdultStore}>अभी बाहर जाएँ</button>
+          <small>PRIVATE • DISCREET • RESPONSIBLE</small>
+        </section>
+      </div>}
+      {quickOrderOpen && !ageGateOpen && !orderSuccessOpen && (
+        <div className="quickOrderOverlay" role="dialog" aria-modal="true" aria-labelledby="quick-order-title" onMouseDown={() => { if (!quickOrderSaving) setQuickOrderOpen(false); }}>
+          <section className="quickOrderCard" onMouseDown={event => event.stopPropagation()}>
+            <button className="quickOrderClose" type="button" aria-label="ऑर्डर फॉर्म बंद करें" onClick={() => { if (!quickOrderSaving) setQuickOrderOpen(false); }}>×</button>
 
-      <header className="site-header">
-        <div className="menu" aria-hidden="true">☰</div>
-        <div className="brand">
-          <div className="brand-mark">🌿</div>
-          <div>
-            <strong>AMRIT AYURVEDA</strong>
-            <small>Natural Wellness</small>
-          </div>
+            <div className="quickOrderVisual">
+              <img className="quickOrderModel" src="/product-model-premium.webp" alt="Amrit Ayurveda wellness presentation" />
+              <span className="quickOrderShade" aria-hidden="true" />
+              <img className="quickOrderProduct" src="/takat-power-x.jpg" alt="TAKAT POWER X" />
+              <div className="quickOrderBrand"><small>AMRIT AYURVEDA</small><strong>TAKAT POWER X</strong></div>
+            </div>
+
+            <div className="quickOrderBody">
+              <div className="quickOrderIntro">
+                <h2 id="quick-order-title">अपना पैक चुनें — COD उपलब्ध</h2>
+                <p>🔒 सुरक्षित और गोपनीय पैकिंग • Amrit Ayurveda</p>
+              </div>
+
+              <div className="quickOrderAssurance">
+                <strong>🛡️ आसान COD ऑर्डर</strong>
+                <span>नीचे अपना पैक चुनें और delivery details भरें। Parcel मिलने पर payment करें।</span>
+              </div>
+
+              <div className="quickPackGrid" aria-label="TAKAT POWER X pack options">
+                {quickOrderPacks.map(pack => (
+                  <button
+                    type="button"
+                    key={pack.qty}
+                    className={quickOrderQty === pack.qty ? "selected" : ""}
+                    onClick={() => setQuickOrderQty(pack.qty)}
+                    aria-pressed={quickOrderQty === pack.qty}
+                  >
+                    {pack.badge && <i>{pack.badge}</i>}
+                    <span>{pack.title}</span>
+                    <strong>₹{pack.price.toLocaleString("en-IN")}</strong>
+                    <small>{pack.detail}</small>
+                  </button>
+                ))}
+              </div>
+
+              <div className="quickOrderSummary">
+                <span>{quickOrderPacks.find(pack => pack.qty === quickOrderQty)?.title} — {quickOrderPacks.find(pack => pack.qty === quickOrderQty)?.detail}</span>
+                <strong>₹{(quickOrderPacks.find(pack => pack.qty === quickOrderQty)?.price ?? 999).toLocaleString("en-IN")}</strong>
+              </div>
+
+              <div className="quickOrderFields">
+                <label><span>पूरा नाम *</span><input type="text" autoComplete="name" value={quickCustomer.name} onChange={event => updateQuickCustomer("name", event.target.value)} /></label>
+                <label><span>मोबाइल नंबर * (10 अंक)</span><input type="tel" inputMode="numeric" autoComplete="tel" maxLength={10} value={quickCustomer.mobile} onChange={event => updateQuickCustomer("mobile", event.target.value.replace(/\D/g, "").slice(0, 10))} /></label>
+                <label className="wide"><span>पूरा पता *</span><textarea rows={3} autoComplete="street-address" value={quickCustomer.address} onChange={event => updateQuickCustomer("address", event.target.value)} /></label>
+                <label className="wide"><span>पिनकोड * (6 अंक)</span><input type="text" inputMode="numeric" autoComplete="postal-code" maxLength={6} value={quickCustomer.pincode} onChange={event => updateQuickCustomer("pincode", event.target.value.replace(/\D/g, "").slice(0, 6))} /></label>
+              </div>
+
+              {quickOrderError && <p className="quickOrderError" role="alert">{quickOrderError}</p>}
+
+              <div className="quickOrderTrust"><span>🚚 Free Delivery</span><span>📦 Secret Packing</span><span>✅ COD Available</span></div>
+
+              <button className="quickOrderSubmit" type="button" disabled={quickOrderSaving} onClick={() => void submitQuickCodOrder()}>
+                {quickOrderSaving ? "ORDER SAVING…" : `🛒 ₹${(quickOrderPacks.find(pack => pack.qty === quickOrderQty)?.price ?? 999).toLocaleString("en-IN")} — COD ORDER करें`}
+              </button>
+              <small className="quickOrderPrivacy">आपकी details केवल order processing और delivery के लिए Amrit Ayurveda CRM में सुरक्षित save होंगी।</small>
+            </div>
+          </section>
         </div>
-        <a className="top-order" href="/checkout?product=takat-power-x&qty=1&payment=COD">
-          अभी ऑर्डर करें
-        </a>
-      </header>
+      )}
 
-      <section className="landing-shell">
-        <section className="hero-card">
-          <img
-            className="hero-photo"
-            src="/hero-couple.webp"
-            alt="TAKAT POWER X के साथ adult wellness lifestyle"
-          />
-          <div className="hero-shade" />
+      {orderSuccessOpen && confirmedOrder && <div className="orderSuccessOverlay" role="dialog" aria-modal="true" aria-labelledby="order-success-title">
+        <section className="orderSuccessCard">
+          <span className="orderSuccessCheck" aria-hidden="true">✓</span>
+          <p className="sectionKicker center">AMRIT AYURVEDA</p>
+          <h2 id="order-success-title">ऑर्डर कन्फर्म!</h2>
+          <p className="orderCustomerThanks">धन्यवाद, <strong>{confirmedOrder.customerName} जी</strong></p>
+          <p className="orderSuccessMessage">आपका {confirmedOrder.method} ऑर्डर सफलतापूर्वक प्राप्त हो गया है।</p>
+          <div className="confirmedOrderSummary">
+            <p><strong>{confirmedOrder.quantity} {confirmedOrder.quantity === 1 ? "Pack" : "Packs"}</strong><span>₹{formatPrice(confirmedOrder.total)}</span></p>
+            <small>{confirmedOrder.productName}</small>
+          </div>
+          <p className="orderConfirmationCode"><span>CONFIRMATION CODE / ORDER ID</span><strong>{confirmedOrder.id}</strong></p>
+          <div className="orderContactMessage">
+            <strong>Amrit Ayurveda टीम जल्द ही आपसे संपर्क करेगी।</strong>
+            <p>हम आपके दिए हुए mobile number पर ऑर्डर की पुष्टि के लिए संपर्क करेंगे। कृपया अपना फोन उपलब्ध रखें।</p>
+          </div>
+          <p className="orderDispatchMessage">ऑर्डर की पुष्टि होने के बाद आपका parcel सुरक्षित तरीके से pack करके भेजा जाएगा।</p>
+          <div className="orderTrustRow"><span>100% गोपनीय पैकेजिंग</span><span>सुरक्षित डिलीवरी</span></div>
+          <button className="redButton" onClick={() => { setOrderSuccessOpen(false); setCartOpen(false); }}>ठीक है</button>
+          <small className="orderHelpNote">सहायता के लिए WhatsApp विकल्प वेबसाइट पर उपलब्ध है।</small>
+        </section>
+      </div>}
+      {scrollOfferOpen && !ageGateOpen && !cartOpen && !orderSuccessOpen && !quickOrderOpen && (
+        <div className="scrollOfferOverlay" role="dialog" aria-modal="true" aria-labelledby="scroll-offer-title" onClick={closeScrollOffer}>
+          <section className="scrollOfferCard" onClick={event => event.stopPropagation()}>
+            <button className="scrollOfferClose" type="button" aria-label="ऑफर बंद करें" onClick={closeScrollOffer}>×</button>
+            <span className="scrollOfferBadge">⚡ LIMITED STOCK</span>
+            <p className="scrollOfferLead">रुकिए! जाने से पहले</p>
+            <h2 id="scroll-offer-title">यह ऑफर मत छोड़िए</h2>
+            <p className="scrollOfferPrice"><strong>TAKAT POWER X</strong> अब सिर्फ <b>₹999</b> में</p>
+            <p className="scrollOfferCod">✅ Cash on Delivery उपलब्ध</p>
+            <button className="scrollOfferButton" type="button" onClick={orderFromScrollOffer}>अभी ऑर्डर करें ₹999 COD</button>
+            <small className="scrollOfferTrust">🔒 100% Discreet Packaging · Free Delivery</small>
+          </section>
+        </div>
+      )}
 
-          <div className="hero-copy">
-            <p className="hindi-kicker">आयुर्वेदिक शक्ति<br />रोज़ की एनर्जी के लिए</p>
-            <h1>TAKAT<br />POWER X</h1>
-            <div className="gold-label">Ayurvedic Vitality<br />Support for Men</div>
-            <p className="support-copy">Supports Daily Stamina<br />Promotes Physical Energy</p>
+      <div className="tpxReferenceTop" id="home">
+        <div className="tpxShippingStrip">
+          <span>🌿 Free Shipping on All Orders</span>
+          <span>Cash on Delivery Available</span>
+          <span>100% Ayurvedic</span>
+        </div>
 
-            <div className="benefit-list">
-              <div><b>🌿 25+</b><span>SUPER HERBS</span></div>
-              <div><b>🥣 100%</b><span>AYURVEDIC WELLNESS</span></div>
-              <div><b>🍃 NATURAL</b><span>INGREDIENT FOCUS</span></div>
-              <div><b>✓ QUALITY</b><span>FOCUSED FORMULA</span></div>
+        <header className="tpxReferenceHeader">
+          <button
+            className="tpxMenuIcon"
+            type="button"
+            aria-label="Menu"
+            onClick={() => setMenuOpen(value => !value)}
+          >☰</button>
+          <a className="tpxReferenceBrand" href="#home" aria-label="Amrit Ayurveda home">
+            <span className="tpxBrandLeaf">🌿</span>
+            <span><strong>AMRIT AYURVEDA</strong><small>Natural Wellness</small></span>
+          </a>
+          <button className="tpxTopOrder" type="button" onClick={() => openQuickOrder(1)}>
+            अभी ऑर्डर करें
+          </button>
+        </header>
+
+        <section className="tpxReferenceShell" aria-label="TAKAT POWER X">
+          <div className="tpxReferenceHero">
+            <img
+              className="tpxReferenceHeroPhoto"
+              src="/hero-couple.webp"
+              alt="Outdoor wellness lifestyle"
+              fetchPriority="high"
+            />
+            <div className="tpxReferenceHeroShade" aria-hidden="true" />
+
+            <div className="tpxReferenceCopy">
+              <p className="tpxHindiLead">आयुर्वेदिक शक्ति<br />रोज़ की एनर्जी के लिए</p>
+              <h1>TAKAT<br />POWER X</h1>
+              <div className="tpxGoldLabel">Ayurvedic Vitality<br />Support for Men</div>
+              <p className="tpxSupportText">Supports Daily Stamina<br />Promotes Physical Energy</p>
+
+              <div className="tpxBenefitStack">
+                <div><b>🌿 25+</b><span>SUPER HERBS</span></div>
+                <div><b>🥣 100%</b><span>AYURVEDIC HERBS</span></div>
+                <div><b>🍃 NATURAL</b><span>INGREDIENTS</span></div>
+                <div><b>✓ QUALITY</b><span>FOCUSED FORMULA</span></div>
+              </div>
+            </div>
+
+            <div className="tpxProductStage">
+              <img src="/takat-power-x.jpg" alt="TAKAT POWER X product pack" />
+            </div>
+
+            <div className="tpxFeatureBar">
+              <div><b>25+</b><span>SUPER<br />HERBS</span></div>
+              <div><b>100%</b><span>AYURVEDIC<br />HERBS</span></div>
+              <div><b>🌿</b><span>NATURAL<br />INGREDIENTS</span></div>
+              <div><b>✓</b><span>QUALITY<br />FOCUSED</span></div>
             </div>
           </div>
 
-          <div className="hero-product-card">
-            <img src="/takat-power-x.jpg" alt="TAKAT POWER X product bottle" />
-          </div>
+          <div className="tpxReferenceBuy">
+            <h2>TAKAT POWER X — रोज़ की वेलनेस के लिए आयुर्वेदिक सपोर्ट</h2>
+            <div className="tpxReferencePrice"><strong>Rs. 999.00</strong><del>Rs. 1,500.00</del></div>
+            <p className="tpxTaxes">Taxes included.</p>
 
-          <div className="feature-row">
-            <div><b>25+</b><span>SUPER<br />HERBS</span></div>
-            <div><b>100%</b><span>AYURVEDIC<br />WELLNESS</span></div>
-            <div><b>🌿</b><span>NATURAL<br />FOCUS</span></div>
-            <div><b>✓</b><span>QUALITY<br />FOCUSED</span></div>
-          </div>
-        </section>
+            <button className="tpxBuyButton tpxCodButton" type="button" onClick={() => openQuickOrder(1)}>
+              🛒 अभी ऑर्डर करें — Cash on Delivery
+            </button>
+            <button
+              className="tpxBuyButton tpxOnlineButton"
+              type="button"
+              onClick={() => {
+                setCartProductId("takat-power-x");
+                setCartQty(1);
+                setSelectedQty(1);
+                setPaymentMethod("upi");
+                setCartOpen(true);
+                trackActivity("payment_method", "Online payment selected from hero");
+              }}
+            >
+              ▱ Pay Online &amp; Get 10% Extra Discount
+            </button>
+            <p className="tpxPaymentNote">UPI / Google Pay / PhonePe / Paytm</p>
 
-        <section className="purchase-panel" id="order">
-          <h2>TAKAT POWER X — रोज़ की वेलनेस के लिए आयुर्वेदिक सपोर्ट</h2>
-          <div className="price-line">
-            <strong>Rs. 999.00</strong>
-            <del>Rs. 1,500.00</del>
-          </div>
-          <p className="taxes">Taxes included.</p>
-
-          <a className="buy-btn cod" href="/checkout?product=takat-power-x&qty=1&payment=COD">
-            🛒 अभी ऑर्डर करें — Cash on Delivery
-          </a>
-          <a className="buy-btn prepaid" href="/checkout?product=takat-power-x&qty=1&payment=Prepaid">
-            ▱ Pay Online &amp; Get 10% Extra Discount
-          </a>
-          <p className="payment-note">UPI / Debit Card / Credit Card / Net Banking</p>
-
-          <div className="sale-copy">
-            <strong>Hurry up! Limited Offer</strong>
-            <span>TAKAT POWER X ₹999 COD</span>
+            <div className="tpxSaleLine">
+              <strong>Hurry up! Limited Offer</strong>
+              <button type="button" onClick={() => openQuickOrder(1)}>अभी ऑर्डर करें ₹999 COD</button>
+            </div>
           </div>
         </section>
+
+        <style>{`
+          .tpxReferenceTop{background:#fff7df;color:#141414;font-family:Arial,Helvetica,sans-serif}
+          .tpxShippingStrip{min-height:32px;display:flex;align-items:center;justify-content:center;gap:9px;padding:6px 10px;background:#fff;border-bottom:1px solid #eee8d9;color:#555;font-size:11px;text-align:center}
+          .tpxShippingStrip span+span:before{content:"|";margin-right:9px;color:#aaa}
+          .tpxReferenceHeader{height:72px;display:grid;grid-template-columns:54px 1fr 132px;align-items:center;padding:0 14px;background:#fff;border-bottom:1px solid #ece7da}
+          .tpxMenuIcon{border:0;background:transparent;color:#333;font-size:24px;cursor:pointer}
+          .tpxReferenceBrand{justify-self:center;display:flex;align-items:center;gap:8px;color:#244d2d;text-decoration:none}
+          .tpxReferenceBrand>span:last-child{display:grid;line-height:1.05}
+          .tpxReferenceBrand strong{font-size:14px;letter-spacing:.5px}
+          .tpxReferenceBrand small{margin-top:4px;color:#9a752c;font-size:9px;letter-spacing:1px;text-transform:uppercase}
+          .tpxBrandLeaf{width:40px;height:40px;display:grid;place-items:center;border:2px solid #2f6b3a;border-radius:50%;background:#fffdf4;font-size:21px}
+          .tpxTopOrder{justify-self:end;border:0;border-radius:999px;background:#37643f;color:#fff;padding:10px 14px;font-size:11px;font-weight:900;cursor:pointer}
+          .tpxReferenceShell{width:min(100%,930px);margin:0 auto;padding:30px 12px 34px}
+          .tpxReferenceHero{position:relative;min-height:1040px;overflow:hidden;border-radius:12px;background:#070706;box-shadow:0 8px 28px rgba(36,24,0,.14)}
+          .tpxReferenceHeroPhoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:66% center}
+          .tpxReferenceHeroShade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.98) 0%,rgba(0,0,0,.91) 29%,rgba(0,0,0,.50) 56%,rgba(0,0,0,.08) 80%),linear-gradient(0deg,rgba(0,0,0,.70) 0%,transparent 42%)}
+          .tpxReferenceCopy{position:relative;z-index:2;width:56%;padding:52px 28px 225px 48px;color:#fff}
+          .tpxHindiLead{margin:0 0 14px;color:#f5f0e5;font-size:30px;line-height:1.22;font-weight:900}
+          .tpxReferenceCopy h1{margin:0 0 15px;color:#e1a326;font-size:clamp(68px,9vw,112px);line-height:.84;letter-spacing:-3px;font-weight:1000;text-shadow:0 3px 14px rgba(0,0,0,.25)}
+          .tpxGoldLabel{display:inline-block;margin-top:9px;padding:13px 19px 15px;border-radius:10px;background:linear-gradient(180deg,#daa92b,#b97c13);color:#111;font-size:24px;line-height:1.17;font-weight:900}
+          .tpxSupportText{margin:28px 0;color:#fff;font-size:21px;line-height:1.5;font-weight:800}
+          .tpxBenefitStack{display:grid;max-width:350px;margin-top:24px}
+          .tpxBenefitStack>div{display:grid;grid-template-columns:112px 1fr;align-items:center;gap:8px;min-height:78px;border-bottom:1px dotted rgba(224,162,34,.60)}
+          .tpxBenefitStack b{color:#e4b348;font-size:18px}.tpxBenefitStack span{font-size:15px;font-weight:800;letter-spacing:.35px}
+          .tpxProductStage{position:absolute;z-index:3;right:28px;bottom:175px;width:275px;overflow:hidden;border:2px solid rgba(226,168,42,.86);border-radius:20px;background:#fff;box-shadow:0 18px 45px rgba(0,0,0,.40)}
+          .tpxProductStage img{display:block;width:100%;height:auto}
+          .tpxFeatureBar{position:absolute;z-index:4;left:28px;right:28px;bottom:24px;min-height:130px;display:grid;grid-template-columns:repeat(4,1fr);overflow:hidden;border:1px solid rgba(218,166,52,.55);border-radius:13px;background:rgba(7,7,7,.84);backdrop-filter:blur(3px)}
+          .tpxFeatureBar>div{display:grid;place-items:center;align-content:center;gap:7px;padding:14px 8px;border-right:1px solid rgba(218,166,52,.35);color:#f8f4e7;text-align:center}.tpxFeatureBar>div:last-child{border-right:0}
+          .tpxFeatureBar b{color:#dfad3b;font-size:26px}.tpxFeatureBar span{font-size:13px;font-weight:900;line-height:1.2}
+          .tpxReferenceBuy{text-align:center;padding:2px 2px 0}
+          .tpxReferenceBuy h2{margin:8px 0 15px;font-size:27px;line-height:1.25;font-weight:1000}
+          .tpxReferencePrice{display:flex;align-items:baseline;justify-content:center;gap:12px}.tpxReferencePrice strong{font-size:22px}.tpxReferencePrice del{color:#aaa;font-size:16px}
+          .tpxTaxes{margin:6px 0 18px;color:#999;font-size:10px;letter-spacing:1px}
+          .tpxBuyButton{width:100%;min-height:54px;margin-top:15px;border:0;border-radius:999px;font-weight:900;cursor:pointer;box-shadow:0 7px 16px rgba(0,0,0,.12)}
+          .tpxCodButton{background:#050505;color:#fff}.tpxOnlineButton{background:linear-gradient(90deg,#efd667,#d7b53f);color:#2a260f}
+          .tpxPaymentNote{margin:10px 0 30px;color:#8d8d8d;font-size:10px}
+          .tpxSaleLine{display:grid;gap:14px;font-size:17px}.tpxSaleLine button{min-height:49px;border:0;border-radius:8px;background:#080808;color:#fff;font-weight:900;cursor:pointer}
+          @media(max-width:680px){
+            .tpxShippingStrip{gap:4px;padding:6px 3px;font-size:8px}.tpxShippingStrip span+span:before{margin-right:4px}
+            .tpxReferenceHeader{height:62px;grid-template-columns:36px 1fr 102px;padding:0 7px}.tpxMenuIcon{font-size:19px}
+            .tpxReferenceBrand{gap:5px}.tpxBrandLeaf{width:34px;height:34px;font-size:18px}.tpxReferenceBrand strong{font-size:10px}.tpxReferenceBrand small{font-size:7px}.tpxTopOrder{padding:8px 9px;font-size:9px}
+            .tpxReferenceShell{padding:17px 9px 28px}.tpxReferenceHero{min-height:865px;border-radius:9px}
+            .tpxReferenceHeroPhoto{object-position:68% center}.tpxReferenceHeroShade{background:linear-gradient(90deg,rgba(0,0,0,.98) 0%,rgba(0,0,0,.88) 32%,rgba(0,0,0,.38) 67%,rgba(0,0,0,.05) 90%),linear-gradient(0deg,rgba(0,0,0,.84) 0%,transparent 40%)}
+            .tpxReferenceCopy{width:66%;padding:35px 10px 192px 19px}.tpxHindiLead{font-size:19px}
+            .tpxReferenceCopy h1{font-size:clamp(49px,16vw,75px);letter-spacing:-2px}.tpxGoldLabel{padding:9px 10px;font-size:16px}.tpxSupportText{margin:18px 0;font-size:14px;line-height:1.45}
+            .tpxBenefitStack{max-width:220px}.tpxBenefitStack>div{grid-template-columns:82px 1fr;min-height:59px}.tpxBenefitStack b{font-size:13px}.tpxBenefitStack span{font-size:10px}
+            .tpxProductStage{right:11px;bottom:145px;width:148px;border-radius:12px}.tpxFeatureBar{left:11px;right:11px;bottom:14px;min-height:106px;border-radius:9px}.tpxFeatureBar b{font-size:19px}.tpxFeatureBar span{font-size:9px}
+            .tpxReferenceBuy h2{font-size:20px}.tpxBuyButton{min-height:50px;font-size:12px}.tpxSaleLine{font-size:15px}
+          }
+          @media(max-width:390px){.tpxReferenceHero{min-height:810px}.tpxReferenceCopy{width:69%;padding-left:14px}.tpxReferenceCopy h1{font-size:47px}.tpxProductStage{width:130px;right:7px}.tpxFeatureBar span{font-size:8px}}
+        `}</style>
+      </div>
+
+      <section className="customGallerySection" aria-label="Photo gallery">
+        <div className="siteShell">
+          <div className="customGalleryGrid">
+            {customGalleryPhotos.map((src, index) => (
+              <div className="customGallerySlot hasPhoto" key={src}>
+                <img
+                  src={src}
+                  alt={`Amrit Ayurveda gallery photo ${index + 1}`}
+                  loading="lazy"
+                />
+                <span className="customGalleryPlaceholder"><b>{String(index + 1).padStart(2, "0")}</b>PHOTO SLOT</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
-      <a className="sticky-order" href="/checkout?product=takat-power-x&qty=1&payment=COD">
-        अभी ऑर्डर करें ₹999 COD
-      </a>
+      <section className="featuredProductsSection" id="products" aria-labelledby="products-title">
+        <div className="siteShell">
+          <span className="sectionKicker center">AMRIT AYURVEDA • PRODUCT STORE</span>
+          <h2 className="centerTitle" id="products-title">अपनी daily wellness routine चुनें</h2>
+          <p className="productsIntro">दोनों products के उपयोग, price और payment offer साफ़ देखें। Order करते समय चुना हुआ product CRM में अलग नाम से save होगा।</p>
 
-      <style>{`
-        * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body { margin: 0; background: #fff7df; }
-        .tpx-page {
-          min-height: 100vh;
-          background: #fff7df;
-          color: #141414;
-          font-family: Arial, Helvetica, sans-serif;
-          padding-bottom: 86px;
-        }
-        .shipping-strip {
-          min-height: 34px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 10px;
-          padding: 7px 12px;
-          font-size: 12px;
-          background: #ffffff;
-          border-bottom: 1px solid #ece7d9;
-          color: #4d4d4d;
-          text-align: center;
-        }
-        .shipping-strip span + span::before {
-          content: "|";
-          margin-right: 10px;
-          color: #a9a9a9;
-        }
-        .site-header {
-          height: 78px;
-          display: grid;
-          grid-template-columns: 80px 1fr 150px;
-          align-items: center;
-          padding: 0 18px;
-          background: #fff;
-          border-bottom: 1px solid #ebe7da;
-        }
-        .menu {
-          font-size: 26px;
-          color: #363636;
-        }
-        .brand {
-          justify-self: center;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          text-align: left;
-        }
-        .brand-mark {
-          width: 42px;
-          height: 42px;
-          border: 2px solid #2f6b3a;
-          border-radius: 50%;
-          display: grid;
-          place-items: center;
-          font-size: 24px;
-          background: #fffdf4;
-        }
-        .brand strong {
-          display: block;
-          color: #244d2d;
-          letter-spacing: .7px;
-          font-size: 15px;
-        }
-        .brand small {
-          display: block;
-          margin-top: 2px;
-          color: #8b6c24;
-          font-size: 10px;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-        }
-        .top-order {
-          justify-self: end;
-          text-decoration: none;
-          color: #fff;
-          background: #37643f;
-          border-radius: 999px;
-          padding: 10px 16px;
-          font-size: 13px;
-          font-weight: 800;
-          white-space: nowrap;
-        }
-        .landing-shell {
-          width: min(100%, 930px);
-          margin: 0 auto;
-          padding: 34px 14px 0;
-        }
-        .hero-card {
-          position: relative;
-          min-height: 1030px;
-          overflow: hidden;
-          border-radius: 12px;
-          background: #0a0908;
-          box-shadow: 0 8px 26px rgba(37, 24, 0, .14);
-        }
-        .hero-photo {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: 64% center;
-          opacity: .98;
-        }
-        .hero-shade {
-          position: absolute;
-          inset: 0;
-          background:
-            linear-gradient(90deg, rgba(0,0,0,.98) 0%, rgba(0,0,0,.9) 29%, rgba(0,0,0,.48) 55%, rgba(0,0,0,.08) 78%),
-            linear-gradient(0deg, rgba(0,0,0,.68) 0%, transparent 38%);
-        }
-        .hero-copy {
-          position: relative;
-          z-index: 2;
-          width: 54%;
-          padding: 54px 30px 220px 48px;
-          color: #fff;
-        }
-        .hindi-kicker {
-          margin: 0 0 12px;
-          font-size: 30px;
-          line-height: 1.22;
-          font-weight: 800;
-          color: #f5f0e6;
-        }
-        .hero-copy h1 {
-          margin: 0 0 12px;
-          font-size: clamp(68px, 9vw, 112px);
-          line-height: .84;
-          letter-spacing: -3px;
-          color: #e0a222;
-          font-weight: 1000;
-          text-shadow: 0 3px 14px rgba(0,0,0,.25);
-        }
-        .gold-label {
-          display: inline-block;
-          margin-top: 10px;
-          padding: 13px 20px 15px;
-          border-radius: 10px;
-          background: linear-gradient(180deg,#d9a82b,#b87c13);
-          color: #111;
-          font-size: 24px;
-          line-height: 1.18;
-          font-weight: 900;
-        }
-        .support-copy {
-          margin: 28px 0;
-          font-size: 21px;
-          line-height: 1.55;
-          font-weight: 700;
-        }
-        .benefit-list {
-          display: grid;
-          gap: 0;
-          margin-top: 26px;
-          max-width: 360px;
-        }
-        .benefit-list > div {
-          display: grid;
-          grid-template-columns: 112px 1fr;
-          align-items: center;
-          gap: 8px;
-          min-height: 78px;
-          border-bottom: 1px dotted rgba(224,162,34,.6);
-        }
-        .benefit-list b {
-          color: #e4b348;
-          font-size: 18px;
-        }
-        .benefit-list span {
-          font-size: 15px;
-          line-height: 1.25;
-          font-weight: 700;
-          letter-spacing: .4px;
-        }
-        .hero-product-card {
-          position: absolute;
-          z-index: 3;
-          right: 28px;
-          bottom: 175px;
-          width: 260px;
-          border-radius: 22px;
-          overflow: hidden;
-          border: 2px solid rgba(226,168,42,.85);
-          background: #fff;
-          box-shadow: 0 18px 45px rgba(0,0,0,.38);
-          transform: rotate(-1deg);
-        }
-        .hero-product-card img {
-          display: block;
-          width: 100%;
-          height: auto;
-        }
-        .feature-row {
-          position: absolute;
-          z-index: 4;
-          left: 28px;
-          right: 28px;
-          bottom: 24px;
-          min-height: 128px;
-          border: 1px solid rgba(218,166,52,.55);
-          border-radius: 13px;
-          background: rgba(7,7,7,.82);
-          backdrop-filter: blur(3px);
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          overflow: hidden;
-        }
-        .feature-row > div {
-          display: grid;
-          place-items: center;
-          align-content: center;
-          gap: 6px;
-          text-align: center;
-          color: #f8f4e7;
-          padding: 14px 8px;
-          border-right: 1px solid rgba(218,166,52,.35);
-        }
-        .feature-row > div:last-child { border-right: 0; }
-        .feature-row b {
-          color: #dfad3b;
-          font-size: 26px;
-        }
-        .feature-row span {
-          font-size: 13px;
-          font-weight: 800;
-          line-height: 1.2;
-        }
-        .purchase-panel {
-          text-align: center;
-          padding: 0 2px 34px;
-        }
-        .purchase-panel h2 {
-          margin: 6px 0 16px;
-          font-size: 28px;
-          line-height: 1.28;
-          font-weight: 900;
-        }
-        .price-line {
-          display: flex;
-          justify-content: center;
-          align-items: baseline;
-          gap: 12px;
-        }
-        .price-line strong { font-size: 22px; }
-        .price-line del { color: #a6a6a6; font-size: 16px; }
-        .taxes {
-          margin: 6px 0 20px;
-          color: #a0a0a0;
-          letter-spacing: 1px;
-          font-size: 11px;
-        }
-        .buy-btn {
-          min-height: 56px;
-          border-radius: 999px;
-          margin: 16px auto 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 100%;
-          text-decoration: none;
-          font-weight: 900;
-          box-shadow: 0 7px 16px rgba(0,0,0,.13);
-        }
-        .buy-btn.cod {
-          background: #050505;
-          color: #fff;
-        }
-        .buy-btn.prepaid {
-          background: linear-gradient(90deg,#efd667,#d7b53f);
-          color: #2a260f;
-        }
-        .payment-note {
-          margin: 11px 0 34px;
-          font-size: 10px;
-          color: #8d8d8d;
-        }
-        .sale-copy {
-          display: grid;
-          gap: 14px;
-          font-size: 17px;
-        }
-        .sale-copy span {
-          display: block;
-          background: #090909;
-          color: #fff;
-          border-radius: 8px;
-          padding: 15px;
-          font-weight: 900;
-        }
-        .sticky-order {
-          position: fixed;
-          z-index: 9998;
-          left: 10px;
-          right: 10px;
-          bottom: 10px;
-          min-height: 54px;
-          border-radius: 10px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: #060606;
-          color: #fff;
-          text-decoration: none;
-          font-weight: 900;
-          box-shadow: 0 6px 20px rgba(0,0,0,.3);
-        }
-        @media (max-width: 680px) {
-          .shipping-strip {
-            gap: 5px;
-            padding: 6px 4px;
-            font-size: 9px;
-          }
-          .shipping-strip span + span::before {
-            margin-right: 5px;
-          }
-          .site-header {
-            height: 64px;
-            grid-template-columns: 38px 1fr 104px;
-            padding: 0 8px;
-          }
-          .menu { font-size: 20px; }
-          .brand { gap: 5px; }
-          .brand-mark { width: 34px; height: 34px; font-size: 19px; }
-          .brand strong { font-size: 11px; }
-          .brand small { font-size: 8px; }
-          .top-order { padding: 8px 10px; font-size: 10px; }
-          .landing-shell { padding: 18px 10px 0; }
-          .hero-card {
-            min-height: 860px;
-            border-radius: 9px;
-          }
-          .hero-photo {
-            object-position: 67% center;
-          }
-          .hero-shade {
-            background:
-              linear-gradient(90deg, rgba(0,0,0,.98) 0%, rgba(0,0,0,.86) 31%, rgba(0,0,0,.35) 66%, rgba(0,0,0,.04) 90%),
-              linear-gradient(0deg, rgba(0,0,0,.83) 0%, transparent 38%);
-          }
-          .hero-copy {
-            width: 65%;
-            padding: 36px 10px 190px 20px;
-          }
-          .hindi-kicker { font-size: 19px; }
-          .hero-copy h1 {
-            font-size: clamp(50px, 16vw, 76px);
-            letter-spacing: -2px;
-          }
-          .gold-label {
-            padding: 9px 11px;
-            font-size: 16px;
-          }
-          .support-copy {
-            margin: 18px 0;
-            font-size: 14px;
-            line-height: 1.48;
-          }
-          .benefit-list { max-width: 220px; }
-          .benefit-list > div {
-            grid-template-columns: 82px 1fr;
-            min-height: 59px;
-          }
-          .benefit-list b { font-size: 13px; }
-          .benefit-list span { font-size: 10px; }
-          .hero-product-card {
-            right: 12px;
-            bottom: 145px;
-            width: 145px;
-            border-radius: 13px;
-          }
-          .feature-row {
-            left: 12px;
-            right: 12px;
-            bottom: 14px;
-            min-height: 106px;
-            border-radius: 9px;
-          }
-          .feature-row b { font-size: 19px; }
-          .feature-row span { font-size: 9px; }
-          .purchase-panel h2 {
-            margin-top: 5px;
-            font-size: 21px;
-          }
-          .buy-btn { min-height: 50px; font-size: 13px; }
-          .sticky-order { min-height: 50px; font-size: 13px; }
-        }
-        @media (max-width: 390px) {
-          .hero-card { min-height: 800px; }
-          .hero-copy { width: 68%; padding-left: 15px; }
-          .hero-copy h1 { font-size: 48px; }
-          .hero-product-card { width: 130px; right: 8px; }
-          .feature-row span { font-size: 8px; }
-        }
-      `}</style>
+          <div className="productShowcaseGrid">
+            <article className="productShowcaseCard takatShowcase">
+              <div className="singleProductVisual"><img src="/takat-power-x.jpg" alt="TAKAT POWER X 150g bottle" loading="lazy"/></div>
+              <div className="productShowcaseContent">
+                <span className="productType">POWDER • DAILY WELLNESS</span>
+                <h3>TAKAT POWER X</h3>
+                <p>25 Super Herbs और Pure Shilajit वाला 150g पुरुष wellness support.</p>
+                <div className="showcaseUse"><b>रोज़ाना उपयोग</b><span>भोजन के 30 मिनट बाद 1 चम्मच पानी या हल्के गर्म दूध के साथ।</span></div>
+                <div className="showcasePrice"><s>MRP ₹1,500</s><strong>COD ₹999</strong><small>Online payment पर extra 10% off</small></div>
+                <button className="redButton productOrderButton" onClick={() => buyCourse(1)}>TAKAT POWER X ORDER करें</button>
+              </div>
+            </article>
+
+            <article className="productShowcaseCard comboShowcase">
+              <span className="limitedBadge">LIMITED TIME OFFER</span>
+              <span className="comboShine" aria-hidden="true" />
+              <div className="comboVisualStage" aria-label="MAX X7 capsule और MAX X100 oil combo">
+                <span className="comboGlowOrb" aria-hidden="true" />
+                <figure className="comboBottle capsuleFloat"><img src="/max-x7-capsule.webp" alt="MAX X7 Ayurvedic capsule bottle" loading="lazy"/><figcaption>30 CAPSULE</figcaption></figure>
+                <figure className="comboBottle oilFloat"><img src="/max-x100-oil.webp" alt="MAX X100 massage oil bottle" loading="lazy"/><figcaption>MASSAGE OIL</figcaption></figure>
+              </div>
+              <div className="productShowcaseContent comboContent">
+                <span className="productType">CAPSULE + OIL • COMBO PACK</span>
+                <h3>MAX X7 + MAX X100</h3>
+                <p>Capsule और massage oil की complete daily routine—एक ही combo pack में।</p>
+                <div className="comboRoutine">
+                  <article><b>01</b><span><strong>MAX X7 Capsule</strong><small>रोज़ खाना खाने के बाद 1 capsule लें।</small></span></article>
+                  <article><b>02</b><span><strong>MAX X100 Oil</strong><small>Oil से रोज़ नियमित रूप से हल्की मालिश करें।</small></span></article>
+                </div>
+                <div className="comboPaymentOptions" aria-label="Combo payment prices">
+                  <article><small>CASH ON DELIVERY</small><strong>₹2,500</strong><span>Parcel मिलने पर payment</span></article>
+                  <article className="onlineOfferOption"><small>ONLINE PAYMENT</small><strong>₹1,499</strong><span>Limited time offer</span></article>
+                </div>
+                <div className="showcasePrice comboPrice"><s>MRP ₹2,500</s><strong>ONLINE ₹1,499</strong><small>Limited time online payment offer • Save ₹1,001</small></div>
+                <div className="offerCountdown" role="timer" aria-live="off" aria-label="Limited time offer countdown">
+                  <span className="timerLabel">OFFER ENDS IN</span>
+                  <span className="timeBox"><b>{String(offerTimeLeft.days).padStart(2, "0")}</b><small>DAYS</small></span>
+                  <i>:</i>
+                  <span className="timeBox"><b>{String(offerTimeLeft.hours).padStart(2, "0")}</b><small>HRS</small></span>
+                  <i>:</i>
+                  <span className="timeBox"><b>{String(offerTimeLeft.minutes).padStart(2, "0")}</b><small>MIN</small></span>
+                  <i>:</i>
+                  <span className="timeBox"><b>{String(offerTimeLeft.seconds).padStart(2, "0")}</b><small>SEC</small></span>
+                </div>
+                <a className="redButton productOrderButton comboOrderButton" href="/checkout?product=max-x7-x100-combo&qty=1">COMBO ORDER करें • ₹1,499</a>
+              </div>
+            </article>
+          </div>
+          <p className="comboSafety">18+ वयस्कों के लिए। निर्धारित मात्रा से अधिक उपयोग न करें। कोई medical condition, allergy या दवा चल रही हो तो योग्य स्वास्थ्य विशेषज्ञ से सलाह लें। Product label के निर्देश प्राथमिक हैं।</p>
+        </div>
+      </section>
+
+      <section className="whatsappStrip" aria-label="WhatsApp सहायता">
+        <div className="siteShell whatsappStripInner">
+          <span className="liveDot" aria-hidden="true" />
+          <div><strong>कोई सवाल है? अभी सीधे WhatsApp पर बात करें</strong><small>Product, COD, use और delivery की private सहायता</small></div>
+          <a href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer">WHATSAPP पर CHAT करें →</a>
+        </div>
+      </section>
+
+      <section className="authenticityAlert">
+        <div className="siteShell"><h2>असली TAKAT POWER X की पहचान करें</h2><p>Original product पर <strong>AMRIT AYURVEDA</strong> branding, TAKAT POWER X label, 25 Super Herbs और With Pure Shilajit की जानकारी देखें। केवल verified Amrit Ayurveda order channel से खरीदें।</p></div>
+      </section>
+
+      <section className="privateStoreSection" id="private-store">
+        <div className="siteShell">
+          <span className="sectionKicker center">PRIVATE ADULT WELLNESS • 18+</span>
+          <h2 className="centerTitle">Bold wellness. Private shopping.</h2>
+          <p className="privateStoreIntro">Men&apos;s wellness, couple care और intimate lifestyle से जुड़े products के लिए discreet guidance और private ordering.</p>
+          <div className="wellnessCategories">
+            <a href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer"><b>01</b><strong>Men&apos;s Performance</strong><span>Stamina • Energy • Confidence</span></a>
+            <a href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer"><b>02</b><strong>Couple Wellness</strong><span>Connection • Comfort • Care</span></a>
+            <a href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer"><b>03</b><strong>Intimate Care</strong><span>Private advice on WhatsApp</span></a>
+            <a href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer"><b>04</b><strong>Ayurvedic Vitality</strong><span>Herbal daily wellness</span></a>
+          </div>
+
+          <div className="productGalleryHeading">
+            <div><span className="sectionKicker">GENUINE PRODUCT VIEW</span><h3>हर angle से product देखें</h3></div>
+            <span>Swipe / scroll करके पैक और delivery view देखें</span>
+          </div>
+          <div className="productGallery">
+            <figure><img src="/gallery-angle.webp" alt="TAKAT POWER X premium three-quarter product view" loading="lazy"/><figcaption><b>Premium Pack</b><span>Original 250g bottle</span></figcaption></figure>
+            <figure><img src="/gallery-detail.webp" alt="TAKAT POWER X cap और label का close-up" loading="lazy"/><figcaption><b>Label & Seal</b><span>पैक और branding ध्यान से देखें</span></figcaption></figure>
+            <figure><img src="/gallery-delivery.webp" alt="TAKAT POWER X discreet parcel delivery view" loading="lazy"/><figcaption><b>Discreet Delivery</b><span>Plain, private parcel packing</span></figcaption></figure>
+          </div>
+        </div>
+      </section>
+
+      <section className="darkSection whySection" id="why">
+        <div className="siteShell whyGrid">
+          <div>
+            <span className="sectionKicker">WHY CHOOSE US</span>
+            <h2>Why Choose<br/><em>TAKAT POWER X?</em></h2>
+            <p className="sectionLead">एक प्रीमियम आयुर्वेदिक पुरुष वेलनेस सपोर्ट, जिसे रोज़ की एनर्जी, स्टैमिना और शरीर की ताकत को सपोर्ट करने के लिए बनाया गया है।</p>
+            <div className="trustCards">{trustPoints.map(item => <article key={item.index}><b>{item.index}</b><span><strong>{item.title}</strong><p>{item.text}</p></span></article>)}</div>
+            <button className="redButton sectionBuy" type="button" onClick={() => openQuickOrder(selectedQty)}>BUY NOW</button>
+          </div>
+          <div className="whyProduct"><img src="/takat-power-x.jpg" alt="TAKAT POWER X product packaging" loading="lazy"/><span>AMRIT AYURVEDA</span></div>
+        </div>
+      </section>
+
+      <section className="guideSection" id="guide">
+        <div className="siteShell">
+          <span className="sectionKicker center">BUYER&apos;S GUIDE</span>
+          <h2 className="centerTitle">असली प्रोडक्ट की पहचान कैसे करें?</h2>
+          <div className="guideGrid"><article><span>01</span><h3>Official Source से खरीदें</h3><p>Original TAKAT POWER X केवल Amrit Ayurveda के verified order channel से खरीदें।</p></article><article><span>02</span><h3>Branding और Seal Check करें</h3><p>पैक पर AMRIT AYURVEDA नाम, सही label और सुरक्षित seal ज़रूर देखें।</p></article></div>
+
+          <div className="howToUseBlock" id="how-to-use">
+            <span className="sectionKicker center howKicker">HOW TO USE • सेवन विधि</span>
+            <h2 className="centerTitle">रोज़ाना 1 चम्मच—सही तरीके से लें</h2>
+            <p className="howToUseIntro">TAKAT POWER X को अपनी शाम की daily wellness routine में इस आसान तरीके से शामिल करें।</p>
+            <div className="useSteps" aria-label="TAKAT POWER X सेवन विधि">
+              <article><b>01</b><span><small>सही समय</small><strong>शाम को भोजन के 30 मिनट बाद</strong><p>दिन में एक बार, रोज़ एक ही समय पर सेवन करें।</p></span></article>
+              <article><b>02</b><span><small>सही मात्रा</small><strong>रोज़ाना 1 चम्मच</strong><p>निर्धारित मात्रा से अधिक सेवन न करें।</p></span></article>
+              <article><b>03</b><span><small>विकल्प 1</small><strong>पानी में घोलकर</strong><p>1 चम्मच पानी में अच्छी तरह घोलकर पिएँ।</p></span></article>
+              <article><b>04</b><span><small>विकल्प 2</small><strong>हल्के गर्म दूध के साथ</strong><p>चाहें तो 1 चम्मच हल्के गर्म दूध के साथ लें।</p></span></article>
+            </div>
+            <div className="dailyUseReminder"><span>DAILY ROUTINE</span><strong>बेहतर नियमितता के लिए इसका सेवन रोज़ाना करें।</strong></div>
+            <p className="safetyNote">18+ वयस्कों के लिए। कोई दवा चल रही हो, एलर्जी या medical condition हो तो सेवन से पहले योग्य स्वास्थ्य विशेषज्ञ की सलाह लें। Product label पर दिए निर्देशों को प्राथमिकता दें।</p>
+            <button className="redButton sectionBuy centered" type="button" onClick={() => openQuickOrder(selectedQty)}>BUY NOW</button>
+          </div>
+        </div>
+      </section>
+
+      <section className="faqDark" id="faq">
+        <div className="siteShell faqWrap">
+          <span className="sectionKicker center">GOT QUESTIONS?</span>
+          <h2>Frequently Asked Questions</h2>
+          <div className="faqAccordion">{faqs.map(([question, answer], index) => <details key={question} open={index === 0}><summary>{question}<span>+</span></summary><p>{answer}</p></details>)}</div>
+        </div>
+      </section>
+
+      <section className="promiseSection">
+        <div className="siteShell">
+          <span className="sectionKicker center">CUSTOMER PROMISE</span>
+          <h2 className="centerTitle">Clear Product. Private Delivery. Direct Support.</h2>
+          <div className="promiseGrid"><article><strong>Original Product</strong><p>आपको वही pack मिलेगा जो order के समय दिखाया गया है।</p></article><article><strong>Private Packaging</strong><p>बाहर से सादा और सुरक्षित पैकेजिंग रखी जाती है।</p></article><article><strong>Order Assistance</strong><p>WhatsApp पर quantity, address और delivery status की मदद।</p></article></div>
+          <button className="redButton sectionBuy centered" type="button" onClick={() => openQuickOrder(selectedQty)}>ORDER NOW</button>
+        </div>
+      </section>
+
+      <section className="resultStorySection" aria-labelledby="result-story-title">
+        <div className="siteShell">
+          <span className="sectionKicker center">BEFORE • AFTER</span>
+          <h2 className="centerTitle" id="result-story-title">Confidence और Connection की Wellness Journey</h2>
+          <p className="resultIntro">एक बेहतर daily routine, balanced lifestyle और premium Ayurvedic wellness support के साथ अपने confidence पर काम करें।</p>
+          <div className="resultVisual">
+            <img src="/before-after-wellness.png" alt="एक adult couple की illustrative before and after confidence journey" loading="lazy"/>
+            <article className="resultPanel resultBefore"><span>BEFORE</span><strong>Low Energy</strong><p>थकान • कम confidence • दूरी</p></article>
+            <article className="resultPanel resultAfter"><span>AFTER</span><strong>Better Confidence</strong><p>Active routine • closer connection • positive mindset</p></article>
+          </div>
+          <div className="resultHighlights">
+            <article><b>01</b><strong>Daily Energy Support</strong><span>अपनी रोज़ की active lifestyle और routine को बेहतर support दें।</span></article>
+            <article><b>02</b><strong>Confidence & Connection</strong><span>बेहतर mindset और partner के साथ comfortable communication पर focus करें।</span></article>
+            <article><b>03</b><strong>Private Wellness Choice</strong><span>Discreet delivery और WhatsApp assistance के साथ आसान order।</span></article>
+          </div>
+          <p className="resultDisclaimer">यह visual केवल illustrative lifestyle representation है—किसी व्यक्ति के actual medical या sexual before/after result का दावा नहीं। परिणाम व्यक्ति के अनुसार अलग हो सकते हैं।</p>
+          <button className="redButton sectionBuy centered" type="button" onClick={() => openQuickOrder(selectedQty)}>START YOUR WELLNESS ROUTINE</button>
+        </div>
+      </section>
+
+      <section className="testimonialsSection" aria-labelledby="testimonial-title">
+        <div className="siteShell">
+          <span className="sectionKicker center">EXPERIENCE EXAMPLES</span>
+          <h2 className="centerTitle" id="testimonial-title">लोग क्या जानना चाहते हैं</h2>
+          <p className="testimonialIntro">नीचे दिए गए cards illustrative sample experiences हैं। Verified customer feedback मिलने पर इन्हें असली reviews से update किया जा सकता है।</p>
+          <div className="testimonialStage" aria-live="polite">
+            {Array.from({ length: 3 }, (_, offset) => testimonialSamples[(reviewStart + offset) % testimonialSamples.length]).map((review, index) => (
+              <article className="testimonialCard" key={`${review.name}-${reviewStart}-${index}`}>
+                <div className="reviewTopline"><span className="reviewAvatar">{review.name.charAt(0)}</span><span><strong>{review.name}</strong><small>{review.city}</small></span><b>SAMPLE</b></div>
+                <div className="reviewStars" aria-label="5 star visual">★★★★★</div>
+                <p>“{review.text}”</p>
+              </article>
+            ))}
+          </div>
+          <div className="reviewControls" aria-label="Sample experience controls">
+            <button type="button" onClick={() => setReviewStart(current => (current - 1 + testimonialSamples.length) % testimonialSamples.length)} aria-label="पिछला experience">PREV</button>
+            <span>{String(reviewStart + 1).padStart(2, "0")} / {testimonialSamples.length}</span>
+            <button type="button" onClick={() => setReviewStart(current => (current + 1) % testimonialSamples.length)} aria-label="अगला experience">NEXT</button>
+          </div>
+          <p className="testimonialDisclaimer">ये वास्तविक verified customer reviews नहीं हैं। अनुभव और परिणाम हर व्यक्ति के लिए अलग हो सकते हैं।</p>
+        </div>
+      </section>
+
+      <footer id="contact">
+        <div className="siteShell footerGrid">
+          <div><a className="wordmark footerMark" href="#home"><strong>AMRIT</strong><span>AYURVEDA</span></a><p>Men&apos;s wellness support inspired by Ayurveda and African herbs.</p></div>
+          <div><h3>Quick Links</h3><a href="#home">Home</a><a href="#why">Why Choose</a><a href="#how-to-use">How To Use</a><a href="#faq">FAQ</a></div>
+          <div><h3>Support</h3><a href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")}>WhatsApp Order</a><a href="#faq">Shipping</a><a href="#faq">Privacy</a><a href="#faq">Disclaimer</a></div>
+          <div><h3>Contact</h3><a href={`tel:+${phone}`} onClick={() => trackActivity("call_click", "Call click")}>+91 82906 95226</a><a href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")}>Chat on WhatsApp</a></div>
+        </div>
+        <div className="siteShell disclaimer">डिस्क्लेमर: यह प्रोडक्ट किसी बीमारी का निदान, इलाज, cure या रोकथाम करने के लिए प्रस्तुत नहीं किया गया है। परिणाम व्यक्ति के अनुसार अलग हो सकते हैं। © 2026 Amrit Ayurveda.</div>
+      </footer>
+
+      <button className="stickyBuy quickOrderSticky" type="button" onClick={() => openQuickOrder(selectedQty)}>BUY NOW • ₹{selectedCourse.price.toLocaleString("en-IN")}</button>
+      <a className="floatingWhatsapp" href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer" aria-label="WhatsApp पर सीधे चैट करें"><span>WA</span><b>WhatsApp Chat</b></a>
+      <button
+        className="floatingCallback"
+        type="button"
+        onClick={() => { setCallbackOpen(true); setCallbackMessage(""); trackActivity("callback_open", "Call Me Back opened"); }}
+        aria-label="Call Me Back form खोलें"
+      ><span>☎</span><b>Call Me Back</b></button>
+      {callbackOpen && !ageGateOpen && (
+        <div className="callbackOverlay" role="dialog" aria-modal="true" aria-labelledby="callback-title" onMouseDown={() => { if (!callbackSaving) setCallbackOpen(false); }}>
+          <section className="callbackCard" onMouseDown={event => event.stopPropagation()}>
+            <button className="callbackClose" type="button" aria-label="बंद करें" onClick={() => { if (!callbackSaving) setCallbackOpen(false); }}>×</button>
+            <span className="sectionKicker center">FREE CALLBACK</span>
+            <h2 id="callback-title">क्या हम आपको Call करें?</h2>
+            <p>सिर्फ अपना mobile number डालें। हमारी Amrit Ayurveda team आपको product और order की जानकारी के लिए call करेगी।</p>
+            <label className="callbackField"><span>नाम (Optional)</span><input type="text" autoComplete="name" value={callbackName} onChange={event => setCallbackName(event.target.value.slice(0, 80))} placeholder="आपका नाम" /></label>
+            <label className="callbackField"><span>Mobile Number *</span><input type="tel" inputMode="numeric" autoComplete="tel" maxLength={10} value={callbackMobile} onChange={event => { setCallbackMobile(event.target.value.replace(/\D/g, "").slice(0, 10)); setCallbackMessage(""); }} placeholder="10 digit mobile number" /></label>
+            {callbackMessage && <p className={callbackMessage.startsWith("✓") ? "callbackMessage success" : "callbackMessage"} role="status">{callbackMessage}</p>}
+            <button className="callbackSubmit" type="button" disabled={callbackSaving} onClick={() => void submitCallbackLead()}>{callbackSaving ? "SAVING…" : "CALL ME BACK"}</button>
+            <small>यह lead CRM के “Website Leads” section में New Lead के रूप में save होगी। यह order नहीं माना जाएगा।</small>
+          </section>
+        </div>
+      )}
+
+      {cartOpen && <div className="cartOverlay" onMouseDown={() => setCartOpen(false)}>
+        <aside className="cartDrawer" onMouseDown={event => event.stopPropagation()} role="dialog" aria-modal="true" aria-label="Shopping cart and payment">
+          <button className="cartClose" onClick={() => setCartOpen(false)} aria-label="Close cart">CLOSE</button>
+          <span className="sectionKicker">YOUR ORDER</span>
+          <h2>{activeProduct.name}</h2>
+          {cartQty > 0 ? <>
+            <div className="cartItem">
+              <span className={`cartProductThumb ${activeProduct.secondaryImage ? "double" : ""}`}><img src={activeProduct.primaryImage} alt={activeProduct.shortName}/>{activeProduct.secondaryImage && <img src={activeProduct.secondaryImage} alt=""/>}</span>
+              <span><strong>{cartQty} × {activeProduct.cartDetail}</strong><small>MRP ₹{formatPrice(activeProduct.mrp)} • Online ₹{formatPrice(activeProduct.onlinePrice)}</small></span>
+              <button onClick={() => { trackActivity("cart_remove", "Cart item removed"); setCartQty(0); }}>REMOVE</button>
+            </div>
+            <div className={`cartTotal ${paymentMethod === "upi" ? "discounted" : ""}`}>
+              <span>{paymentMethod === "upi" ? "Online Payment Total" : "Cash on Delivery Total"}</span>
+              <strong>{paymentMethod === "upi" && <s>₹{formatPrice(codTotal)}</s>}₹{formatPrice(payableTotal)}</strong>
+            </div>
+
+            <section className="customerDetails" id="delivery-details" aria-labelledby="delivery-details-title">
+              <span className="detailsStep">STEP 1 • DELIVERY DETAILS</span>
+              <small style={{display:"block",fontWeight:800,letterSpacing:"0.08em",marginBottom:"8px"}}>CRM CONNECTED • V2</small>
+              <h3 id="delivery-details-title">Parcel कहाँ भेजना है?</h3>
+              <p>Payment या COD चुनने से पहले नीचे customer की सही जानकारी भरें।</p>
+              <div className="customerFields">
+                <label className="fieldWide"><span>Customer Name *</span><input type="text" autoComplete="name" value={customer.name} onChange={event => updateCustomer("name", event.target.value)} placeholder="पूरा नाम"/></label>
+                <label><span>Mobile Number *</span><input type="tel" inputMode="numeric" autoComplete="tel" maxLength={10} value={customer.mobile} onChange={event => updateCustomer("mobile", event.target.value.replace(/\D/g, "").slice(0, 10))} placeholder="10 digit mobile"/></label>
+                <label><span>PIN Code *</span><input type="text" inputMode="numeric" autoComplete="postal-code" maxLength={6} value={customer.pincode} onChange={event => updateCustomer("pincode", event.target.value.replace(/\D/g, "").slice(0, 6))} placeholder="6 digit PIN"/></label>
+                <label className="fieldWide"><span>Home Address *</span><textarea rows={3} autoComplete="street-address" value={customer.address} onChange={event => updateCustomer("address", event.target.value)} placeholder="मकान नंबर, गली, मोहल्ला, गाँव या शहर"/></label>
+              </div>
+              {detailsError && <p className="detailsError" role="alert">कृपया नाम, 10-digit mobile, home address और 6-digit PIN code सही भरें।</p>}
+              {orderError && <p className="detailsError" role="alert">{orderError}</p>}
+              {savedOrderId === paymentRef && <p className="orderSaved" role="status">✓ Order CRM में सुरक्षित save हो गया। Order ID: {paymentRef}</p>}
+              <small>आपकी details Amrit Ayurveda CRM में केवल order processing और delivery के लिए सुरक्षित रखी जाती हैं।</small>
+            </section>
+
+            <section className="paymentChoice" aria-labelledby="payment-choice-title">
+              <span className="detailsStep">STEP 2 • PAYMENT METHOD</span>
+              <h3 id="payment-choice-title">Payment कैसे करना है?</h3>
+              <div className="paymentChoiceGrid">
+                <button className={paymentMethod === "cod" ? "selected" : ""} onClick={() => { trackActivity("payment_method", "COD selected"); setPaymentMethod("cod"); }} aria-pressed={paymentMethod === "cod"}>
+                  <span className="methodIcon">COD</span><strong>Cash on Delivery</strong><small>Parcel मिलने पर payment</small><b>PAY ₹{formatPrice(codTotal)} ON DELIVERY</b>
+                </button>
+                <button className={paymentMethod === "upi" ? "selected" : ""} onClick={() => { trackActivity("payment_method", "UPI selected"); setPaymentMethod("upi"); }} aria-pressed={paymentMethod === "upi"}>
+                  <span className="methodIcon">UPI</span><strong>Online Payment</strong><small>GPay • PhonePe • Paytm • BHIM</small><b>{activeProduct.offerLabel} • SAVE ₹{formatPrice(onlineSavings)}</b>
+                </button>
+              </div>
+            </section>
+
+            {paymentMethod === "cod" ? <section className={`codBlock ${customerDetailsValid ? "" : "checkoutLocked"}`} aria-labelledby="cod-title">
+              <span className="codBadge">MOST POPULAR • CASH ON DELIVERY</span>
+              <h3 id="cod-title">अभी ₹0 दें—parcel मिलने पर payment करें</h3>
+              <ul><li>Advance payment की जरूरत नहीं</li><li>Plain और private parcel packing</li><li>Order सीधे Amrit Ayurveda CRM में save होगा</li></ul>
+              <a className="codConfirmButton" href="#delivery-details" onClick={event => void confirmCodOrder(event)} aria-disabled={!customerDetailsValid || orderSaving || savedOrderId === paymentRef}>{orderSaving ? "ORDER SAVING…" : savedOrderId === paymentRef ? "✓ ORDER CRM में SAVE हो गया" : "COD ORDER CONFIRM करें →"}</a>
+              <small>WhatsApp अपने-आप नहीं खुलेगा। जरूरत हो तो नीचे WhatsApp Chat का अलग option इस्तेमाल करें।</small>
+            </section> : <>
+              <section className={`paymentBlock ${customerDetailsValid ? "" : "checkoutLocked"}`} aria-labelledby="upi-payment-title">
+                <span className="paymentBadge">{activeProduct.offerLabel} • ONLINE PAYMENT</span>
+                <h3 id="upi-payment-title">Online Pay करें और ₹{formatPrice(onlineSavings)} बचाएँ</h3>
+                <div className="onlineDiscountSummary">
+                  <span><small>Regular Total</small><s>₹{formatPrice(codTotal)}</s></span>
+                  <span><small>Online Offer Saving</small><b>− ₹{formatPrice(onlineSavings)}</b></span>
+                  <span><small>You Pay</small><strong>₹{formatPrice(onlineTotal)}</strong></span>
+                </div>
+                <p className="upiSectionIntro">अपना UPI app चुनें। Discounted रकम ₹{formatPrice(onlineTotal)} payment screen पर अपने-आप भरी मिलेगी।</p>
+                <div className="paymentApps">
+                  <a className="upiAppButton gpayButton" href={customerDetailsValid ? upiPaymentUrl : "#delivery-details"} onClick={event => openSpecificUpiApp(event, "googlePay")} aria-disabled={!customerDetailsValid} aria-label={`सिर्फ Google Pay में ₹${formatPrice(onlineTotal)} भुगतान खोलें`}><span>G</span><b>Google Pay Only</b></a>
+                  <a className="upiAppButton phonePeButton" href={customerDetailsValid ? upiPaymentUrl : "#delivery-details"} onClick={event => openSpecificUpiApp(event, "phonePe")} aria-disabled={!customerDetailsValid} aria-label={`सिर्फ PhonePe में ₹${formatPrice(onlineTotal)} भुगतान खोलें`}><span>पे</span><b>PhonePe Only</b></a>
+                  <a className="upiAppButton paytmButton" href={customerDetailsValid ? upiPaymentUrl : "#delivery-details"} onClick={event => openSpecificUpiApp(event, "paytm")} aria-disabled={!customerDetailsValid} aria-label={`सिर्फ Paytm में ₹${formatPrice(onlineTotal)} भुगतान खोलें`}><span>PT</span><b>Paytm Only</b></a>
+                  <a className="upiAppButton bharatPeButton" href={customerDetailsValid ? upiPaymentUrl : "#delivery-details"} onClick={event => openSpecificUpiApp(event, "bharatPe")} aria-disabled={!customerDetailsValid} aria-label={`सिर्फ BharatPe में ₹${formatPrice(onlineTotal)} भुगतान खोलें`}><span>BP</span><b>BharatPe Only</b></a>
+                  <a className="upiAppButton bhimButton" href={customerDetailsValid ? upiPaymentUrl : "#delivery-details"} onClick={event => openSpecificUpiApp(event, "bhim")} aria-disabled={!customerDetailsValid} aria-label={`सिर्फ BHIM UPI में ₹${formatPrice(onlineTotal)} भुगतान खोलें`}><span>BH</span><b>BHIM UPI Only</b></a>
+                  <a className="upiAppButton otherUpiButton" href={customerDetailsValid ? upiPaymentUrl : "#delivery-details"} onClick={event => void beginUpiOrder(event)} aria-disabled={!customerDetailsValid || orderSaving} aria-label={`किसी अन्य UPI app से ₹${formatPrice(onlineTotal)} भुगतान करें`}><span>UPI</span><b>{orderSaving ? "Saving Order…" : "Choose Other App"}</b></a>
+                </div>
+                <p className="appOpenNote">Android पर चुना हुआ app ही खुलेगा। सभी apps की list केवल “Choose Other App” में दिखेगी।</p>
+                <div className="paymentPrivacyNote"><span>VERIFIED BUSINESS UPI</span><p>Payment आपके चुने हुए UPI app में Amrit Ayurveda के business account पर पूरा होगा। Website आपका UPI PIN या bank details कभी नहीं देखती।</p></div>
+                <small>UPI PIN केवल अपने payment app में डालें—वेबसाइट या WhatsApp पर कभी share न करें।</small>
+              </section>
+              <a className="receiptButton" href={customerDetailsValid ? paymentWhatsappUrl : "#delivery-details"} onClick={requireCustomerDetails} aria-disabled={!customerDetailsValid}>PAYMENT के बाद RECEIPT / UTR भेजें</a>
+            </>}
+            <a className="directCartChat" href={supportWhatsappUrl} onClick={() => trackActivity("whatsapp_click", "WhatsApp click")} target="_blank" rel="noreferrer"><span>WA</span><b>Order से पहले WhatsApp पर बात करें</b></a>
+            <small className="cartNote">UPI payment अपने-आप confirm नहीं होता। Payment के बाद screenshot या UTR WhatsApp पर भेजें।</small>
+          </> : <div className="emptyCart"><h3>Your cart is empty</h3><p>अपना product या combo चुनें।</p><button className="redButton" onClick={() => { setCartOpen(false); document.querySelector("#products")?.scrollIntoView(); }}>CHOOSE PRODUCT</button></div>}
+        </aside>
+      </div>}
     </main>
   );
 }
