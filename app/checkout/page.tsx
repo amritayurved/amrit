@@ -50,15 +50,6 @@ async function submitDirectlyToCrm(fields: Record<string, string>) {
   return result;
 }
 
-type MetaWindow = Window & { fbq?: (...args: unknown[]) => void };
-
-function sendMetaEvent(name: string, params: Record<string, unknown>, eventId: string) {
-  const fbq = (window as MetaWindow).fbq;
-  if (!fbq) return false;
-  fbq("track", name, params, { eventID: eventId });
-  return true;
-}
-
 export default function CheckoutPage() {
   const [productId, setProductId] = useState<ProductId>("takat-power-x");
   const [qty, setQty] = useState(1);
@@ -83,17 +74,7 @@ export default function CheckoutPage() {
     const pay = params.get("payment");
     if (pay === "COD" || pay === "Prepaid") setPayment(pay);
 
-    const checkoutTimer = window.setTimeout(() => {
-      sendMetaEvent("InitiateCheckout", {
-        content_ids: [resolvedProduct],
-        content_type: "product",
-        currency: "INR",
-      }, `checkout-${Date.now()}`);
-    }, 700);
-
-    return () => {
-      window.clearTimeout(checkoutTimer);
-    };
+    void resolvedProduct;
   }, []);
 
   const product = PRODUCTS[productId];
@@ -158,34 +139,8 @@ export default function CheckoutPage() {
       };
       sessionStorage.setItem("amrit-order-success", JSON.stringify(successPayload));
 
-      sendMetaEvent("Purchase", {
-        value: total,
-        currency: "INR",
-        content_name: product.name,
-        content_ids: [productId],
-        content_type: "product",
-        num_items: qty,
-      }, id);
-
-      // Send the same Purchase server-side as a reliable fallback.
-      // Meta can deduplicate browser/server copies because they share the same event_id.
-      await Promise.allSettled([
-        fetch("/api/meta-purchase", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            eventId: id,
-            value: total,
-            currency: "INR",
-            contentName: product.name,
-            contentIds: [productId],
-            numItems: qty,
-            sourceUrl: window.location.href,
-          }),
-          keepalive: true,
-        }),
-        new Promise(resolve => window.setTimeout(resolve, 500)),
-      ]);
+      // Purchase tracking is intentionally not sent to Meta while the event is blocked
+      // by Meta's data-source restrictions. CRM order saving remains unchanged.
 
       window.location.assign("/order-success");
     } catch (e) {
