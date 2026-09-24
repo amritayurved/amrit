@@ -12,15 +12,6 @@ export default function MetaPageView() {
 
   useEffect(() => {
     const eventId = crypto.randomUUID();
-    const sourceUrl = window.location.href;
-
-    fetch("/api/meta-pageview", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ eventId, sourceUrl }),
-      keepalive: true,
-    }).catch(() => {});
-
     let tries = 0;
     const timer = window.setInterval(() => {
       tries += 1;
