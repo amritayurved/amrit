@@ -75,6 +75,9 @@ export default function CheckoutPage() {
     const q = Number(params.get("qty") || 1);
     if (Number.isFinite(q)) setQty(Math.max(1, Math.min(10, q)));
 
+    const pay = params.get("payment");
+    if (pay === "COD" || pay === "Prepaid") setPayment(pay);
+
     const checkoutTimer = window.setTimeout(() => {
       sendMetaEvent("InitiateCheckout", {
         content_ids: [resolvedProduct],
