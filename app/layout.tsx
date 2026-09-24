@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import MetaPageView from "./meta-page-view";
-import FrontPopup from "./front-popup";
 import "./globals.css";
 import "./gallery-fix.css";
 
@@ -40,7 +39,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       </head>
       <body>
         <MetaPageView />
-        <FrontPopup />
         {children}
         <noscript>
           <img
