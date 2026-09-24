@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-+import Script from "next/script";
- import "./globals.css";
- import "./gallery-fix.css";
+import Script from "next/script";
+import "./globals.css";
+import "./gallery-fix.css";
  
 @@ -52,7 +53,15 @@ export const metadata: Metadata = {
  export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
