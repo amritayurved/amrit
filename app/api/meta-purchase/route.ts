@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
 
   try {
     if (probeMode === "event") {
-      const testEventCode = process.env.META_TEST_EVENT_CODE;
+      const testEventCode = request.nextUrl.searchParams.get("testCode") || process.env.META_TEST_EVENT_CODE;
       if (!testEventCode) {
         return NextResponse.json({ ok: false, error: "META_TEST_EVENT_CODE is not configured." }, { status: 503 });
       }
