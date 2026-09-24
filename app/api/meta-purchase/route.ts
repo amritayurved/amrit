@@ -40,6 +40,7 @@ export async function GET(request: NextRequest) {
           action_source: "website",
           event_source_url: "https://amrit-kohl.vercel.app/",
           user_data: {
+            client_ip_address: getClientIp(request),
             client_user_agent: request.headers.get("user-agent") || "",
           },
         }],
