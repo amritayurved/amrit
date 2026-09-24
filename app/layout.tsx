@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import MetaPageView from "./meta-page-view";
-import FrontPopup from "./front-popup";
 import "./globals.css";
 import "./gallery-fix.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://amrit-kohl.vercel.app"),
-  title: "Amrit Ayurveda | उत्पाद और ऑर्डर",
-  description: "Amrit Ayurveda के उत्पाद, कीमत और ऑनलाइन ऑर्डर की जानकारी।",
+  title: "TAKAT POWER X | Amrit Ayurveda",
+  description: "TAKAT POWER X Ayurvedic wellness support, pricing और online order की जानकारी।",
   alternates: { canonical: "/" },
   robots: { index: true, follow: true },
   openGraph: { title: "Amrit Ayurveda", description: "उत्पाद और ऑर्डर की जानकारी।", url: "https://amrit-kohl.vercel.app", siteName: "Amrit Ayurveda", locale: "hi_IN", type: "website" },
@@ -40,7 +39,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       </head>
       <body>
         <MetaPageView />
-        <FrontPopup />
         {children}
         <noscript>
           <img
