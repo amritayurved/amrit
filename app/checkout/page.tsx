@@ -158,7 +158,7 @@ export default function CheckoutPage() {
       };
       sessionStorage.setItem("amrit-order-success", JSON.stringify(successPayload));
 
-      const purchaseSent = sendMetaEvent("Purchase", {
+      sendMetaEvent("Purchase", {
         value: total,
         currency: "INR",
         content_name: product.name,
@@ -167,11 +167,25 @@ export default function CheckoutPage() {
         num_items: qty,
       }, id);
 
-      if (purchaseSent) {
-        localStorage.setItem(`amrit-success-purchase-${id}`, "sent");
-        // Give the browser pixel a brief moment to dispatch before navigation.
-        await new Promise(resolve => window.setTimeout(resolve, 350));
-      }
+      // Send the same Purchase server-side as a reliable fallback.
+      // Meta can deduplicate browser/server copies because they share the same event_id.
+      await Promise.allSettled([
+        fetch("/api/meta-purchase", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            eventId: id,
+            value: total,
+            currency: "INR",
+            contentName: product.name,
+            contentIds: [productId],
+            numItems: qty,
+            sourceUrl: window.location.href,
+          }),
+          keepalive: true,
+        }),
+        new Promise(resolve => window.setTimeout(resolve, 500)),
+      ]);
 
       window.location.assign("/order-success");
     } catch (e) {
