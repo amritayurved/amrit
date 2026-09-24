@@ -50,8 +50,13 @@ async function submitDirectlyToCrm(fields: Record<string, string>) {
   return result;
 }
 
-function sendMetaEvent(..._args: unknown[]) {
-  // Meta analytics intentionally disabled. Checkout still saves orders to the CRM.
+type MetaWindow = Window & { fbq?: (...args: unknown[]) => void };
+
+function sendMetaEvent(name: string, params: Record<string, unknown>, eventId: string) {
+  const fbq = (window as MetaWindow).fbq;
+  if (!fbq) return false;
+  fbq("track", name, params, { eventID: eventId });
+  return true;
 }
 
 export default function CheckoutPage() {
@@ -153,7 +158,7 @@ export default function CheckoutPage() {
       };
       sessionStorage.setItem("amrit-order-success", JSON.stringify(successPayload));
 
-      sendMetaEvent("Purchase", {
+      const purchaseSent = sendMetaEvent("Purchase", {
         value: total,
         currency: "INR",
         content_name: product.name,
@@ -161,6 +166,12 @@ export default function CheckoutPage() {
         content_type: "product",
         num_items: qty,
       }, id);
+
+      if (purchaseSent) {
+        localStorage.setItem(`amrit-success-purchase-${id}`, "sent");
+        // Give the browser pixel a brief moment to dispatch before navigation.
+        await new Promise(resolve => window.setTimeout(resolve, 350));
+      }
 
       window.location.assign("/order-success");
     } catch (e) {
