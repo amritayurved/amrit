@@ -58,6 +58,23 @@ export async function POST(request: NextRequest) {
 
     const result = await response.json().catch(() => ({}));
 
+    console.log("[META_PAGEVIEW_RESULT]", JSON.stringify({
+      status: response.status,
+      ok: response.ok,
+      events_received:
+        result && typeof result === "object" && "events_received" in result
+          ? (result as { events_received?: unknown }).events_received
+          : undefined,
+      messages:
+        result && typeof result === "object" && "messages" in result
+          ? (result as { messages?: unknown }).messages
+          : undefined,
+      fbtrace_id:
+        result && typeof result === "object" && "fbtrace_id" in result
+          ? (result as { fbtrace_id?: unknown }).fbtrace_id
+          : undefined,
+    }));
+
     if (!response.ok) {
       return NextResponse.json(
         { ok: false, status: response.status, result },
