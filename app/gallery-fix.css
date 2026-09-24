@@ -37,9 +37,9 @@
 
 .customGalleryGrid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 24px;
-  max-width: 1120px;
+  max-width: 780px;
   margin-inline: auto;
 }
 
@@ -106,7 +106,7 @@
 .customGalleryPlaceholder b { color: #f1a400 !important; }
 
 @media (max-width: 900px) {
-  .customGalleryGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .customGalleryGrid { grid-template-columns: 1fr; }
   .customGallerySlot { min-height: 420px; }
 }
 
