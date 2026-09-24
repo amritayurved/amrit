@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const PIXEL_ID = "3143912892480883";
+const PIXEL_ID = "1398113965721936";
 
 function getClientIp(request: NextRequest) {
   const forwarded = request.headers.get("x-forwarded-for");
