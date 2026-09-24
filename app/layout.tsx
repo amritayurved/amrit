@@ -1,5 +1,4 @@
-@@ -1,4 +1,5 @@
- import type { Metadata } from "next";
+import type { Metadata } from "next";
 +import Script from "next/script";
  import "./globals.css";
  import "./gallery-fix.css";
