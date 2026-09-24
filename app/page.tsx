@@ -911,8 +911,8 @@ export default function Home() {
             <button className="scrollOfferClose" type="button" aria-label="ऑफर बंद करें" onClick={closeScrollOffer}>×</button>
             <span className="scrollOfferBadge">⚡ LIMITED STOCK</span>
             <img
-              src="/takat-power-x.jpg"
-              alt="TAKAT POWER X front product view"
+              src="/takat-front-exact.webp"
+              alt="TAKAT POWER X front promotional artwork"
               style={{
                 display: "block",
                 width: "100%",
@@ -960,8 +960,8 @@ export default function Home() {
           <div className="tpxReferenceHero">
             <img
               className="tpxReferenceHeroPhoto"
-              src="/takat-power-x.jpg"
-              alt="TAKAT POWER X front product view"
+              src="/takat-front-exact.webp"
+              alt="TAKAT POWER X front promotional artwork"
               fetchPriority="high"
             />
             <div className="tpxReferenceHeroShade" aria-hidden="true" />
