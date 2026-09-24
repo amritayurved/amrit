@@ -10,7 +10,8 @@ function getClientIp(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   const accessToken = process.env.META_CAPI_ACCESS_TOKEN;
-  const probe = request.nextUrl.searchParams.get("probe") === "1";
+  const probeMode = request.nextUrl.searchParams.get("probe");
+  const probe = probeMode === "1" || probeMode === "event";
 
   if (!probe) {
     return NextResponse.json({
@@ -26,6 +27,37 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    if (probeMode === "event") {
+      const testEventCode = process.env.META_TEST_EVENT_CODE;
+      if (!testEventCode) {
+        return NextResponse.json({ ok: false, error: "META_TEST_EVENT_CODE is not configured." }, { status: 503 });
+      }
+      const payload = {
+        data: [{
+          event_name: "PageView",
+          event_time: Math.floor(Date.now() / 1000),
+          event_id: `capi-probe-${Date.now()}`,
+          action_source: "website",
+          event_source_url: "https://amrit-kohl.vercel.app/",
+          user_data: {
+            client_user_agent: request.headers.get("user-agent") || "",
+          },
+        }],
+        test_event_code: testEventCode,
+      };
+      const response = await fetch(
+        `https://graph.facebook.com/${PIXEL_ID}/events?access_token=${encodeURIComponent(accessToken)}`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(payload),
+          cache: "no-store",
+        }
+      );
+      const result = await response.json().catch(() => ({}));
+      return NextResponse.json({ ok: response.ok, status: response.status, result }, { status: response.ok ? 200 : 502 });
+    }
+
     const response = await fetch(
       `https://graph.facebook.com/${PIXEL_ID}?fields=id,name&access_token=${encodeURIComponent(accessToken)}`,
       { cache: "no-store" }
