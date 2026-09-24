@@ -8,13 +8,36 @@ function getClientIp(request: NextRequest) {
   return request.headers.get("x-real-ip") || "";
 }
 
-export async function GET() {
-  return NextResponse.json({
-    ok: true,
-    configured: Boolean(process.env.META_CAPI_ACCESS_TOKEN),
-    testMode: Boolean(process.env.META_TEST_EVENT_CODE),
-    pixelId: PIXEL_ID,
-  });
+export async function GET(request: NextRequest) {
+  const accessToken = process.env.META_CAPI_ACCESS_TOKEN;
+  const probe = request.nextUrl.searchParams.get("probe") === "1";
+
+  if (!probe) {
+    return NextResponse.json({
+      ok: true,
+      configured: Boolean(accessToken),
+      testMode: Boolean(process.env.META_TEST_EVENT_CODE),
+      pixelId: PIXEL_ID,
+    });
+  }
+
+  if (!accessToken) {
+    return NextResponse.json({ ok: false, error: "META_CAPI_ACCESS_TOKEN is not configured." }, { status: 503 });
+  }
+
+  try {
+    const response = await fetch(
+      `https://graph.facebook.com/${PIXEL_ID}?fields=id,name&access_token=${encodeURIComponent(accessToken)}`,
+      { cache: "no-store" }
+    );
+    const result = await response.json().catch(() => ({}));
+    return NextResponse.json({ ok: response.ok, status: response.status, result }, { status: response.ok ? 200 : 502 });
+  } catch (error) {
+    return NextResponse.json(
+      { ok: false, error: error instanceof Error ? error.message : "Unknown Meta probe error" },
+      { status: 502 }
+    );
+  }
 }
 
 export async function POST(request: NextRequest) {
