@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
 };
 
-const META_PIXEL_ID = "4101120370192000";
+const META_PIXEL_ID = "1720516185901735";
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
