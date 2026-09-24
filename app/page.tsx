@@ -910,6 +910,19 @@ export default function Home() {
           <section className="scrollOfferCard" onClick={event => event.stopPropagation()}>
             <button className="scrollOfferClose" type="button" aria-label="ऑफर बंद करें" onClick={closeScrollOffer}>×</button>
             <span className="scrollOfferBadge">⚡ LIMITED STOCK</span>
+            <img
+              src="/takat-power-x.jpg"
+              alt="TAKAT POWER X front product view"
+              style={{
+                display: "block",
+                width: "100%",
+                maxHeight: 250,
+                objectFit: "contain",
+                borderRadius: 14,
+                margin: "14px auto 16px",
+                background: "#fff",
+              }}
+            />
             <p className="scrollOfferLead">रुकिए! जाने से पहले</p>
             <h2 id="scroll-offer-title">यह ऑफर मत छोड़िए</h2>
             <p className="scrollOfferPrice"><strong>TAKAT POWER X</strong> अब सिर्फ <b>₹999</b> में</p>
@@ -947,8 +960,8 @@ export default function Home() {
           <div className="tpxReferenceHero">
             <img
               className="tpxReferenceHeroPhoto"
-              src="/hero-couple.webp"
-              alt="Outdoor wellness lifestyle"
+              src="/takat-power-x.jpg"
+              alt="TAKAT POWER X front product view"
               fetchPriority="high"
             />
             <div className="tpxReferenceHeroShade" aria-hidden="true" />
