@@ -40,7 +40,7 @@ export default function PixelTestPage() {
       return;
     }
     fbq("track", "PageView", { pixel_test_manual: true });
-    setManual("Manual PageView fired. Meta Events Manager 20–30 सेकंड बाद check करें.");
+    setManual("PageView command भेजी गई है। Meta ने event स्वीकार किया या नहीं, इसकी पुष्टि Test events में करें।");
   }
 
   useEffect(() => {
@@ -66,22 +66,22 @@ export default function PixelTestPage() {
     endpoint === "checking"
       ? "Checking…"
       : endpoint === "reachable"
-        ? "REACHABLE ✅"
-        : "BLOCKED ❌";
+        ? "IMAGE REQUEST SUCCEEDED ✅"
+        : "IMAGE REQUEST FAILED / TIMED OUT ⚠️";
 
   const fbqText =
     fbqReady === "checking"
       ? "Checking…"
       : fbqReady === "ready"
-        ? "READY ✅"
-        : "NOT READY ❌";
+        ? "LIBRARY LOADED ✅"
+        : "LIBRARY NOT LOADED ⚠️";
 
   return (
     <main style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: 24, fontFamily: "Arial, sans-serif", background: "#f6f7f7", color: "#111" }}>
       <section style={{ width: "100%", maxWidth: 620, background: "#fff", color: "#111", border: "1px solid #ddd", borderRadius: 16, padding: 24, lineHeight: 1.6 }}>
         <h1>Meta Pixel Diagnostic</h1>
         <p><b>Pixel ID:</b> {META_PIXEL_ID}</p>
-        <div style={{padding:12,border:"1px solid #ddd",borderRadius:10,margin:"12px 0",background:"#fafafa",color:"#111"}}><b>1. Meta tracking endpoint:</b><br/><span style={{fontSize:20,fontWeight:800,color:"#111"}}>{endpointText}</span></div>
+        <div style={{padding:12,border:"1px solid #ddd",borderRadius:10,margin:"12px 0",background:"#fafafa",color:"#111"}}><b>1. Meta image request:</b><br/><span style={{fontSize:20,fontWeight:800,color:"#111"}}>{endpointText}</span></div>
         <div style={{padding:12,border:"1px solid #ddd",borderRadius:10,margin:"12px 0",background:"#fafafa",color:"#111"}}><b>2. fbq library:</b><br/><span style={{fontSize:20,fontWeight:800,color:"#111"}}>{fbqText}</span></div>
 
         <button onClick={fireFbq} style={{ padding: "12px 16px", marginRight: 10, marginBottom: 10, color:"#111", background:"#eee", border:"1px solid #bbb", borderRadius:8 }}>
@@ -94,8 +94,8 @@ export default function PixelTestPage() {
         {manual ? <p><b>{manual}</b></p> : null}
 
         <hr style={{ margin: "20px 0" }} />
-        <p>अगर ऊपर दोनों ✅ हैं लेकिन Events Manager में No activity है, तो website code काम कर रहा है और अगली जाँच Meta के selected Pixel/Dataset की करनी है।</p>
-        <p>अगर कोई ❌ है, तो browser/network Meta tracking को block कर रहा है। दूसरे browser या mobile data से यह page खोलकर Retry करें।</p>
+        <p>Library loaded का मतलब केवल Meta की script लोड हुई है। इससे Pixel उपलब्ध होने या Meta द्वारा PageView स्वीकार करने की पुष्टि नहीं होती।</p>
+        <p>Image request fail या timeout होने से कारण तय नहीं होता। Browser/network blocking, Meta का response या Pixel की उपलब्धता जाँचनी होगी। Meta Events Manager में इसी Pixel की Settings और Test events जाँचें।</p>
       </section>
     </main>
   );
