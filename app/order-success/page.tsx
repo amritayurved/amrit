@@ -20,15 +20,6 @@ function money(value: number) {
   });
 }
 
-type MetaWindow = Window & { fbq?: (...args: unknown[]) => void };
-
-function sendMetaEvent(name: string, params: Record<string, unknown>, eventId: string) {
-  const fbq = (window as MetaWindow).fbq;
-  if (!fbq) return false;
-  fbq("track", name, params, { eventID: eventId });
-  return true;
-}
-
 export default function OrderSuccessPage() {
   const [order, setOrder] = useState<SuccessOrder | null>(null);
 
@@ -36,33 +27,6 @@ export default function OrderSuccessPage() {
     const raw = sessionStorage.getItem("amrit-order-success");
     const parsed = raw ? JSON.parse(raw) as SuccessOrder : null;
     setOrder(parsed);
-
-    if (parsed?.id && parsed.payment === "COD") {
-      const purchaseKey = `amrit-success-purchase-${parsed.id}`;
-      if (localStorage.getItem(purchaseKey) !== "sent") {
-        let attempts = 0;
-        const purchaseTimer = window.setInterval(() => {
-          attempts += 1;
-          const sent = sendMetaEvent("Purchase", {
-            value: Number(parsed.total || 0),
-            currency: "INR",
-            content_name: parsed.productName,
-            content_ids: [parsed.productId],
-            content_type: "product",
-            num_items: Number(parsed.quantity || 1),
-          }, parsed.id);
-          if (sent) {
-            localStorage.setItem(purchaseKey, "sent");
-            window.clearInterval(purchaseTimer);
-          } else if (attempts >= 20) {
-            window.clearInterval(purchaseTimer);
-          }
-        }, 500);
-        return () => {
-          window.clearInterval(purchaseTimer);
-        };
-      }
-    }
 
     return undefined;
   }, []);
