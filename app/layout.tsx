@@ -13,6 +13,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="hi">
       <head>
+        {/* Meta Pixel base code */}
         <script
           id="meta-pixel"
           dangerouslySetInnerHTML={{
