@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const META_PIXEL_ID = "849242441547365";
+const META_PIXEL_ID = "3143912892480883";
 
 type MetaWindow = Window & {
   fbq?: ((...args: unknown[]) => void) & { callMethod?: (...args: unknown[]) => void };
