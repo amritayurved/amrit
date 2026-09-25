@@ -139,8 +139,19 @@ export default function CheckoutPage() {
       };
       sessionStorage.setItem("amrit-order-success", JSON.stringify(successPayload));
 
-      // Purchase tracking is intentionally not sent to Meta while the event is blocked
-      // by Meta's data-source restrictions. CRM order saving remains unchanged.
+            // Meta Pixel Purchase event — sirf amount aur currency, koi product detail nahi
+      try {
+        if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
+          (window as any).fbq("track", "Purchase", {
+            value: total,
+            currency: "INR",
+          });
+        }
+      } catch (e) {
+        // Silently ignore agar fbq load na hua ho
+      }
+  // Silently ignore agar fbq load na hua ho
+}
 
       window.location.assign("/order-success");
     } catch (e) {
