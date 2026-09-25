@@ -150,8 +150,7 @@ export default function CheckoutPage() {
       } catch (e) {
         // Silently ignore agar fbq load na hua ho
       }
-  // Silently ignore agar fbq load na hua ho
-}
+  
 
       window.location.assign("/order-success");
     } catch (e) {
