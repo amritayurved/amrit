@@ -139,7 +139,7 @@ export default function CheckoutPage() {
       };
       sessionStorage.setItem("amrit-order-success", JSON.stringify(successPayload));
 
-            // Meta Pixel Purchase event — sirf amount aur currency, koi product detail nahi
+                  // Meta Pixel Purchase event — sirf amount aur currency, koi product detail nahi
       try {
         if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
           (window as any).fbq("track", "Purchase", {
@@ -150,9 +150,11 @@ export default function CheckoutPage() {
       } catch (e) {
         // Silently ignore agar fbq load na hua ho
       }
-  
 
-      window.location.assign("/order-success");
+      // Thoda ruk kar redirect karein taki tracking event bhejne ka time mil jaaye
+      setTimeout(() => {
+        window.location.assign("/order-success");
+      }, 300);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Order save नहीं हुआ। दोबारा try करें।");
     } finally {
