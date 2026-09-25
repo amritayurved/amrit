@@ -152,9 +152,9 @@ export default function CheckoutPage() {
       }
 
       // Thoda ruk kar redirect karein taki tracking event bhejne ka time mil jaaye
-      setTimeout(() => {
-        window.location.assign("/order-success");
-      }, 300);
+         setTimeout(() => {
+     window.location.assign("/order-success");
+   }, 300);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Order save नहीं हुआ। दोबारा try करें।");
     } finally {
