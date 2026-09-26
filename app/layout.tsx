@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./gallery-fix.css";
 import Script from "next/script";
-import FrontPopup from "./front-popup";
 
 const META_PIXEL_ID = "2952176195138054";
 
@@ -43,7 +42,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {/* End Meta Pixel Code */}
       </head>
       <body>
-        <FrontPopup />
         {children}
       </body>
     </html>

@@ -947,8 +947,8 @@ export default function Home() {
           <div className="tpxReferenceHero">
             <img
               className="tpxReferenceHeroPhoto"
-              src="/hero-couple.webp"
-              alt="Outdoor wellness lifestyle"
+              src="/takat-running-hero.webp"
+              alt="दो लोग पार्क में दौड़ते हुए, सामने TAKAT POWER X का पैक"
               fetchPriority="high"
             />
             <div className="tpxReferenceHeroShade" aria-hidden="true" />
@@ -967,10 +967,6 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="tpxProductStage">
-              <img src="/takat-power-x.jpg" alt="TAKAT POWER X product pack" />
-            </div>
-
             <div className="tpxFeatureBar">
               <div><b>25+</b><span>SUPER<br />HERBS</span></div>
               <div><b>100%</b><span>AYURVEDIC<br />HERBS</span></div>
@@ -980,7 +976,7 @@ export default function Home() {
           </div>
 
           <div className="tpxReferenceBuy">
-            <h2>TAKAT POWER X — रोज़ की वेलनेस के लिए आयुर्वेदिक सपोर्ट</h2>
+            <h2>Takat Power X — रोज़ की वेलनेस के लिए आयुर्वेदिक सपोर्ट</h2>
             <div className="tpxReferencePrice"><strong>Rs. 999.00</strong><del>Rs. 1,500.00</del></div>
             <p className="tpxTaxes">Taxes included.</p>
 
@@ -1060,6 +1056,28 @@ export default function Home() {
             .tpxReferenceBuy h2{font-size:20px}.tpxBuyButton{min-height:50px;font-size:12px}.tpxSaleLine{font-size:15px}
           }
           @media(max-width:390px){.tpxReferenceHero{min-height:810px}.tpxReferenceCopy{width:69%;padding-left:14px}.tpxReferenceCopy h1{font-size:47px}.tpxProductStage{width:130px;right:7px}.tpxFeatureBar span{font-size:8px}}
+          .tpxReferenceHero{min-height:0;aspect-ratio:3/4}
+          .tpxReferenceHeroPhoto{object-position:center}
+          .tpxReferenceHeroShade{background:linear-gradient(90deg,rgba(0,0,0,.42),transparent 70%),linear-gradient(0deg,rgba(0,0,0,.25),transparent 35%)}
+          .tpxReferenceCopy{width:54%;padding:7% 2% 150px 5%}
+          .tpxReferenceCopy h1{font-size:clamp(60px,9vw,112px)}
+          .tpxBenefitStack>div{min-height:clamp(54px,6vw,78px)}
+          .tpxFeatureBar{bottom:16px}
+          @media(max-width:680px){
+            .tpxReferenceHero{min-height:0;aspect-ratio:3/4}
+            .tpxReferenceCopy{width:55%;padding:7% 0 0 5%}
+            .tpxHindiLead{font-size:clamp(14px,4vw,25px);margin-bottom:9px}
+            .tpxReferenceCopy h1{font-size:clamp(34px,9.5vw,67px);line-height:.89;letter-spacing:-1px;margin-bottom:7px}
+            .tpxGoldLabel{margin-top:4px;padding:7px 8px;font-size:clamp(11px,3.1vw,19px)}
+            .tpxSupportText{font-size:clamp(10px,2.8vw,16px);margin:11px 0}
+            .tpxBenefitStack{margin-top:8px}
+            .tpxBenefitStack>div{grid-template-columns:50px 1fr;gap:4px;min-height:clamp(40px,10vw,67px)}
+            .tpxBenefitStack b{font-size:clamp(9px,2.5vw,15px)}
+            .tpxBenefitStack span{font-size:clamp(7px,2vw,11px)}
+            .tpxFeatureBar{left:8px;right:8px;bottom:8px;min-height:clamp(57px,15vw,106px)}
+            .tpxFeatureBar b{font-size:clamp(13px,4vw,22px)}
+            .tpxFeatureBar span{font-size:clamp(7px,2vw,11px)}
+          }
         `}</style>
       </div>
 
