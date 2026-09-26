@@ -250,8 +250,7 @@ export default function Home() {
   const [savedOrderId, setSavedOrderId] = useState("");
   const [confirmedOrder, setConfirmedOrder] = useState<ConfirmedOrder | null>(null);
   const [orderSuccessOpen, setOrderSuccessOpen] = useState(false);
-  const [scrollOfferOpen, setScrollOfferOpen] = useState(false);
-  const [scrollOfferDismissed, setScrollOfferDismissed] = useState(false);
+  const [scrollOfferOpen, setScrollOfferOpen] = useState(true);
   const [quickOrderOpen, setQuickOrderOpen] = useState(false);
   const [quickOrderQty, setQuickOrderQty] = useState(1);
   const quickOrderRef = useRef<{ key: string; id: string } | null>(null);
@@ -296,19 +295,6 @@ export default function Home() {
   }, [ageGateOpen]);
 
   useEffect(() => {
-    if (ageGateOpen || scrollOfferDismissed || cartOpen || orderSuccessOpen || quickOrderOpen) return;
-
-    const openOfferOnScroll = () => {
-      if (window.scrollY < 90) return;
-      setScrollOfferOpen(true);
-      window.removeEventListener("scroll", openOfferOnScroll);
-    };
-
-    window.addEventListener("scroll", openOfferOnScroll, { passive: true });
-    return () => window.removeEventListener("scroll", openOfferOnScroll);
-  }, [ageGateOpen, scrollOfferDismissed, cartOpen, orderSuccessOpen, quickOrderOpen]);
-
-  useEffect(() => {
     if (!scrollOfferOpen) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -316,7 +302,6 @@ export default function Home() {
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setScrollOfferOpen(false);
-        setScrollOfferDismissed(true);
       }
     };
 
@@ -622,13 +607,6 @@ export default function Home() {
 
   function closeScrollOffer() {
     setScrollOfferOpen(false);
-    setScrollOfferDismissed(true);
-  }
-
-  function orderFromScrollOffer() {
-    setScrollOfferOpen(false);
-    setScrollOfferDismissed(true);
-    openQuickOrder(1);
   }
 
   function activitySessionId() {
@@ -906,16 +884,51 @@ export default function Home() {
         </section>
       </div>}
       {scrollOfferOpen && !ageGateOpen && !cartOpen && !orderSuccessOpen && !quickOrderOpen && (
-        <div className="scrollOfferOverlay" role="dialog" aria-modal="true" aria-labelledby="scroll-offer-title" onClick={closeScrollOffer}>
-          <section className="scrollOfferCard" onClick={event => event.stopPropagation()}>
-            <button className="scrollOfferClose" type="button" aria-label="ऑफर बंद करें" onClick={closeScrollOffer}>×</button>
-            <span className="scrollOfferBadge">⚡ LIMITED STOCK</span>
-            <p className="scrollOfferLead">रुकिए! जाने से पहले</p>
-            <h2 id="scroll-offer-title">यह ऑफर मत छोड़िए</h2>
-            <p className="scrollOfferPrice"><strong>TAKAT POWER X</strong> अब सिर्फ <b>₹999</b> में</p>
-            <p className="scrollOfferCod">✅ Cash on Delivery उपलब्ध</p>
-            <button className="scrollOfferButton" type="button" onClick={orderFromScrollOffer}>अभी ऑर्डर करें ₹999 COD</button>
-            <small className="scrollOfferTrust">🔒 100% Discreet Packaging · Free Delivery</small>
+        <div
+          className="scrollOfferOverlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label="TAKAT POWER X opening offer"
+          onClick={closeScrollOffer}
+        >
+          <section
+            className="scrollOfferCard"
+            onClick={event => event.stopPropagation()}
+            style={{
+              width: "min(92vw, 430px)",
+              padding: 0,
+              overflow: "hidden",
+              borderRadius: 20,
+              background: "#080808",
+              lineHeight: 0,
+            }}
+          >
+            <button
+              className="scrollOfferClose"
+              type="button"
+              aria-label="पॉपअप बंद करें"
+              onClick={closeScrollOffer}
+              style={{
+                zIndex: 2,
+                background: "rgba(0,0,0,.82)",
+                color: "#fff",
+                border: "1px solid rgba(255,255,255,.5)",
+              }}
+            >
+              ×
+            </button>
+            <img
+              src="/takat-opening-popup.webp"
+              alt="TAKAT POWER X Ayurvedic wellness offer"
+              style={{
+                display: "block",
+                width: "100%",
+                height: "auto",
+                maxHeight: "84vh",
+                objectFit: "contain",
+                background: "#080808",
+              }}
+            />
           </section>
         </div>
       )}
