@@ -77,7 +77,7 @@ export default function StoreOrder() {
         throw new Error(result?.error || "ऑर्डर सेव नहीं हुआ। कृपया दोबारा कोशिश करें।");
       }
       sessionStorage.setItem("amrit-order-success", JSON.stringify({
-        id: String(result.order.orderCode), productId: "takat-power-x", productName: "TAKAT POWER X",
+        id: String(result.order.orderCode), customerName: name.trim(), productId: "takat-power-x", productName: "TAKAT POWER X",
         quantity: qty, total: pack.price, payment: "COD", upiUrl: "",
       }));
       if (typeof (window as Window & { fbq?: (...args: unknown[]) => void }).fbq === "function") {
