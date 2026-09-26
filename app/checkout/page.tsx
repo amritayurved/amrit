@@ -130,6 +130,7 @@ export default function CheckoutPage() {
 
       const successPayload = {
         id,
+        customerName: name.trim(),
         productId,
         productName: product.name,
         quantity: qty,
