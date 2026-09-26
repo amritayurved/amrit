@@ -4,40 +4,10 @@ import { useEffect, useState } from "react";
 
 export default function FrontPopup() {
   const [open, setOpen] = useState(false);
-  const [imageSrc, setImageSrc] = useState("");
 
   useEffect(() => {
     setOpen(true);
-
-    let active = true;
-    fetch("/front-popup-data.txt", { cache: "no-store" })
-      .then((response) => {
-        if (!response.ok) throw new Error("Popup image could not be loaded");
-        return response.text();
-      })
-      .then((value) => {
-        if (active) setImageSrc(value.trim());
-      })
-      .catch(() => {
-        if (active) setImageSrc("");
-      });
-
-    return () => {
-      active = false;
-    };
   }, []);
-
-  const closePopup = () => setOpen(false);
-
-  const goToOrder = () => {
-    setOpen(false);
-    const products = document.getElementById("products");
-    if (products) {
-      products.scrollIntoView({ behavior: "smooth", block: "start" });
-      return;
-    }
-    window.location.hash = "products";
-  };
 
   if (!open) return null;
 
@@ -46,7 +16,7 @@ export default function FrontPopup() {
       role="dialog"
       aria-modal="true"
       aria-label="TAKAT POWER X"
-      onClick={closePopup}
+      onClick={() => setOpen(false)}
       style={{
         position: "fixed",
         inset: 0,
@@ -56,8 +26,6 @@ export default function FrontPopup() {
         justifyContent: "center",
         padding: 12,
         background: "rgba(0,0,0,.82)",
-        backdropFilter: "blur(3px)",
-        WebkitBackdropFilter: "blur(3px)",
       }}
     >
       <div
@@ -66,15 +34,12 @@ export default function FrontPopup() {
           position: "relative",
           width: "min(430px, 96vw)",
           maxHeight: "92vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
         }}
       >
         <button
           type="button"
-          aria-label="Close popup"
-          onClick={closePopup}
+          aria-label="पॉपअप बंद करें"
+          onClick={() => setOpen(false)}
           style={{
             position: "absolute",
             top: 8,
@@ -96,53 +61,29 @@ export default function FrontPopup() {
           ×
         </button>
 
-        {imageSrc ? (
-          <button
-            type="button"
-            onClick={goToOrder}
-            aria-label="TAKAT POWER X offer देखें और order करें"
+        <a
+          href="/checkout?product=takat-power-x&qty=1"
+          aria-label="TAKAT POWER X order करें"
+          style={{
+            display: "block",
+            width: "100%",
+            borderRadius: 18,
+            overflow: "hidden",
+            boxShadow: "0 20px 70px rgba(0,0,0,.45)",
+          }}
+        >
+          <img
+            src="/takat-opening-popup.webp"
+            alt="TAKAT POWER X"
             style={{
+              display: "block",
               width: "100%",
-              border: 0,
-              padding: 0,
-              margin: 0,
-              background: "transparent",
-              cursor: "pointer",
-              borderRadius: 18,
-              overflow: "hidden",
-              boxShadow: "0 20px 70px rgba(0,0,0,.45)",
+              height: "auto",
+              maxHeight: "90vh",
+              objectFit: "contain",
             }}
-          >
-            <img
-              src={imageSrc}
-              alt="TAKAT POWER X"
-              style={{
-                display: "block",
-                width: "100%",
-                height: "auto",
-                maxHeight: "90vh",
-                objectFit: "contain",
-              }}
-            />
-          </button>
-        ) : (
-          <div
-            style={{
-              width: "100%",
-              minHeight: 220,
-              borderRadius: 18,
-              background: "#111",
-              color: "#fff",
-              display: "grid",
-              placeItems: "center",
-              padding: 24,
-              textAlign: "center",
-              fontWeight: 800,
-            }}
-          >
-            TAKAT POWER X
-          </div>
-        )}
+          />
+        </a>
       </div>
     </div>
   );
