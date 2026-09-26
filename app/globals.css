@@ -16,30 +16,42 @@ a { color:inherit; text-decoration:none; }
 .ageGateCard .redButton { width:100%; min-height:55px; }
 .ageExit { margin-top:11px; padding:10px 18px; border:0; color:#837b7c; background:transparent; font-size:11px; font-weight:800; }
 .ageGateCard > small { display:block; margin-top:16px; color:#6e6667; font-size:8px; font-weight:900; letter-spacing:.2em; }
-.orderSuccessOverlay { position:fixed; inset:0; z-index:120; display:grid; place-items:center; padding:14px; overflow-y:auto; background:#000000df; backdrop-filter:blur(12px); }
-.orderSuccessCard { width:min(510px,100%); max-height:calc(100dvh - 28px); overflow-y:auto; padding:30px 28px 25px; border:1px solid #d8b85a; border-radius:24px; background:#fffaf0; color:#18140d; box-shadow:0 38px 110px #000,0 0 52px #d59b282e; text-align:center; }
-.orderSuccessCheck { width:68px; height:68px; display:grid; place-items:center; margin:0 auto 15px; border:3px solid #11964b; border-radius:50%; background:#effbf3; color:#11964b; font-size:36px; font-weight:900; }
-.orderSuccessCard .sectionKicker { color:#a37100; }
-.orderSuccessCard h2 { margin:8px 0 12px; color:#123c24; font-family:Georgia,serif; font-size:clamp(29px,7vw,40px); line-height:1.1; }
-.orderCustomerThanks { margin:0 0 8px; color:#262117; font-size:18px; }
-.orderCustomerThanks strong { color:#0c7138; }
-.orderSuccessMessage { margin:0 0 18px; color:#5e574a; font-size:14px; line-height:1.6; }
-.confirmedOrderSummary { margin:0 0 13px; padding:14px 17px; border-block:1px solid #dfd2b5; }
-.confirmedOrderSummary p { display:flex; align-items:center; justify-content:center; gap:34px; margin:0; font-size:19px; }
-.confirmedOrderSummary p > span { color:#0d7d3d; font-weight:900; }
-.confirmedOrderSummary small { display:block; margin-top:7px; color:#746b59; font-size:10px; font-weight:800; letter-spacing:.06em; }
-.orderConfirmationCode { margin:0 0 14px; padding:12px; border:1px dashed #bea34f; border-radius:12px; background:#fff5cf; }
+.orderSuccessOverlay { position:fixed; inset:0; z-index:120; display:grid; place-items:center; padding:14px; overflow-y:auto; background:#061009c9; backdrop-filter:blur(9px); -webkit-backdrop-filter:blur(9px); }
+.orderSuccessCard { width:min(640px,100%); max-height:calc(100dvh - 28px); position:relative; overflow-y:auto; padding:34px 28px 25px; border:1px solid #d8c892; border-radius:25px; background:radial-gradient(circle at 50% 8%,#e6fff0 0,transparent 28%),linear-gradient(180deg,#fff 0%,#fffdf8 70%,#fffaf0 100%); color:#18251d; box-shadow:0 38px 110px #0009,0 0 0 1px #ffffffd9 inset; text-align:center; }
+.orderSuccessCard::before { content:""; height:5px; position:absolute; inset:0 0 auto; background:linear-gradient(90deg,#1aa85b,#77d99e,#d9b24c,#f1cf70); }
+.orderSuccessClose { width:34px; height:34px; position:absolute; top:12px; right:12px; display:grid; place-items:center; padding:0; border:0; border-radius:50%; background:#dfe5e1; color:#fff; font-size:22px; line-height:1; cursor:pointer; }
+.orderSuccessCheck { width:72px; height:72px; display:grid; place-items:center; margin:0 auto 13px; border:4px solid #12a451; border-radius:50%; background:#e9fff1; color:#12a451; font-size:38px; font-weight:900; box-shadow:0 0 0 18px #bcf8d255,0 13px 35px #18a75a32; }
+.orderSuccessCard .sectionKicker { margin:12px 0 0; color:#33724a; letter-spacing:.14em; }
+.orderSuccessCard h2 { margin:6px 0 10px; color:#365a40; font-family:Georgia,serif; font-size:clamp(28px,7vw,39px); line-height:1.1; }
+.orderCustomerThanks { margin:0 0 7px; color:#2d2f2d; font-size:18px; }
+.orderCustomerThanks strong { color:#243a2b; }
+.orderSuccessMessage { margin:0 0 14px; color:#68736c; font-size:13px; line-height:1.55; }
+.confirmedOrderSummary { width:min(100%,360px); margin:0 auto 12px; padding:11px 16px; border:1px solid #cbdccf; border-radius:12px; background:#f3fbf5; }
+.confirmedOrderSummary p { display:flex; align-items:center; justify-content:center; gap:16px; margin:0; font-size:18px; }
+.confirmedOrderSummary p > span { color:#44734f; font-weight:900; }
+.confirmedOrderSummary small { display:block; margin-top:6px; color:#78827b; font-size:9px; font-weight:800; letter-spacing:.06em; }
+.orderConfirmationCode { margin:0 0 13px; padding:7px 12px; background:transparent; }
 .orderConfirmationCode span,.orderConfirmationCode strong { display:block; }
-.orderConfirmationCode span { color:#8a7435; font-size:8px; font-weight:900; letter-spacing:.12em; }
-.orderConfirmationCode strong { margin-top:6px; color:#262016; font-size:16px; overflow-wrap:anywhere; }
-.orderContactMessage { margin:0 0 12px; padding:14px; border-left:4px solid #0f8f45; border-radius:8px; background:#edf8f1; color:#2d4937; text-align:left; }
-.orderContactMessage strong { display:block; color:#125d31; font-size:13px; line-height:1.5; }
-.orderContactMessage p { margin:5px 0 0; font-size:11px; line-height:1.55; }
-.orderDispatchMessage { margin:0 0 13px; color:#665e50; font-size:11px; line-height:1.55; }
-.orderTrustRow { display:flex; justify-content:center; gap:8px; margin:0 0 17px; }
-.orderTrustRow span { padding:7px 9px; border:1px solid #e1d4b3; border-radius:999px; background:#f8f1df; color:#665d49; font-size:9px; font-weight:900; }
-.orderSuccessCard .redButton { width:100%; min-height:52px; background:linear-gradient(90deg,#dcae31,#f0cd68); color:#312609; box-shadow:0 12px 28px #b38a2440; }
-.orderHelpNote { display:block; margin-top:12px; color:#998f7d; font-size:9px; }
+.orderConfirmationCode span { color:#8b9290; font-size:8px; font-weight:900; letter-spacing:.09em; }
+.orderConfirmationCode strong { margin-top:5px; color:#37434c; font-size:15px; overflow-wrap:anywhere; }
+.orderContactMessage { margin:0 0 12px; padding:13px 15px; border:1px solid #9ec9ff; border-radius:12px; background:#edf5ff; color:#285996; text-align:left; box-shadow:0 5px 16px #4a8bd214 inset; }
+.orderContactMessage strong { display:block; color:#2e5c96; font-size:12px; line-height:1.55; }
+.orderContactMessage p { margin:4px 0 0; color:#416890; font-size:10px; line-height:1.5; }
+.orderDispatchMessage { margin:0 0 12px; color:#666d69; font-size:10px; line-height:1.55; }
+.orderTrustRow { display:flex; justify-content:center; flex-wrap:wrap; gap:9px; margin:0 0 15px; }
+.orderTrustRow span { padding:6px 9px; border:0; border-radius:999px; background:#f1f8f2; color:#3d6c48; font-size:9px; font-weight:900; }
+.orderSuccessCard .redButton { width:100%; min-height:54px; border-radius:12px; background:linear-gradient(90deg,#d4aa42,#f0cf72,#d5ab45); color:#31563a; box-shadow:0 12px 28px #b38a2440; font-size:17px; }
+.orderHelpNote { display:block; margin-top:11px; color:#929999; font-size:9px; line-height:1.5; }
+.orderHelpNote a { color:#7d8587; font-weight:900; text-decoration:none; }
+@media (max-width:520px) {
+  .orderSuccessOverlay { padding:10px; }
+  .orderSuccessCard { width:min(100%,430px); padding:31px 18px 20px; border-radius:22px; }
+  .orderSuccessCheck { width:64px; height:64px; font-size:34px; box-shadow:0 0 0 14px #bcf8d24d,0 10px 28px #18a75a2c; }
+  .orderSuccessCard h2 { font-size:30px; }
+  .orderCustomerThanks { font-size:16px; }
+  .confirmedOrderSummary { width:100%; }
+  .orderContactMessage strong { font-size:11px; }
+}
 .siteShell { width:min(1180px,calc(100% - 40px)); margin-inline:auto; }
 .siteRoot { min-height:100vh; background:var(--black); }
 .saleTicker { height:42px; overflow:hidden; display:flex; align-items:center; background:var(--red); color:white; font-size:13px; font-weight:800; white-space:nowrap; }
