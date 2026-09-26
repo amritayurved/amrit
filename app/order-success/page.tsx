@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 
-
 type SuccessOrder = {
   id: string;
+  customerName?: string;
   productId: string;
   productName: string;
   quantity: number;
@@ -25,42 +25,56 @@ export default function OrderSuccessPage() {
 
   useEffect(() => {
     const raw = sessionStorage.getItem("amrit-order-success");
-    const parsed = raw ? JSON.parse(raw) as SuccessOrder : null;
-    setOrder(parsed);
-
-    return undefined;
+    try {
+      setOrder(raw ? JSON.parse(raw) as SuccessOrder : null);
+    } catch {
+      setOrder(null);
+    }
   }, []);
 
+  const close = () => window.location.assign("/");
+
   return (
-    <main style={{minHeight:"100vh",background:"#0b0b0d",color:"#fff",display:"grid",placeItems:"center",padding:20,fontFamily:"Arial,sans-serif"}}>
-      <section style={{width:"100%",maxWidth:560,background:"#17171b",border:"1px solid #333",borderRadius:22,padding:24,textAlign:"center"}}>
-        <div style={{fontSize:48}}>✓</div>
-        <h1 style={{margin:"8px 0"}}>Order Confirmed</h1>
-        <p style={{opacity:.75}}>आपका order सफलतापूर्वक receive हो गया है।</p>
+    <main style={{minHeight:"100vh",background:"radial-gradient(circle at 50% 12%,#1c3b29 0,#0b0b0d 52%,#050505 100%)",fontFamily:"Arial,sans-serif"}}>
+      <div className="orderSuccessOverlay" role="dialog" aria-modal="true" aria-labelledby="order-success-title">
+        <section className="orderSuccessCard">
+          <button className="orderSuccessClose" type="button" aria-label="ऑर्डर पुष्टि बंद करें" onClick={close}>×</button>
+          <span className="orderSuccessCheck" aria-hidden="true">✓</span>
+          <p className="sectionKicker center">AMRIT AYURVEDA</p>
+          <h2 id="order-success-title">ऑर्डर कन्फर्म! 🎉</h2>
 
-        {order ? (
-          <>
-            <p style={{opacity:.8}}>Order ID: <b>{order.id}</b></p>
-            <p><b>{order.productName}</b> × {order.quantity}</p>
-            <p style={{fontSize:30,fontWeight:900}}>₹{money(order.total)}</p>
+          {order ? (
+            <>
+              <p className="orderCustomerThanks">धन्यवाद, <strong>{order.customerName || "Customer"} जी</strong> 🙏</p>
+              <p className="orderSuccessMessage">आपका {order.payment} ऑर्डर सफलतापूर्वक प्राप्त हो गया है।</p>
+              <div className="confirmedOrderSummary">
+                <p><strong>{order.quantity} {order.quantity === 1 ? "Pack" : "Packs"}</strong><span>₹{money(order.total)}</span></p>
+                <small>{order.productName}</small>
+              </div>
+              <p className="orderConfirmationCode"><span>ऑर्डर आईडी / ORDER ID</span><strong>{order.id}</strong></p>
 
-            {order.payment === "Prepaid" && order.upiUrl ? (
-              <>
-                <p>अब UPI payment पूरा करें।</p>
-                <a href={order.upiUrl} style={{display:"block",padding:"15px 18px",borderRadius:12,background:"#16883f",color:"#fff",textDecoration:"none",fontWeight:900}}>
+              {order.payment === "Prepaid" && order.upiUrl ? (
+                <a href={order.upiUrl} style={{display:"block",margin:"0 0 12px",padding:"14px 18px",borderRadius:12,background:"#16883f",color:"#fff",textDecoration:"none",fontWeight:900}}>
                   UPI PAYMENT खोलें
                 </a>
-              </>
-            ) : (
-              <p style={{fontWeight:800}}>Cash on Delivery • Parcel मिलने पर payment करें।</p>
-            )}
-          </>
-        ) : (
-          <p>Order confirmation सुरक्षित हो चुका है।</p>
-        )}
+              ) : (
+                <div className="orderContactMessage">
+                  <strong>📞 हमारी टीम आज या अगले कार्यदिवस में आपके दिए गए मोबाइल नंबर पर ऑर्डर की पुष्टि के लिए कॉल करेगी।</strong>
+                  <p>कृपया अपना फोन उपलब्ध रखें।</p>
+                </div>
+              )}
 
-        <a href="/" style={{display:"block",marginTop:18,color:"#fff"}}>← Website पर वापस जाएँ</a>
-      </section>
+              <p className="orderDispatchMessage">📦 ऑर्डर की पुष्टि होने के बाद ही आपका parcel सुरक्षित तरीके से pack करके भेजा जाएगा।</p>
+              <div className="orderTrustRow"><span>📦 100% गोपनीय पैकेजिंग</span><span>🛡️ सुरक्षित डिलीवरी</span></div>
+            </>
+          ) : (
+            <p className="orderSuccessMessage">आपका ऑर्डर सुरक्षित रूप से प्राप्त हो गया है।</p>
+          )}
+
+          <button className="redButton" type="button" onClick={close}>ठीक है ✓</button>
+          <small className="orderHelpNote">यदि आपको तुरंत सहायता चाहिए तो कॉल करें: <a href="tel:+918290695226">+91 82906 95226</a></small>
+        </section>
+      </div>
     </main>
   );
 }
