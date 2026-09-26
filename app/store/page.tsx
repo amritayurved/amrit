@@ -1,5 +1,6 @@
 import Image from "next/image";
 import ScrollOffer from "./scroll-offer";
+import StoreOrder from "./store-order";
 import "./store.css";
 
 const whatsapp = "https://wa.me/918290695226?text=" + encodeURIComponent("नमस्ते, मुझे TAKAT POWER X के बारे में जानकारी चाहिए।");
@@ -38,6 +39,7 @@ export default function StorePage() {
   return (
     <main className="prakritiStore">
       <ScrollOffer />
+      <StoreOrder />
       <div className="topOffer">FREE DELIVERY • CASH ON DELIVERY AVAILABLE • AMRIT AYURVEDA</div>
 
       <header className="storeHeader">
