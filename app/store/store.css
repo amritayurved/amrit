@@ -40,7 +40,7 @@ body{margin:0;background:#f8f5ed;color:var(--ink);font-family:Arial,Helvetica,sa
 .storeRunningPhoto{object-fit:cover;object-position:center 43%}
 .productSection{display:block;max-width:850px;padding:78px 28px}
 .productSection .sectionCopy{max-width:760px;margin:auto}
-@media(max-width:850px){.heroVisual{min-height:550px}.storeRunningPhoto{object-position:center 40%}}
+@media(max-width:850px){.heroVisual{order:-1;min-height:550px}.storeRunningPhoto{object-position:center 40%}}
 @media(max-width:560px){.heroVisual{min-height:520px}}
 
 .storeOfferOverlay{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:18px;background:#080b09b8;backdrop-filter:blur(4px)}
