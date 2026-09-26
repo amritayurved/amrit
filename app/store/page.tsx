@@ -1,4 +1,5 @@
 import Image from "next/image";
+import ScrollOffer from "./scroll-offer";
 import "./store.css";
 
 const whatsapp = "https://wa.me/918290695226?text=" + encodeURIComponent("नमस्ते, मुझे TAKAT POWER X के बारे में जानकारी चाहिए।");
@@ -36,6 +37,7 @@ export const metadata = {
 export default function StorePage() {
   return (
     <main className="prakritiStore">
+      <ScrollOffer />
       <div className="topOffer">FREE DELIVERY • CASH ON DELIVERY AVAILABLE • AMRIT AYURVEDA</div>
 
       <header className="storeHeader">
@@ -74,12 +76,7 @@ export default function StorePage() {
         </div>
 
         <div className="heroVisual">
-          <div className="leafShape leafOne" />
-          <div className="leafShape leafTwo" />
-          <div className="productHalo" />
-          <Image src="/takat-power-x.jpg" alt="TAKAT POWER X Ayurvedic wellness product" width={620} height={720} priority className="heroProduct" />
-          <div className="floatingCard cardOne"><b>25</b><span>HERBAL<br/>INGREDIENTS</span></div>
-          <div className="floatingCard cardTwo"><b>COD</b><span>AVAILABLE</span></div>
+          <Image src="/takat-running-hero.webp" alt="पार्क में दौड़ते दो वयस्क और TAKAT POWER X पैक" fill priority sizes="(max-width: 850px) 100vw, 50vw" className="storeRunningPhoto" />
         </div>
       </section>
 
@@ -91,10 +88,6 @@ export default function StorePage() {
       </section>
 
       <section className="productSection" id="product">
-        <div className="sectionVisual">
-          <div className="creamDisc" />
-          <Image src="/takat-power-x.jpg" alt="TAKAT POWER X 150g bottle" width={520} height={620} className="sectionProduct" />
-        </div>
         <div className="sectionCopy">
           <span className="sectionEyebrow">AMRIT AYURVEDA</span>
           <h2>Simple daily wellness,<br/><em>Ayurvedic way.</em></h2>

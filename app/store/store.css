@@ -35,3 +35,21 @@ body{margin:0;background:#f8f5ed;color:var(--ink);font-family:Arial,Helvetica,sa
 .stickyOrder{display:none}
 @media(max-width:850px){.storeHeader nav{display:none}.hero{grid-template-columns:1fr;background:#f5f0e4}.heroCopy{padding:65px 24px 40px}.heroVisual{min-height:500px;background:#dfe8d5}.trustStrip{grid-template-columns:repeat(2,1fr);margin:0 16px}.trustStrip div{padding:18px}.productSection{grid-template-columns:1fr;gap:35px;padding:70px 20px}.ingredientGrid{grid-template-columns:1fr 1fr}.benefitGrid{grid-template-columns:1fr 1fr}.storeFooter{grid-template-columns:1fr 1fr}.footerBrand{grid-column:1/-1}}
 @media(max-width:560px){.topOffer{font-size:8px}.storeHeader{height:66px;padding:0 14px}.brand strong{font-size:17px}.brandLeaf{width:32px;height:32px}.headerOrder{padding:10px 11px;font-size:9px}.heroCopy{padding-top:48px}.hero h1{font-size:58px}.heroLead{font-size:15px}.heroActions{flex-direction:column}.primaryBtn,.secondaryBtn{width:100%;justify-content:center}.heroVisual{min-height:430px}.productHalo{width:280px;height:280px;box-shadow:0 0 0 25px #eaf0df}.heroProduct{width:78%;max-height:380px}.floatingCard{padding:9px}.floatingCard b{font-size:19px}.cardOne{left:4%;bottom:10%}.cardTwo{right:4%;top:13%}.trustStrip{grid-template-columns:1fr 1fr;padding:8px 0}.productSection{padding-top:55px}.sectionVisual{min-height:390px}.creamDisc{width:270px;height:270px}.ingredientGrid,.benefitGrid{grid-template-columns:1fr}.ingredientsSection,.benefitsSection,.faqSection{padding:65px 18px}.orderBand{align-items:flex-start;flex-direction:column;padding:38px 20px}.goldBtn{width:100%}.storeFooter{grid-template-columns:1fr;padding:55px 20px 90px}.footerBrand{grid-column:auto}.stickyOrder{display:flex;position:fixed;left:12px;right:12px;bottom:10px;z-index:60;min-height:51px;align-items:center;justify-content:center;border-radius:5px;background:#184f39;color:#fff;text-decoration:none;font-weight:900;box-shadow:0 12px 35px #0005}}
+
+.heroVisual{overflow:hidden;background:#183322}
+.storeRunningPhoto{object-fit:cover;object-position:center 43%}
+.productSection{display:block;max-width:850px;padding:78px 28px}
+.productSection .sectionCopy{max-width:760px;margin:auto}
+@media(max-width:850px){.heroVisual{min-height:550px}.storeRunningPhoto{object-position:center 40%}}
+@media(max-width:560px){.heroVisual{min-height:520px}}
+
+.storeOfferOverlay{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:18px;background:#080b09b8;backdrop-filter:blur(4px)}
+.storeOfferCard{width:min(100%,370px);position:relative;padding:30px 22px 23px;border:2px solid #d5a844;border-radius:20px;background:#fffdf8;color:#1c251d;text-align:center;box-shadow:0 22px 70px #0009}
+.storeOfferClose{position:absolute;top:10px;right:11px;width:30px;height:30px;border:0;border-radius:50%;background:#eae9e5;color:#555;font-size:20px;cursor:pointer}
+.storeOfferBadge{display:inline-block;margin-bottom:12px;padding:6px 14px;border-radius:30px;background:#1b5d3a;color:#fff;font-size:11px;font-weight:800}
+.storeOfferLead{margin:0;color:#24673d;font-size:18px;font-weight:800}
+.storeOfferCard h2{margin:5px 0 16px;color:#ac812d;font-family:Georgia,serif;font-size:22px}
+.storeOfferPrice{margin:0;color:#64665f;font-size:14px}.storeOfferPrice strong{color:#202820}.storeOfferPrice b{color:#1d6d3b;font-size:17px}
+.storeOfferCod{margin:10px 0 18px;color:#267249;font-size:13px;font-weight:800}
+.storeOfferButton{display:flex;align-items:center;justify-content:center;min-height:52px;border-radius:11px;background:#111;color:#fff;text-decoration:none;font-size:15px;font-weight:800;box-shadow:0 9px 20px #0004}
+.storeOfferTrust{display:block;margin-top:13px;color:#73776f;font-size:11px}
