@@ -475,8 +475,11 @@ export default function Home() {
     return `upi://pay?${params.toString()}`;
   }, [activeProduct.shortName, cartQty, onlineTotal, paymentRef]);
 
-  function sendMetaBrowserEvent(..._args: unknown[]) {
-    // Meta analytics intentionally disabled. Website/CRM functionality remains unchanged.
+  function sendMetaBrowserEvent(name: string, params: Record<string, unknown>, eventId: string) {
+    const fbq = (window as Window & { fbq?: (...args: unknown[]) => void }).fbq;
+    if (!fbq) return false;
+    fbq("track", name, params, { eventID: eventId });
+    return true;
   }
 
   async function submitCallbackLead() {
@@ -579,14 +582,7 @@ export default function Home() {
       if (!result?.ok) throw new Error("CRM save failed");
 
       localStorage.setItem("amrit-last-order-phone", quickCustomer.mobile);
-      sendMetaBrowserEvent("Purchase", {
-        value: selectedPack.price,
-        currency: "INR",
-        content_name: "TAKAT POWER X",
-        content_ids: ["takat-power-x"],
-        content_type: "product",
-        num_items: selectedPack.qty,
-      }, orderId);
+      sendMetaPurchase(selectedPack.price, orderId, "TAKAT POWER X", "takat-power-x", selectedPack.qty);
 
       setConfirmedOrder({
         id: String(result.order.orderCode),
@@ -680,8 +676,27 @@ export default function Home() {
     }).catch(() => undefined);
   }
 
-  function sendMetaPurchase(..._args: unknown[]) {
-    // Meta analytics intentionally disabled. Purchase remains recorded in CRM only.
+  function sendMetaPurchase(value: number, orderId: string, productName = activeProduct.name, productId = cartProductId, quantity = Math.max(1, cartQty)) {
+    const sentKey = `amrit-meta-purchase-${orderId}`;
+    if (localStorage.getItem(sentKey) === "sent") return;
+    let attempts = 0;
+    const timer = window.setInterval(() => {
+      attempts += 1;
+      const sent = sendMetaBrowserEvent("Purchase", {
+        value,
+        currency: "INR",
+        content_name: productName,
+        content_ids: [productId],
+        content_type: "product",
+        num_items: quantity,
+      }, orderId);
+      if (sent) {
+        localStorage.setItem(sentKey, "sent");
+        window.clearInterval(timer);
+      } else if (attempts >= 20) {
+        window.clearInterval(timer);
+      }
+    }, 500);
   }
 
   function updateCustomer(field: keyof CustomerDetails, value: string) {
