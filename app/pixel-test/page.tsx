@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-const PIXEL_ID = "1658629772265184";
+const PIXEL_ID = "2952176195138054";
 
 export default function PixelTestPage() {
   const [libraryStatus, setLibraryStatus] = useState("Checking Meta library...");
@@ -18,7 +18,6 @@ export default function PixelTestPage() {
 
   useEffect(() => {
     let attempts = 0;
-    let fired = false;
 
     const timer = window.setInterval(() => {
       attempts += 1;
@@ -34,11 +33,6 @@ export default function PixelTestPage() {
       const libraryLoaded =
         typeof window.fbq === "function" &&
         typeof window.fbq.callMethod === "function";
-
-      if (libraryLoaded && !fired) {
-        window.fbq?.("track", "PageView");
-        fired = true;
-      }
 
       if (libraryLoaded) {
         setLibraryStatus(
@@ -62,9 +56,7 @@ export default function PixelTestPage() {
 
       if (attempts >= 20) {
         setRequestStatus(
-          fired
-            ? "NO REQUEST DETECTED: fbq ran, but no facebook.com/tr request appeared"
-            : "NO REQUEST DETECTED: Pixel never fired"
+          "NO REQUEST DETECTED: no facebook.com/tr request appeared"
         );
         window.clearInterval(timer);
       }
