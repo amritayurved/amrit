@@ -3,7 +3,7 @@ import "./globals.css";
 import "./gallery-fix.css";
 import Script from "next/script";
 
-const META_PIXEL_ID = "1658629772265184";
+const META_PIXEL_ID = "2952176195138054";
 
 export const metadata: Metadata = {
   title: "Amrit Ayurveda | Takat Power X",
