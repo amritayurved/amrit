@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-const PIXEL_ID = "2952176195138054";
+const PIXEL_ID = "1658629772265184";
 
 export default function PixelTestPage() {
   const [libraryStatus, setLibraryStatus] = useState("Checking Meta library...");
