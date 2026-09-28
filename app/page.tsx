@@ -15,6 +15,12 @@ const product = {
   onlinePrice: 1499,
 } as const;
 
+type PixelEvent = "InitiateCheckout" | "Purchase";
+function trackPixel(event: PixelEvent, data: Record<string, string | number>) {
+  const fbq = (window as Window & { fbq?: (...args: unknown[]) => void }).fbq;
+  if (typeof fbq === "function") fbq("track", event, data);
+}
+
 type PaymentMethod = "cod" | "upi";
 
 type CustomerDetails = {
@@ -67,6 +73,7 @@ export default function Home() {
     setOrderError("");
     setOrderSuccess("");
     setOrderOpen(true);
+    trackPixel("InitiateCheckout", { content_name: product.name, content_ids: product.shortName, content_type: "product", value: method === "cod" ? product.codPrice : product.onlinePrice, currency: "INR" });
   }
 
   function updateCustomer(field: keyof CustomerDetails, value: string) {
@@ -124,6 +131,9 @@ export default function Home() {
       }
 
       setOrderSuccess(String(result.order.orderCode));
+      if (paymentMethod === "cod") {
+        trackPixel("Purchase", { value: Number(result.order.amount) || product.codPrice, currency: "INR", content_name: product.name, content_ids: product.shortName, content_type: "product", num_items: 1, order_id: String(result.order.orderCode) });
+      }
 
       if (paymentMethod === "upi") {
         const params = new URLSearchParams({
