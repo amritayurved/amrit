@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-const PIXEL_ID = "2232651107302701";
+const PIXEL_ID = "1658629772265184";
 
 export default function PixelTestPage() {
   const [libraryStatus, setLibraryStatus] = useState("Checking Meta library...");
@@ -27,7 +27,7 @@ export default function PixelTestPage() {
         entry.name.includes("connect.facebook.net/en_US/fbevents.js")
       );
       const trackingSeen = resources.some((entry) =>
-        /https:\/\/(www\.)?facebook\.com\/tr[/?]/.test(entry.name)
+        /https:\/\/(www\.)?facebook\.com\/tr[/?]/.test(entry.name) &&\n        new URL(entry.name).searchParams.get("id") === PIXEL_ID
       );
 
       const libraryLoaded =
