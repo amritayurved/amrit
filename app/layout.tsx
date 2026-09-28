@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://amrit-kohl.vercel.app"),
+  metadataBase: new URL("https://amritayurveda.shop"),
   title: "AMRIT URJA Capsule + Oil Combo | Amrit Ayurveda",
   description: "AMRIT URJA by Amrit Ayurveda — 30 capsules और 20 ml massage oil का premium Ayurvedic wellness combo. COD और online payment available.",
   keywords: [
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "AMRIT URJA | Amrit Ayurveda",
     description: "30 Capsules + 20 ml Massage Oil premium wellness combo.",
-    url: "https://amrit-kohl.vercel.app",
+    url: "https://amritayurveda.shop",
     siteName: "Amrit Ayurveda",
     locale: "hi_IN",
     type: "website",
