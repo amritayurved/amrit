@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const siteUrl = "https://amrit-ayurveda.rohitsangwan517.chatgpt.site";
+const siteUrl = "https://amrit-kohl.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
