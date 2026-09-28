@@ -9,7 +9,7 @@ const crmOrderEndpoint = "/api/website-order";
 const product = {
   name: "AMRIT URJA Capsule + Oil Combo",
   shortName: "AMRIT URJA",
-  image: "/amrit-urja-combo.webp",
+  image: "/amrit-urja-product.png",
   detail: "30 Capsules + 20 ml Massage Oil",
   codPrice: 2500,
   onlinePrice: 1499,
@@ -34,6 +34,7 @@ function money(value: number) {
 }
 
 export default function Home() {
+  const [introOpen, setIntroOpen] = useState(true);
   const [orderOpen, setOrderOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cod");
   const [customer, setCustomer] = useState<CustomerDetails>({
@@ -289,6 +290,23 @@ export default function Home() {
       </footer>
 
       <button className="mobileOrder" onClick={() => openOrder("cod")}>ORDER NOW • COD AVAILABLE</button>
+
+      {introOpen && (
+        <div className="introOverlay" role="dialog" aria-modal="true" aria-label="AMRIT URJA product">
+          <section className="introCard">
+            <button className="introClose" onClick={() => setIntroOpen(false)} aria-label="Close">×</button>
+            <img
+              src={product.image}
+              alt="AMRIT URJA 30 capsules and 20 ml massage oil"
+              className="introImage"
+            />
+            <div className="introActions">
+              <button onClick={() => { setIntroOpen(false); openOrder("cod"); }}>ORDER NOW</button>
+              <button className="introSecondary" onClick={() => setIntroOpen(false)}>VIEW WEBSITE</button>
+            </div>
+          </section>
+        </div>
+      )}
 
       {orderOpen && (
         <div className="orderOverlay" role="dialog" aria-modal="true" aria-labelledby="order-title">
