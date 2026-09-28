@@ -27,7 +27,8 @@ export default function PixelTestPage() {
         entry.name.includes("connect.facebook.net/en_US/fbevents.js")
       );
       const trackingSeen = resources.some((entry) =>
-        /https:\/\/(www\.)?facebook\.com\/tr[/?]/.test(entry.name) &&\n        new URL(entry.name).searchParams.get("id") === PIXEL_ID
+        /https:\/\/(www\.)?facebook\.com\/tr[/?]/.test(entry.name) &&
+        new URL(entry.name).searchParams.get("id") === PIXEL_ID
       );
 
       const libraryLoaded =
