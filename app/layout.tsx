@@ -13,7 +13,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="hi">
-      <head>
+      <body>
+        {children}
+
         {/* Meta Pixel Code */}
         <Script id="meta-pixel" strategy="afterInteractive">
           {`
@@ -40,9 +42,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           />
         </noscript>
         {/* End Meta Pixel Code */}
-      </head>
-      <body>
-        {children}
       </body>
     </html>
   );
