@@ -81,3 +81,13 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
   .introImage{max-height:calc(100dvh - 142px);border-radius:14px}
   .introActions{grid-template-columns:1fr}
 }
+
+.floatingContact{position:fixed;right:18px;bottom:24px;z-index:55;display:flex;flex-direction:column;gap:12px}
+.floatingContactButton{display:grid;place-items:center;width:54px;height:54px;border:2px solid #fff;border-radius:50%;color:#fff;box-shadow:0 7px 22px #001b1259;animation:contactFloat 2.8s ease-in-out infinite;transition:transform .2s ease,box-shadow .2s ease}
+.floatingContactButton svg{width:26px;height:26px}
+.floatingContactButton:hover,.floatingContactButton:focus-visible{transform:scale(1.1);box-shadow:0 9px 27px #001b1273}
+.floatingWhatsapp{background:#20bd63}
+.floatingCall{background:#174f38;animation-delay:1.2s}
+@keyframes contactFloat{0%,100%{translate:0 0}50%{translate:0 -5px}}
+@media(max-width:560px){.floatingContact{right:14px;bottom:76px;gap:9px}.floatingContactButton{width:48px;height:48px}.floatingContactButton svg{width:24px;height:24px}}
+@media(prefers-reduced-motion:reduce){.floatingContactButton{animation:none}}
