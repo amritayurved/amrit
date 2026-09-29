@@ -91,3 +91,61 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 @keyframes contactFloat{0%,100%{translate:0 0}50%{translate:0 -5px}}
 @media(max-width:560px){.floatingContact{right:14px;bottom:76px;gap:9px}.floatingContactButton{width:48px;height:48px}.floatingContactButton svg{width:24px;height:24px}}
 @media(prefers-reduced-motion:reduce){.floatingContactButton{animation:none}}
+
+/* Reference-inspired Amrit Ayurveda opening */
+.announcement{padding:7px 12px;text-align:center;background:#fffdf5;color:#425245;font-size:12px;border-bottom:1px solid #e9dfc9}
+.announcement span{padding:0 9px;color:#bc9b45}
+.headerOrder{border:0;border-radius:999px;background:#174f38;color:white;padding:11px 20px;font-weight:800}
+.referenceHero{background:#fff7df;padding:24px max(16px,calc((100vw - 1180px)/2)) 42px}
+.heroPoster{position:relative;isolation:isolate;min-height:590px;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;border-radius:18px;background:radial-gradient(circle at 76% 35%,#7a5426 0,#241d14 35%,#080b09 75%);box-shadow:0 20px 42px #24190b35;color:#fff}
+.heroPoster:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#020503 0%,#030604d9 43%,transparent 90%);z-index:-1}
+.posterCopy{padding:52px 20px 130px 55px;z-index:1}
+.posterOverline{color:#d8bd77;letter-spacing:.16em;font-weight:800;font-size:14px;margin:0 0 18px}
+.posterHindi{font-size:clamp(19px,2.2vw,30px);font-weight:800;line-height:1.35;margin:0 0 12px}
+.posterCopy h1{color:#e7b94e;font-size:clamp(68px,9vw,138px);letter-spacing:-.065em;line-height:.8;margin:8px 0 26px;font-weight:900}
+.posterCopy h1 span{color:#f2cf73}
+.posterTag{display:inline-block;background:linear-gradient(100deg,#b98725,#e9bf5a);border-radius:10px;padding:10px 16px;color:#16110b;font-size:clamp(18px,2vw,28px);font-weight:900;margin:0}
+.posterSupport{font-size:19px;font-weight:700;margin:24px 0}
+.posterPoints{list-style:none;padding:0;margin:0;display:grid;gap:12px;color:#f7efd9;font-size:17px}
+.posterPoints li:before{content:"✦";color:#e4b94f;margin-right:10px}
+.posterProduct{display:flex;align-items:center;justify-content:center;padding:18px 35px 108px 0;min-width:0}
+.posterProduct img{width:100%;max-width:440px;max-height:445px;object-fit:contain;border-radius:14px;box-shadow:0 24px 45px #0009}
+.posterFeatureRow{position:absolute;bottom:15px;left:3%;right:3%;display:grid;grid-template-columns:repeat(4,1fr);padding:12px;border:1px solid #a87931;border-radius:12px;background:#0b0c0be8;text-align:center;color:#e9bd54}
+.posterFeatureRow span{display:grid;gap:3px;place-items:center;font-size:28px;font-weight:800}
+.posterFeatureRow span+span{border-left:1px solid #765d32}
+.posterFeatureRow small{color:#f2e5c4;font-size:11px;letter-spacing:.05em}
+.posterOrder{text-align:center;max-width:900px;margin:16px auto 0}
+.posterOrder h2{font-size:clamp(21px,2.4vw,30px);margin:0 0 14px;color:#1a1a16}
+.posterPrice{font-size:20px;font-weight:900;margin:0;color:#1c241c}
+.posterPrice span{padding:0 10px;color:#a99562}
+.posterPriceNote{font-size:13px;color:#5d6258;margin:8px 0 20px}
+.posterCod,.posterOnline{display:block;width:100%;min-height:53px;border:0;border-radius:999px;font-weight:900;font-size:16px;box-shadow:0 5px 11px #2222}
+.posterCod{background:#070907;color:#fff}
+.posterOnline{margin-top:12px;background:linear-gradient(95deg,#efd67c,#d9b54c);color:#272117}
+@media(max-width:700px){
+ .announcement{font-size:10px;padding:5px}
+ .topbar{height:64px;justify-content:center}
+ .topbar .brand{position:absolute;left:50%;transform:translateX(-50%);text-align:center}
+ .topbar .headerOrder{position:absolute;right:12px;font-size:10px;padding:8px 10px}
+ .topbar:before{content:"☰";position:absolute;left:16px;font-size:20px;color:#24422c}
+ .referenceHero{padding:16px 9px 38px}
+ .heroPoster{display:block;min-height:760px;border-radius:10px;background:radial-gradient(circle at 75% 48%,#7d5828,#1b180f 48%,#050706 83%)}
+ .heroPoster:before{background:linear-gradient(180deg,#050605ec 0,#0506059e 40%,transparent 75%)}
+ .posterCopy{padding:30px 22px 0}
+ .posterOverline{font-size:11px;margin-bottom:12px}
+ .posterHindi{font-size:20px;max-width:320px}
+ .posterCopy h1{font-size:clamp(63px,18vw,99px);margin:8px 0 15px}
+ .posterTag{font-size:16px;padding:8px 11px}
+ .posterSupport{font-size:14px;margin:13px 0}
+ .posterPoints{gap:5px;font-size:13px}
+ .posterProduct{position:absolute;left:25%;right:0;top:345px;height:282px;padding:0 18px}
+ .posterProduct img{height:100%;width:100%;object-fit:contain;box-shadow:none}
+ .posterFeatureRow{left:12px;right:12px;bottom:12px;padding:8px 3px}
+ .posterFeatureRow span{font-size:20px}
+ .posterFeatureRow small{font-size:8px}
+ .posterOrder{margin:11px 5px 0}
+ .posterOrder h2{font-size:20px}
+ .posterPrice{font-size:17px}
+ .posterCod,.posterOnline{font-size:14px}
+}
+@media(max-width:390px){.heroPoster{min-height:700px}.posterProduct{top:325px;height:250px}.posterFeatureRow small{font-size:7px}}
