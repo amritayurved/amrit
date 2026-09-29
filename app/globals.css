@@ -226,3 +226,8 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 .photoSlotFilled img{width:100%;height:100%;display:block;object-fit:cover}
 .photoSlot span{font-size:18px;font-weight:800}.photoSlot small{font-size:14px;color:#5b6c5c}
 @media(max-width:700px){.photoSlots{padding:0 14px;margin-top:24px}.photoSlotsGrid{gap:8px}.photoSlot{border-radius:10px}.photoSlot span{font-size:14px}.photoSlot small{font-size:12px;padding:0 4px}}
+
+
+.benefitsShowcase{max-width:1180px;margin:30px auto 0;padding:0 18px}
+.benefitsShowcase img{width:100%;height:auto;display:block;border-radius:16px;object-fit:contain}
+@media(max-width:700px){.benefitsShowcase{margin-top:20px;padding:0 8px}.benefitsShowcase img{border-radius:10px}}
