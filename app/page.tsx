@@ -275,16 +275,8 @@ export default function Home() {
         <div className="photoSlotsGrid">
           {[1, 2, 3].map((number) => (
             <div className="photoSlot" id={`photo-slot-${number}`} key={number}>
-              {number === 1 ? (
-                <div style={{padding:"18px",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"14px",height:"100%",background:"linear-gradient(160deg,#fff8df,#f0e3b9)",borderRadius:"14px"}}>
-                  <span style={{fontSize:"14px",letterSpacing:"0.12em"}}>AMRIT AYURVEDA</span>
-                  <img src={product.image} alt="AMRIT URJA Capsule और Oil Combo" style={{width:"100%",maxHeight:"60%",objectFit:"contain"}} />
-                  <span>AMRIT URJA</span>
-                  <small>30 Capsules + 20 ml Massage Oil</small>
-                </div>
-              ) : (
-                <><span>फोटो स्लॉट {number}</span><small>9:16 फोटो यहाँ लगाएँ</small></>
-              )}
+              <span>फोटो स्लॉट {number}</span>
+              <small>9:16 फोटो यहाँ लगाएँ</small>
             </div>
           ))}
         </div>
