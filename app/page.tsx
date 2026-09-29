@@ -271,9 +271,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="photoSlots" aria-label="फोटो के लिए तीन खाली स्लॉट">
+      <section className="photoSlots" aria-label="फोटो स्लॉट">
         <div className="photoSlotsGrid">
-          {[1, 2, 3].map((number) => (
+          <div className="photoSlot photoSlotFilled" id="photo-slot-1">
+            <img src="/my-photos/photo-1.webp" alt="Benefits promotional image" />
+          </div>
+          {[2, 3].map((number) => (
             <div className="photoSlot" id={`photo-slot-${number}`} key={number}>
               <span>फोटो स्लॉट {number}</span>
               <small>9:16 फोटो यहाँ लगाएँ</small>
