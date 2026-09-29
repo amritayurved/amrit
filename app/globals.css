@@ -228,6 +228,6 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 @media(max-width:700px){.photoSlots{padding:0 14px;margin-top:24px}.photoSlotsGrid{gap:8px}.photoSlot{border-radius:10px}.photoSlot span{font-size:14px}.photoSlot small{font-size:12px;padding:0 4px}}
 
 
-.benefitsShowcase{max-width:1180px;margin:30px auto 0;padding:0 18px}
-.benefitsShowcase img{width:100%;height:auto;display:block;border-radius:16px;object-fit:contain}
-@media(max-width:700px){.benefitsShowcase{margin-top:20px;padding:0 8px}.benefitsShowcase img{border-radius:10px}}
+.benefitsShowcase{width:100%;max-width:none;margin:24px 0 0;padding:0;overflow:hidden;background:#fff8df}
+.benefitsShowcase img{width:100%;max-width:none;height:auto;display:block;margin:0;object-fit:contain;border-radius:0;image-rendering:auto}
+@media(max-width:700px){.benefitsShowcase{width:100%;margin-top:14px;padding:0}.benefitsShowcase img{width:100%;max-width:none;border-radius:0}}
