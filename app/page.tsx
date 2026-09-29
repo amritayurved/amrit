@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const phone = "918290695226";
 const upiId = "8295820654@okbizaxis";
@@ -41,6 +41,9 @@ function money(value: number) {
 
 export default function Home() {
   const [introOpen, setIntroOpen] = useState(true);
+  const [offerOpen, setOfferOpen] = useState(false);
+  const [offerShown, setOfferShown] = useState(false);
+  const [pack, setPack] = useState<1 | 2 | 3>(1);
   const [orderOpen, setOrderOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cod");
   const [customer, setCustomer] = useState<CustomerDetails>({
@@ -54,7 +57,26 @@ export default function Home() {
   const [orderSuccess, setOrderSuccess] = useState("");
   const [orderRef, setOrderRef] = useState("");
 
-  const payable = paymentMethod === "upi" ? product.onlinePrice : product.codPrice;
+  const packPrices = { 1: 999, 2: 1499, 3: 1999 } as const;
+  const payable = packPrices[pack];
+
+  useEffect(() => {
+    if (introOpen || offerShown || orderOpen) return;
+    let lastY = window.scrollY;
+    let changedDirection = false;
+    function onScroll() {
+      const y = window.scrollY;
+      if (y > 120 && y < lastY - 8) changedDirection = true;
+      if (changedDirection && y > 70) {
+        setOfferOpen(true);
+        setOfferShown(true);
+        window.removeEventListener("scroll", onScroll);
+      }
+      lastY = y;
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [introOpen, offerShown, orderOpen]);
 
   const upiUrl = useMemo(() => {
     const ref = orderRef || "AMRIT-URJA";
@@ -62,18 +84,19 @@ export default function Home() {
       pa: upiId,
       pn: "AMRIT AYURVEDA",
       tn: `${product.shortName} ${ref}`,
-      am: product.onlinePrice.toFixed(2),
+      am: payable.toFixed(2),
       cu: "INR",
     });
     return `upi://pay?${params.toString()}`;
-  }, [orderRef]);
+  }, [orderRef, payable]);
 
   function openOrder(method: PaymentMethod = "cod") {
     setPaymentMethod(method);
     setOrderError("");
     setOrderSuccess("");
+    setOfferOpen(false);
     setOrderOpen(true);
-    trackPixel("InitiateCheckout", { content_name: product.name, content_ids: [product.shortName], content_type: "product", value: method === "cod" ? product.codPrice : product.onlinePrice, currency: "INR" });
+    trackPixel("InitiateCheckout", { content_name: product.name, content_ids: [product.shortName], content_type: "product", value: packPrices[pack], currency: "INR" });
   }
 
   function updateCustomer(field: keyof CustomerDetails, value: string) {
@@ -115,9 +138,9 @@ export default function Home() {
           district: "Unknown",
           state: "Unknown",
           pincode: customer.pincode,
-          quantity: "1",
+          quantity: String(pack),
           product: product.name,
-          notes: product.detail,
+          notes: `${pack} × ${product.detail}`,
           amount: String(payable),
           payment: paymentMethod === "upi" ? "Prepaid" : "COD",
           order_type: "Order",
@@ -132,7 +155,7 @@ export default function Home() {
 
       setOrderSuccess(String(result.order.orderCode));
       if (paymentMethod === "cod") {
-        trackPixel("Purchase", { value: Number(result.order.amount) || product.codPrice, currency: "INR", content_name: product.name, content_ids: [product.shortName], content_type: "product", num_items: 1, order_id: String(result.order.orderCode) });
+        trackPixel("Purchase", { value: Number(result.order.amount) || payable, currency: "INR", content_name: product.name, content_ids: [product.shortName], content_type: "product", num_items: 1, order_id: String(result.order.orderCode) });
       }
 
       if (paymentMethod === "upi") {
@@ -195,10 +218,11 @@ export default function Home() {
         </div>
         <div className="posterOrder">
           <h2>AMRIT URJA — Capsule + Oil Combo</h2>
-          <p className="posterPrice">Online ₹{money(product.onlinePrice)} <span>•</span> COD ₹{money(product.codPrice)}</p>
-          <p className="posterPriceNote">ऑनलाइन और Cash on Delivery के दाम अलग हैं।</p>
-          <button className="posterCod" onClick={() => openOrder("cod")}>🛒 अभी ऑर्डर करें — Cash on Delivery</button>
-          <button className="posterOnline" onClick={() => openOrder("upi")}>▣ Online / UPI पर ऑर्डर करें</button>
+          <p className="posterPrice">1 combo ₹999 <span>•</span> 2 combo ₹1,499 <span>•</span> 3 combo ₹1,999</p>
+          <p className="posterPriceNote">अपना pack चुनें। COD और Online/UPI दोनों उपलब्ध हैं।</p>
+          <div className="packChoices" role="group" aria-label="Combo pack चुनें">{([1, 2, 3] as const).map((count) => <button key={count} className={pack === count ? "selected" : ""} onClick={() => setPack(count)}><b>{count} Combo</b><span>₹{money(packPrices[count])}</span></button>)}</div>
+          <button className="posterCod" onClick={() => openOrder("cod")}>🛒 अभी ऑर्डर करें — ₹{money(payable)} COD</button>
+          <button className="posterOnline" onClick={() => openOrder("upi")}>▣ Online / UPI — ₹{money(payable)}</button>
         </div>
       </section>
 
@@ -255,7 +279,7 @@ export default function Home() {
         <div>
           <p className="eyebrow light">AMRIT URJA COMBO</p>
           <h2>30 Capsules + 20 ml Oil</h2>
-          <p>Online ₹{money(product.onlinePrice)} • COD ₹{money(product.codPrice)}</p>
+          <p>1 combo ₹999 • 2 combo ₹1,499 • 3 combo ₹1,999</p>
         </div>
         <div className="orderBandActions">
           <button onClick={() => openOrder("upi")}>ONLINE PAYMENT</button>
@@ -322,13 +346,27 @@ export default function Home() {
         </div>
       )}
 
+      {offerOpen && !introOpen && !orderOpen && (
+        <div className="offerOverlay" role="dialog" aria-modal="true" aria-labelledby="offer-title">
+          <section className="offerCard">
+            <button className="offerClose" onClick={() => setOfferOpen(false)} aria-label="ऑफर बंद करें">×</button>
+            <span className="offerBadge">AMRIT AYURVEDA OFFER</span>
+            <h2 id="offer-title">जाने से पहले<br /><span>यह ऑफर देखिए</span></h2>
+            <p>AMRIT URJA Capsule + Oil Combo का 1 pack <b>₹999</b> में</p>
+            <strong className="offerCodLine">✓ Cash on Delivery उपलब्ध</strong>
+            <button className="offerAction" onClick={() => { setPack(1); openOrder("cod"); }}>अभी ऑर्डर करें ₹999 COD</button>
+            <small>सुरक्षित पैकिंग • ऑर्डर के लिए पता भरें</small>
+          </section>
+        </div>
+      )}
+
       {orderOpen && (
         <div className="orderOverlay" role="dialog" aria-modal="true" aria-labelledby="order-title">
           <section className="orderCard">
             <button className="closeButton" onClick={() => setOrderOpen(false)} aria-label="Close">×</button>
             <div className="orderProduct">
               <img src={product.image} alt="AMRIT URJA" />
-              <div><small>AMRIT AYURVEDA</small><strong id="order-title">AMRIT URJA</strong><span>{product.detail}</span></div>
+              <div><small>AMRIT AYURVEDA</small><strong id="order-title">AMRIT URJA</strong><span>{pack} × {product.detail}</span></div>
             </div>
 
             {orderSuccess ? (
@@ -345,12 +383,13 @@ export default function Home() {
               </div>
             ) : (
               <>
+                <div className="packChoices compact" role="group" aria-label="Combo pack चुनें">{([1, 2, 3] as const).map((count) => <button key={count} className={pack === count ? "selected" : ""} onClick={() => setPack(count)}><b>{count} Combo</b><span>₹{money(packPrices[count])}</span></button>)}</div>
                 <div className="paymentTabs">
                   <button className={paymentMethod === "cod" ? "active" : ""} onClick={() => setPaymentMethod("cod")}>
-                    <span>COD</span><b>₹{money(product.codPrice)}</b>
+                    <span>COD</span><b>₹{money(payable)}</b>
                   </button>
                   <button className={paymentMethod === "upi" ? "active" : ""} onClick={() => setPaymentMethod("upi")}>
-                    <span>ONLINE / UPI</span><b>₹{money(product.onlinePrice)}</b>
+                    <span>ONLINE / UPI</span><b>₹{money(payable)}</b>
                   </button>
                 </div>
 
