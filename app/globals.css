@@ -192,3 +192,21 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 .howCardCopy>button{width:100%;min-height:48px;border:0;border-radius:9px;background:#174f38;color:#fff;font-weight:900}
 @media(max-width:900px){.menuToggle{display:block;position:absolute;left:10px}.topbar:before{display:none}}
 @media(max-width:560px){.howCard{grid-template-columns:1fr;gap:8px;padding:12px}.howCard>img{height:210px;object-fit:contain;background:#efe5ce}.howCardCopy{padding:4px 9px 8px}.howCardCopy h2{font-size:26px;margin:8px 0 12px}.howStep{padding:9px 0}.howStep b{font-size:16px}.howStep p{font-size:15px;margin-top:5px}.howCaution{margin:8px 0}}
+
+.shopHighlights{display:flex;justify-content:center;gap:45px;flex-wrap:wrap;padding:18px;background:#153e2c;color:#fff;font-size:14px;font-weight:700}
+.shopHighlights span{white-space:nowrap}
+.shopSection{padding:80px max(18px,calc((100vw - 1180px)/2));background:#fff9ed}
+.shopHeading{text-align:center;max-width:680px;margin:0 auto 42px}
+.shopHeading h2,.storyCopy h2{font-family:Georgia,serif;color:#174330;font-size:clamp(35px,4vw,52px);line-height:1.12;margin:10px 0 16px}
+.shopHeading>p:last-child,.storyCopy>p:not(.eyebrow){color:#657267;line-height:1.7;font-size:16px}
+.shopGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.shopCard{position:relative;overflow:hidden;border:1px solid #dfd3b8;border-radius:17px;background:#fff;box-shadow:0 12px 30px #3d32121a;transition:transform .2s,box-shadow .2s}
+.shopCard:hover{transform:translateY(-5px);box-shadow:0 20px 38px #3d321129}
+.shopCard.featured{border-color:#c9a148}
+.shopCard>img{display:block;width:100%;height:330px;object-fit:cover;object-position:center;background:#e9ddc8}
+.shopRibbon{position:absolute;top:14px;left:14px;z-index:2;padding:8px 12px;background:#174f38;color:white;border-radius:100px;font-size:11px;font-weight:900}
+.shopCardBody{padding:22px}.shopCardBody small{color:#a67d37;font-weight:900;letter-spacing:.12em}.shopCardBody h3{font-family:Georgia,serif;font-size:27px;color:#173f2e;margin:7px 0}.shopCardBody p{font-size:14px;color:#657267;min-height:36px}.shopCardBody strong{display:block;font-size:29px;color:#173f2e;margin:10px 0 18px}.shopCardBody button{width:100%;min-height:49px;border:0;border-radius:9px;background:#153e2c;color:#fff;font-weight:900}
+.storySection{display:grid;grid-template-columns:1fr 1fr;gap:7vw;align-items:center;max-width:1180px;margin:auto;padding:100px 24px}
+.storyPhoto{padding:13px;border:1px solid #ceb26f;border-radius:22px;background:#eadfc7;box-shadow:0 22px 45px #173f2e22}.storyPhoto img{display:block;width:100%;max-height:550px;object-fit:cover;border-radius:13px}
+.storyFacts{display:grid;gap:11px;margin:24px 0}.storyFacts span{padding:14px 16px;border-left:4px solid #caa452;background:#fff9eb;color:#415447}.storyFacts b{font-size:20px;margin-right:8px;color:#174e36}
+@media(max-width:700px){.shopHighlights{gap:8px;justify-content:space-around;padding:12px 5px;font-size:10px}.shopSection{padding:60px 15px}.shopHeading{margin-bottom:25px}.shopGrid{grid-template-columns:1fr;gap:18px;max-width:430px;margin:auto}.shopCard>img{height:270px;object-fit:contain}.shopCardBody p{min-height:0}.storySection{grid-template-columns:1fr;padding:65px 18px;gap:28px}.storyPhoto img{max-height:380px;object-fit:contain}}
