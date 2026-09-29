@@ -271,6 +271,17 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="photoSlots" aria-label="फोटो के लिए तीन खाली स्लॉट">
+        <div className="photoSlotsGrid">
+          {[1, 2, 3].map((number) => (
+            <div className="photoSlot" id={`photo-slot-${number}`} key={number}>
+              <span>फोटो स्लॉट {number}</span>
+              <small>9:16 फोटो यहाँ लगाएँ</small>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section className="callbackSection" aria-labelledby="callbackTitle">
         <div><p className="eyebrow">AMRIT AYURVEDA</p><h2 id="callbackTitle">ऑर्डर से पहले बात करना चाहते हैं?</h2><p>अपना नाम और मोबाइल नंबर दें। हमारी टीम आपको कॉल करेगी।</p></div>
         <form onSubmit={submitCallbackLead}>
