@@ -210,3 +210,11 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 .storyPhoto{padding:13px;border:1px solid #ceb26f;border-radius:22px;background:#eadfc7;box-shadow:0 22px 45px #173f2e22}.storyPhoto img{display:block;width:100%;max-height:550px;object-fit:cover;border-radius:13px}
 .storyFacts{display:grid;gap:11px;margin:24px 0}.storyFacts span{padding:14px 16px;border-left:4px solid #caa452;background:#fff9eb;color:#415447}.storyFacts b{font-size:20px;margin-right:8px;color:#174e36}
 @media(max-width:700px){.shopHighlights{gap:8px;justify-content:space-around;padding:12px 5px;font-size:10px}.shopSection{padding:60px 15px}.shopHeading{margin-bottom:25px}.shopGrid{grid-template-columns:1fr;gap:18px;max-width:430px;margin:auto}.shopCard>img{height:270px;object-fit:contain}.shopCardBody p{min-height:0}.storySection{grid-template-columns:1fr;padding:65px 18px;gap:28px}.storyPhoto img{max-height:380px;object-fit:contain}}
+
+.callbackSection{display:grid;grid-template-columns:1fr 1.3fr;gap:32px;align-items:center;max-width:1180px;margin:30px auto 0;padding:26px 30px;border:1px solid #d7c59d;border-radius:20px;background:#fffaf0;box-shadow:0 12px 30px #173f2e12}
+.callbackSection h2{font-family:Georgia,serif;font-size:clamp(25px,3vw,36px);margin:6px 0 10px;color:#173f2e}.callbackSection p{line-height:1.5;margin:0;color:#40594a}
+.callbackSection form{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}.callbackSection label{display:grid;gap:7px;font-size:14px;font-weight:700;color:#244a38}
+.callbackSection input{width:100%;min-height:48px;padding:10px 12px;border:1px solid #a9b8a9;border-radius:9px;background:white;color:#172e24;font-size:16px}
+.callbackSection button{min-height:48px;border:0;border-radius:9px;background:#174f39;color:white;padding:10px 20px;font-weight:800;white-space:nowrap}
+.callbackSection button:disabled{opacity:.65;cursor:default}.callbackSection .callbackSuccess,.callbackSection .callbackError{grid-column:1/-1;font-size:14px}.callbackSection .callbackSuccess{color:#12613e}.callbackSection .callbackError{color:#ab2733}
+@media(max-width:800px){.callbackSection{grid-template-columns:1fr;margin:20px 16px 0;padding:22px;gap:18px}.callbackSection form{grid-template-columns:1fr}.callbackSection button{width:100%}}
