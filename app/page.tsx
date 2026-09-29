@@ -271,18 +271,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="photoSlots" aria-label="फोटो स्लॉट">
-        <div className="photoSlotsGrid">
-          <div className="photoSlot photoSlotFilled" id="photo-slot-1">
-            <img src="/my-photos/photo-1.webp" alt="Benefits promotional image" />
-          </div>
-          {[2, 3].map((number) => (
-            <div className="photoSlot" id={`photo-slot-${number}`} key={number}>
-              <span>फोटो स्लॉट {number}</span>
-              <small>9:16 फोटो यहाँ लगाएँ</small>
-            </div>
-          ))}
-        </div>
+      <section className="benefitsShowcase" aria-label="Benefits image">
+        <img src="/my-photos/photo-1.webp" alt="AMRIT URJA benefits information" />
       </section>
 
       <section className="callbackSection" aria-labelledby="callbackTitle">
