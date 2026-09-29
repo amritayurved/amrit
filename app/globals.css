@@ -167,3 +167,28 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 .offerAction{width:100%;min-height:54px;border:0;border-radius:12px;background:#080908;color:white;font-weight:900;font-size:16px;box-shadow:0 10px 18px #0004}
 .offerCard small{display:block;margin-top:12px;color:#777;font-size:11px}
 @media(max-width:560px){.packChoices{gap:5px}.packChoices button{min-height:55px;padding:5px}.packChoices b{font-size:12px}.packChoices span{font-size:14px}}
+
+.menuToggle{display:none;border:0;background:transparent;color:#17452f;font-size:24px;line-height:1;padding:8px}
+.topbar .navHow{border:0;background:none;color:#40594a;font-size:12px;font-weight:800;padding:0}
+.menuOverlay{position:fixed;inset:0;z-index:140;display:flex;background:#0009}
+.menuDrawer{position:relative;z-index:2;width:min(82vw,340px);height:100%;padding:30px 24px;background:#fff9eb;color:#173e2d;box-shadow:15px 0 45px #0005;display:flex;flex-direction:column;gap:7px}
+.menuDrawer strong{font-family:Georgia,serif;font-size:23px;margin-bottom:24px;padding-right:30px}
+.menuDrawer a,.menuDrawer button:not(.menuClose){display:block;width:100%;padding:16px 7px;text-align:left;border:0;border-bottom:1px solid #e4d9c2;background:transparent;text-decoration:none;color:#1e4935;font-size:16px;font-weight:700}
+.menuDrawer .menuBuy{background:#174f38!important;color:white!important;border-radius:9px;text-align:center!important;margin-top:15px}
+.menuClose{position:absolute;top:16px;right:16px;border:0;background:#e7dfcd;border-radius:50%;width:34px;height:34px;font-size:23px}
+.menuBackdrop{flex:1;border:0;background:transparent}
+.howVisualButton{display:block;margin:30px auto 0;padding:15px 25px;border:1px solid #e0bc6d;border-radius:10px;background:#e1bd6a;color:#173e2d;font-weight:900;font-size:16px}
+.howOverlay{position:fixed;inset:0;z-index:130;display:grid;place-items:center;padding:16px;background:#07150fc4;backdrop-filter:blur(5px)}
+.howCard{position:relative;display:grid;grid-template-columns:.8fr 1.2fr;gap:20px;width:min(95vw,780px);max-height:calc(100dvh - 32px);overflow:auto;padding:20px;border:1px solid #d5b66c;border-radius:20px;background:#fff8e8;box-shadow:0 25px 80px #0009}
+.howCard>img{width:100%;height:100%;max-height:500px;object-fit:cover;border-radius:12px}
+.howClose{position:absolute;right:12px;top:12px;z-index:3;border:0;width:35px;height:35px;border-radius:50%;background:#174f38;color:white;font-size:25px}
+.howCardCopy{padding:22px 20px 10px 0}
+.howCardCopy>small{color:#9e782f;font-weight:800;letter-spacing:.1em}
+.howCardCopy h2{font-family:Georgia,serif;color:#174331;font-size:33px;margin:10px 0 23px}
+.howStep{padding:15px 0;border-top:1px solid #dacdaf}
+.howStep b{font-size:18px;color:#1b5036}
+.howStep p{font-size:17px;line-height:1.55;margin:8px 0 0}
+.howCaution{font-size:13px;color:#68746b}
+.howCardCopy>button{width:100%;min-height:48px;border:0;border-radius:9px;background:#174f38;color:#fff;font-weight:900}
+@media(max-width:900px){.menuToggle{display:block;position:absolute;left:10px}.topbar:before{display:none}}
+@media(max-width:560px){.howCard{grid-template-columns:1fr;gap:8px;padding:12px}.howCard>img{height:210px;object-fit:contain;background:#efe5ce}.howCardCopy{padding:4px 9px 8px}.howCardCopy h2{font-size:26px;margin:8px 0 12px}.howStep{padding:9px 0}.howStep b{font-size:16px}.howStep p{font-size:15px;margin-top:5px}.howCaution{margin:8px 0}}
