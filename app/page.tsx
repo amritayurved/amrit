@@ -43,7 +43,6 @@ export default function Home() {
 
   const [offerOpen, setOfferOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [showSlides, setShowSlides] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
   const [howOpen, setHowOpen] = useState(false);
   const [offerShown, setOfferShown] = useState(false);
@@ -62,27 +61,15 @@ export default function Home() {
   const [orderRef, setOrderRef] = useState("");
 
   const slideMessages = [
-    { title: "साथ में बेहतर रोज़मर्रा", accent: "AMRIT URJA", sub: "30 Capsules + 20 ml Massage Oil" },
-    { title: "एक आसान wellness routine", accent: "Capsule + Oil", sub: "Amrit Ayurveda का combo" },
-    { title: "अपना pack चुनें", accent: "₹999 से शुरू", sub: "Cash on Delivery उपलब्ध" },
+    { title: "रोज़ की ऊर्जा और वेलनेस", accent: "AMRIT URJA", sub: "30 Capsules + 20 ml Massage Oil", image: "/hero-couple.webp" },
+    { title: "अपने दिन की शुरुआत", accent: "आसान wellness routine", sub: "Amrit Ayurveda Capsule + Oil Combo", image: "/romantic-couple-premium.webp" },
+    { title: "अपने लिए सही pack चुनें", accent: "AMRIT URJA", sub: "Cash on Delivery उपलब्ध", image: "/hero-premium.webp" },
   ] as const;
 
   useEffect(() => {
-    if (sessionStorage.getItem("amritSlidesSeen")) return;
-    const timer = window.setTimeout(() => setShowSlides(true), 1600);
-    return () => window.clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (!showSlides) return;
-    const timer = window.setInterval(() => setSlideIndex((i) => (i + 1) % 3), 4800);
+    const timer = window.setInterval(() => setSlideIndex((i) => (i + 1) % slideMessages.length), 4800);
     return () => window.clearInterval(timer);
-  }, [showSlides]);
-
-  function closeSlides() {
-    setShowSlides(false);
-    sessionStorage.setItem("amritSlidesSeen", "1");
-  }
+  }, []);
 
   const packPrices = { 1: 999, 2: 1499, 3: 1999 } as const;
   const payable = packPrices[pack];
@@ -221,28 +208,24 @@ export default function Home() {
       </header>
 
       <section className="referenceHero" id="home">
-        <div className="heroPoster">
-          <div className="posterCopy">
-            <p className="posterOverline">AMRIT AYURVEDA प्रस्तुत करता है</p>
-            <p className="posterHindi">रोज़ की ऊर्जा और वेलनेस के लिए</p>
-            <h1>AMRIT<br /><span>URJA</span></h1>
-            <p className="posterTag">Ayurvedic Wellness Combo</p>
-            <p className="posterSupport">30 Capsules + 20 ml Massage Oil</p>
-            <ul className="posterPoints">
-              <li>आसान daily routine</li>
-              <li>Capsule और oil का combo</li>
-              <li>सुरक्षित पैकिंग</li>
-            </ul>
-          </div>
-          <div className="posterProduct">
-            <img src={product.image} alt="Amrit Ayurveda AMRIT URJA capsule और oil combo" />
-          </div>
-          <div className="posterFeatureRow">
-            <span>✦<small>AMRIT AYURVEDA</small></span>
-            <span>30<small>CAPSULES</small></span>
-            <span>20 ml<small>MASSAGE OIL</small></span>
-            <span>✓<small>COD AVAILABLE</small></span>
-          </div>
+        <div className="homeCarousel" role="region" aria-roledescription="carousel" aria-label="AMRIT URJA के तीन दृश्य">
+          {slideMessages.map((slide, index) => (
+            <div key={slide.title} className={index === slideIndex ? "homeSlide active" : "homeSlide"} aria-hidden={index !== slideIndex}>
+              <img className="homeSlidePhoto" src={slide.image} alt="" />
+              <div className="homeSlideShade" />
+              <div className="homeSlideContent">
+                <span className="homeSlideBrand">AMRIT AYURVEDA</span>
+                <p>{slide.title}</p>
+                <h1>{slide.accent}</h1>
+                <span>{slide.sub}</span>
+                <img className="homeSlideProduct" src={product.image} alt="AMRIT URJA capsule और oil combo" />
+                <button onClick={() => openOrder("cod")} tabIndex={index === slideIndex ? 0 : -1}>अभी ऑर्डर करें — ₹{money(payable)} COD</button>
+              </div>
+            </div>
+          ))}
+          <button className="homeSlidePrev" onClick={() => setSlideIndex((i) => (i + 2) % 3)} aria-label="पिछला दृश्य">‹</button>
+          <button className="homeSlideNext" onClick={() => setSlideIndex((i) => (i + 1) % 3)} aria-label="अगला दृश्य">›</button>
+          <div className="homeSlideDots">{slideMessages.map((_, i) => <button key={i} aria-label={`दृश्य ${i + 1}`} aria-current={i === slideIndex ? "true" : undefined} onClick={() => setSlideIndex(i)} />)}</div>
         </div>
         <div className="posterOrder">
           <h2>AMRIT URJA — Capsule + Oil Combo</h2>
@@ -331,8 +314,6 @@ export default function Home() {
         <div><b>Support</b><a href={cleanWhatsappUrl} target="_blank" rel="noreferrer">WhatsApp</a><a href="#faq">FAQ</a></div>
         <small>यह product general wellness presentation के लिए है। किसी बीमारी के diagnosis, treatment, cure या prevention का दावा नहीं किया गया है।</small>
       </footer>
-
-      {showSlides && <div className="slidesOverlay" role="dialog" aria-modal="true" aria-label="AMRIT URJA ऑफर"><section className="slidesCard"><button className="slidesClose" onClick={closeSlides} aria-label="पॉपअप बंद करें">×</button><div className="slidesScene"><img className="slidesLifestyle" src={`/amrit-slide-${slideIndex + 1}.png`} alt="एक साथ समय बिताता भारतीय जोड़ा" /><div className="slidesShade" /><span className="slidesBrand">AMRIT AYURVEDA</span><div className="slidesCopy"><p>{slideMessages[slideIndex].title}</p><h2>{slideMessages[slideIndex].accent}</h2><span>{slideMessages[slideIndex].sub}</span></div><img className="slidesProduct" src={product.image} alt="AMRIT URJA capsule और oil combo" /></div><div className="slidesControls"><button onClick={() => setSlideIndex((slideIndex + 2) % 3)} aria-label="पिछला दृश्य">‹</button><div className="slidesDots" aria-label={`दृश्य ${slideIndex + 1} / 3`}>{[0, 1, 2].map((i) => <button key={i} className={i === slideIndex ? "current" : ""} onClick={() => setSlideIndex(i)} aria-label={`दृश्य ${i + 1}`} />)}</div><button onClick={() => setSlideIndex((slideIndex + 1) % 3)} aria-label="अगला दृश्य">›</button></div><button className="slidesBuy" onClick={() => { closeSlides(); setPack(1); openOrder("cod"); }}>AMRIT URJA ऑर्डर करें — ₹999 COD</button></section></div>}
 
       {menuOpen && <div className="menuOverlay" role="dialog" aria-modal="true" aria-label="वेबसाइट मेन्यू"><div className="menuDrawer"><button className="menuClose" onClick={() => setMenuOpen(false)} aria-label="मेन्यू बंद करें">×</button><strong>AMRIT AYURVEDA</strong><a href="#home" onClick={() => setMenuOpen(false)}>होम</a><a href="#product" onClick={() => setMenuOpen(false)}>AMRIT URJA Combo</a><button onClick={() => { setMenuOpen(false); setHowOpen(true); }}>How to use — इस्तेमाल कैसे करें</button><a href="#faq" onClick={() => setMenuOpen(false)}>सवाल और जवाब</a><button className="menuBuy" onClick={() => { setMenuOpen(false); openOrder("cod"); }}>ऑर्डर करें</button></div><button className="menuBackdrop" aria-label="मेन्यू बंद करें" onClick={() => setMenuOpen(false)} /></div>}
 
