@@ -229,38 +229,24 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="trustStrip">
-        <article><b>01</b><strong>Premium Presentation</strong><span>Green, cream और gold inspired packaging</span></article>
-        <article><b>02</b><strong>Simple Routine</strong><span>Capsule और oil को एक combo में रखा गया है</span></article>
-        <article><b>03</b><strong>Private Packing</strong><span>Order को साफ़ और सुरक्षित packing में भेजा जाता है</span></article>
-        <article><b>04</b><strong>Direct Support</strong><span>Order और delivery assistance WhatsApp पर</span></article>
+      <div className="shopHighlights"><span>✓ Cash on Delivery</span><span>✦ 30 Capsules + 20 ml Oil</span><span>✓ सुरक्षित पैकिंग</span></div>
+
+      <section className="shopSection" id="product">
+        <div className="shopHeading"><p className="eyebrow">AMRIT AYURVEDA</p><h2>अपना AMRIT URJA pack चुनें</h2><p>हर combo में 30 capsules और 20 ml massage oil का pack है। ज़रूरत के अनुसार 1, 2 या 3 combo चुनें।</p></div>
+        <div className="shopGrid">
+          {([1, 2, 3] as const).map((count) => (
+            <article className={count === 2 ? "shopCard featured" : "shopCard"} key={count}>
+              {count === 2 && <span className="shopRibbon">POPULAR PACK</span>}
+              <img src={product.image} alt={`AMRIT URJA ${count} combo pack`} />
+              <div className="shopCardBody"><small>AMRIT AYURVEDA</small><h3>{count} {count === 1 ? "Combo" : "Combos"}</h3><p>{count} × 30 capsules + 20 ml massage oil</p><strong>₹{money(packPrices[count])}</strong><button onClick={() => { setPack(count); openOrder("cod"); }}>अभी ऑर्डर करें</button></div>
+            </article>
+          ))}
+        </div>
       </section>
 
-      <section className="productSection" id="product">
-        <div className="productCard">
-          <div className="miniLabel">AMRIT AYURVEDA</div>
-          <img src={product.image} alt="AMRIT URJA combo pack" />
-          <div className="productCardFoot">
-            <span>30 CAPSULES + 20 ml OIL</span>
-            <strong>AMRIT URJA</strong>
-          </div>
-        </div>
-
-        <div className="sectionCopy" id="details">
-          <p className="eyebrow">ONE CLEAN COMBO</p>
-          <h2>एक premium box-style presentation में capsule और oil</h2>
-          <p>
-            Website को अब AMRIT URJA की packaging के green, cream और gold look के हिसाब से रखा गया है।
-            Product presentation simple है ताकि customer को एक ही combo साफ़ दिखाई दे।
-          </p>
-          <div className="detailGrid">
-            <article><span>Capsules</span><b>30</b><small>Pack quantity</small></article>
-            <article><span>Oil</span><b>20 ml</b><small>Massage oil</small></article>
-            <article><span>Brand</span><b>AMRIT URJA</b><small>by Amrit Ayurveda</small></article>
-            <article><span>Order</span><b>COD / UPI</b><small>Two payment options</small></article>
-          </div>
-          <button className="darkButton" onClick={() => openOrder("cod")}>BUY AMRIT URJA</button>
-        </div>
+      <section className="storySection" id="details">
+        <div className="storyPhoto"><img src={product.image} alt="AMRIT URJA capsule और oil की बोतलें" /></div>
+        <div className="storyCopy"><p className="eyebrow">ONE SIMPLE ROUTINE</p><h2>Capsule और oil, एक ही combo में</h2><p>AMRIT URJA को आसान daily wellness routine के लिए साथ रखा गया है। पैक की जानकारी पढ़ें और अपनी पसंद का combo चुनें।</p><div className="storyFacts"><span><b>30</b> Capsules प्रति combo</span><span><b>20 ml</b> Massage oil प्रति combo</span><span><b>COD</b> और Online / UPI</span></div><button className="darkButton" onClick={() => { setPack(1); openOrder("cod"); }}>₹999 से ऑर्डर करें</button></div>
       </section>
 
       <section className="routineSection" id="how">
@@ -301,7 +287,7 @@ export default function Home() {
           </details>
           <details>
             <summary>Payment options क्या हैं?</summary>
-            <p>Cash on Delivery और UPI / Online Payment दोनों options available हैं।</p>
+            <p>1 combo ₹999, 2 combo ₹1,499 और 3 combo ₹1,999 में चुन सकते हैं। Cash on Delivery और Online / UPI दोनों विकल्प उपलब्ध हैं।</p>
           </details>
           <details>
             <summary>Product कैसे use करना है?</summary>
