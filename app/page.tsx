@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 
 const phone = "918290695226";
 const upiId = "8295820654@okbizaxis";
@@ -58,6 +58,11 @@ export default function Home() {
   const [orderError, setOrderError] = useState("");
   const [orderSuccess, setOrderSuccess] = useState("");
   const [orderRef, setOrderRef] = useState("");
+  const [leadName, setLeadName] = useState("");
+  const [leadMobile, setLeadMobile] = useState("");
+  const [leadSaving, setLeadSaving] = useState(false);
+  const [leadMessage, setLeadMessage] = useState("");
+  const [leadSaved, setLeadSaved] = useState(false);
 
   const packPrices = { 1: 999, 2: 1499, 3: 1999 } as const;
   const payable = packPrices[pack];
@@ -91,6 +96,43 @@ export default function Home() {
     });
     return `upi://pay?${params.toString()}`;
   }, [orderRef, payable]);
+
+  async function submitCallbackLead(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (leadSaving || leadSaved) return;
+    if (leadName.trim().length < 2 || !/^[6-9]\\d{9}$/.test(leadMobile)) {
+      setLeadMessage("पूरा नाम और सही 10-digit मोबाइल नंबर भरें।");
+      return;
+    }
+    setLeadSaving(true);
+    setLeadMessage("");
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const response = await fetch("/api/website-lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: leadName.trim(),
+          mobile: leadMobile,
+          session_id: window.crypto.randomUUID(),
+          path: window.location.pathname,
+          source: "Website Call Me Back",
+          product: product.name,
+          utm_source: params.get("utm_source") || "",
+          utm_campaign: params.get("utm_campaign") || "",
+          fbclid: params.get("fbclid") || "",
+        }),
+      });
+      const result = await response.json().catch(() => null);
+      if (!response.ok || result?.ok !== true) throw new Error("लीड सेव नहीं हुई। कृपया दोबारा कोशिश करें।");
+      setLeadSaved(true);
+      setLeadMessage("धन्यवाद! आपका नंबर मिल गया है। हमारी टीम आपसे संपर्क करेगी।");
+    } catch (error) {
+      setLeadMessage(error instanceof Error ? error.message : "लीड सेव नहीं हुई।");
+    } finally {
+      setLeadSaving(false);
+    }
+  }
 
   function openOrder(method: PaymentMethod = "cod") {
     setPaymentMethod(method);
@@ -227,6 +269,16 @@ export default function Home() {
           <button className="posterCod" onClick={() => openOrder("cod")}>🛒 अभी ऑर्डर करें — ₹{money(payable)} COD</button>
           <button className="posterOnline" onClick={() => openOrder("upi")}>▣ Online / UPI — ₹{money(payable)}</button>
         </div>
+      </section>
+
+      <section className="callbackSection" aria-labelledby="callbackTitle">
+        <div><p className="eyebrow">AMRIT AYURVEDA</p><h2 id="callbackTitle">ऑर्डर से पहले बात करना चाहते हैं?</h2><p>अपना नाम और मोबाइल नंबर दें। हमारी टीम आपको कॉल करेगी।</p></div>
+        <form onSubmit={submitCallbackLead}>
+          <label>आपका नाम<input value={leadName} onChange={(e) => setLeadName(e.target.value)} type="text" autoComplete="name" required minLength={2} maxLength={80} disabled={leadSaved} placeholder="पूरा नाम" /></label>
+          <label>मोबाइल नंबर<input value={leadMobile} onChange={(e) => setLeadMobile(e.target.value.replace(/\\D/g, "").slice(0, 10))} type="tel" inputMode="numeric" autoComplete="tel-national" pattern="[6-9][0-9]{9}" required disabled={leadSaved} placeholder="10 अंकों का नंबर" /></label>
+          <button type="submit" disabled={leadSaving || leadSaved}>{leadSaved ? "रिक्वेस्ट भेज दी" : leadSaving ? "भेज रहे हैं…" : "मुझे कॉल करें"}</button>
+          {leadMessage && <p className={leadSaved ? "callbackSuccess" : "callbackError"} role="status">{leadMessage}</p>}
+        </form>
       </section>
 
       <div className="shopHighlights"><span>✓ Cash on Delivery</span><span>✦ 30 Capsules + 20 ml Oil</span><span>✓ सुरक्षित पैकिंग</span></div>
