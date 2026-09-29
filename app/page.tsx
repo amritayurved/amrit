@@ -154,6 +154,7 @@ export default function Home() {
 
   return (
     <main className="premiumSite">
+      <div className="announcement">🌿 सुरक्षित पैकिंग <span>•</span> Cash on Delivery उपलब्ध <span>•</span> Amrit Ayurveda</div>
       <header className="topbar">
         <a className="brand" href="#home" aria-label="Amrit Ayurveda home">
           <span className="brandMark">✦</span>
@@ -165,44 +166,39 @@ export default function Home() {
           <a href="#how">How to use</a>
           <a href="#faq">FAQ</a>
         </nav>
-        <a className="waButton" href={cleanWhatsappUrl} target="_blank" rel="noreferrer">WhatsApp</a>
+        <button className="headerOrder" onClick={() => openOrder("cod")}>अभी ऑर्डर करें</button>
       </header>
 
-      <section className="hero" id="home">
-        <div className="heroGlow heroGlowOne" />
-        <div className="heroGlow heroGlowTwo" />
-        <div className="heroCopy">
-          <p className="eyebrow">AMRIT AYURVEDA • PREMIUM WELLNESS</p>
-          <h1>AMRIT <em>URJA</em></h1>
-          <p className="heroLead">
-            30 Capsules और 20 ml Massage Oil का premium Ayurvedic wellness combo,
-            एक साफ़ और आसान daily routine के लिए।
-          </p>
-          <div className="heroBadges">
-            <span>30 Capsules</span>
-            <span>20 ml Oil</span>
-            <span>Secure Packing</span>
+      <section className="referenceHero" id="home">
+        <div className="heroPoster">
+          <div className="posterCopy">
+            <p className="posterOverline">AMRIT AYURVEDA प्रस्तुत करता है</p>
+            <p className="posterHindi">रोज़ की ऊर्जा और वेलनेस के लिए</p>
+            <h1>AMRIT<br /><span>URJA</span></h1>
+            <p className="posterTag">Ayurvedic Wellness Combo</p>
+            <p className="posterSupport">30 Capsules + 20 ml Massage Oil</p>
+            <ul className="posterPoints">
+              <li>आसान daily routine</li>
+              <li>Capsule और oil का combo</li>
+              <li>सुरक्षित पैकिंग</li>
+            </ul>
           </div>
-          <div className="pricePanel">
-            <div><small>ONLINE PAYMENT</small><strong>₹{money(product.onlinePrice)}</strong></div>
-            <div><small>CASH ON DELIVERY</small><strong>₹{money(product.codPrice)}</strong></div>
+          <div className="posterProduct">
+            <img src={product.image} alt="Amrit Ayurveda AMRIT URJA capsule और oil combo" />
           </div>
-          <div className="heroActions">
-            <button className="primaryButton" onClick={() => openOrder("cod")}>ORDER NOW</button>
-            <a className="secondaryButton" href="#details">VIEW DETAILS</a>
+          <div className="posterFeatureRow">
+            <span>✦<small>AMRIT AYURVEDA</small></span>
+            <span>30<small>CAPSULES</small></span>
+            <span>20 ml<small>MASSAGE OIL</small></span>
+            <span>✓<small>COD AVAILABLE</small></span>
           </div>
-          <p className="microCopy">Product information और usage guidance के लिए pack label को प्राथमिकता दें।</p>
         </div>
-
-        <div className="heroVisual" aria-label="AMRIT URJA product image">
-          <div className="productFrame">
-            <div className="frameLine" />
-            <img src={product.image} alt="AMRIT URJA capsule bottle और 20 ml massage oil bottle" />
-            <div className="frameCaption">
-              <span>AMRIT URJA</span>
-              <small>Capsule + Oil Combo</small>
-            </div>
-          </div>
+        <div className="posterOrder">
+          <h2>AMRIT URJA — Capsule + Oil Combo</h2>
+          <p className="posterPrice">Online ₹{money(product.onlinePrice)} <span>•</span> COD ₹{money(product.codPrice)}</p>
+          <p className="posterPriceNote">ऑनलाइन और Cash on Delivery के दाम अलग हैं।</p>
+          <button className="posterCod" onClick={() => openOrder("cod")}>🛒 अभी ऑर्डर करें — Cash on Delivery</button>
+          <button className="posterOnline" onClick={() => openOrder("upi")}>▣ Online / UPI पर ऑर्डर करें</button>
         </div>
       </section>
 
