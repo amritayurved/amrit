@@ -222,5 +222,7 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 .photoSlots{max-width:1180px;margin:38px auto 0;padding:0 24px}
 .photoSlotsGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
 .photoSlot{aspect-ratio:9/16;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:2px dashed #b89b5f;border-radius:16px;background:#fffaf0;color:#345440;text-align:center}
+.photoSlotFilled{overflow:hidden;border-style:solid;background:#fff}
+.photoSlotFilled img{width:100%;height:100%;display:block;object-fit:cover}
 .photoSlot span{font-size:18px;font-weight:800}.photoSlot small{font-size:14px;color:#5b6c5c}
 @media(max-width:700px){.photoSlots{padding:0 14px;margin-top:24px}.photoSlotsGrid{gap:8px}.photoSlot{border-radius:10px}.photoSlot span{font-size:14px}.photoSlot small{font-size:12px;padding:0 4px}}
