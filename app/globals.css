@@ -210,3 +210,19 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 .storyPhoto{padding:13px;border:1px solid #ceb26f;border-radius:22px;background:#eadfc7;box-shadow:0 22px 45px #173f2e22}.storyPhoto img{display:block;width:100%;max-height:550px;object-fit:cover;border-radius:13px}
 .storyFacts{display:grid;gap:11px;margin:24px 0}.storyFacts span{padding:14px 16px;border-left:4px solid #caa452;background:#fff9eb;color:#415447}.storyFacts b{font-size:20px;margin-right:8px;color:#174e36}
 @media(max-width:700px){.shopHighlights{gap:8px;justify-content:space-around;padding:12px 5px;font-size:10px}.shopSection{padding:60px 15px}.shopHeading{margin-bottom:25px}.shopGrid{grid-template-columns:1fr;gap:18px;max-width:430px;margin:auto}.shopCard>img{height:270px;object-fit:contain}.shopCardBody p{min-height:0}.storySection{grid-template-columns:1fr;padding:65px 18px;gap:28px}.storyPhoto img{max-height:380px;object-fit:contain}}
+
+.slidesOverlay{position:fixed;inset:0;z-index:150;display:grid;place-items:center;padding:15px;background:#000c;backdrop-filter:blur(4px)}
+.slidesCard{position:relative;width:min(96vw,500px);max-height:calc(100dvh - 30px);overflow:auto;background:#080908;color:white;border:1px solid #d5a84a;border-radius:18px;box-shadow:0 20px 65px #000b}
+.slidesClose{position:absolute;right:11px;top:11px;z-index:7;width:39px;height:39px;border:0;border-radius:50%;background:#143e2d;color:white;font-size:28px}
+.slidesScene{position:relative;height:min(67vh,660px);min-height:430px;overflow:hidden;background:#111}
+.slidesLifestyle{display:block;width:100%;height:65%;object-fit:cover;object-position:center 35%}
+.slidesShade{position:absolute;inset:38% 0 0;background:linear-gradient(transparent,#050505 28%,#050505)}
+.slidesBrand{position:absolute;top:24px;left:20px;z-index:2;padding:8px 12px;background:#08140b9c;color:#fff;font-weight:900;letter-spacing:.14em;font-size:13px}
+.slidesCopy{position:absolute;top:52%;left:22px;right:22px;z-index:2;text-align:center}
+.slidesCopy p{font-size:17px;margin:0;color:#fff}.slidesCopy h2{color:#e7b438;font-size:clamp(31px,7vw,47px);line-height:1.05;margin:7px 0;text-transform:uppercase}.slidesCopy span{font-size:16px;color:#fff}
+.slidesProduct{position:absolute;z-index:2;bottom:4px;right:20px;width:105px;height:125px;object-fit:contain;border-radius:8px}
+.slidesControls{display:flex;align-items:center;justify-content:space-between;padding:4px 22px}
+.slidesControls>button{width:44px;height:38px;border:0;background:transparent;color:white;font-size:38px;line-height:1}
+.slidesDots{display:flex;gap:8px}.slidesDots button{width:9px;height:9px;border:0;border-radius:100%;padding:0;background:#777}.slidesDots button.current{background:#e7b438;width:22px}
+.slidesBuy{display:block;width:calc(100% - 30px);margin:5px 15px 15px;min-height:51px;border:0;border-radius:999px;background:#b50911;color:white;font-size:16px;font-weight:900}
+@media(max-width:560px){.slidesOverlay{padding:8px}.slidesCard{width:min(96vw,430px)}.slidesScene{height:min(73dvh,700px);min-height:480px}.slidesLifestyle{height:63%}.slidesCopy{top:52%;left:14px;right:14px}.slidesProduct{height:112px;width:92px;bottom:0;right:8px}.slidesBuy{font-size:14px}}
