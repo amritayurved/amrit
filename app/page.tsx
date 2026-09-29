@@ -42,6 +42,8 @@ function money(value: number) {
 export default function Home() {
   const [introOpen, setIntroOpen] = useState(true);
   const [offerOpen, setOfferOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [howOpen, setHowOpen] = useState(false);
   const [offerShown, setOfferShown] = useState(false);
   const [pack, setPack] = useState<1 | 2 | 3>(1);
   const [orderOpen, setOrderOpen] = useState(false);
@@ -179,6 +181,7 @@ export default function Home() {
     <main className="premiumSite">
       <div className="announcement">🌿 सुरक्षित पैकिंग <span>•</span> Cash on Delivery उपलब्ध <span>•</span> Amrit Ayurveda</div>
       <header className="topbar">
+        <button className="menuToggle" onClick={() => setMenuOpen(true)} aria-label="मेन्यू खोलें" aria-expanded={menuOpen}>☰</button>
         <a className="brand" href="#home" aria-label="Amrit Ayurveda home">
           <span className="brandMark">✦</span>
           <span><strong>AMRIT</strong><small>AYURVEDA</small></span>
@@ -186,7 +189,7 @@ export default function Home() {
         <nav>
           <a href="#product">Product</a>
           <a href="#details">Details</a>
-          <a href="#how">How to use</a>
+          <button className="navHow" onClick={() => setHowOpen(true)}>How to use</button>
           <a href="#faq">FAQ</a>
         </nav>
         <button className="headerOrder" onClick={() => openOrder("cod")}>अभी ऑर्डर करें</button>
@@ -262,17 +265,16 @@ export default function Home() {
 
       <section className="routineSection" id="how">
         <div className="sectionHeading">
-          <p className="eyebrow">DAILY ROUTINE</p>
-          <h2>Use the product only as directed on the label</h2>
-          <p>
-            Capsule और oil के उपयोग की final instructions हमेशा product label पर दी गई directions के अनुसार follow करें।
-          </p>
+          <p className="eyebrow">HOW TO USE</p>
+          <h2>AMRIT URJA कैसे इस्तेमाल करें</h2>
+          <p>Pack पर लिखी जानकारी भी पढ़ें।</p>
         </div>
         <div className="routineGrid">
-          <article><b>1</b><h3>Read the label</h3><p>Pack पर ingredient और usage information check करें।</p></article>
-          <article><b>2</b><h3>Follow directions</h3><p>Recommended amount और method से अधिक उपयोग न करें।</p></article>
-          <article><b>3</b><h3>Store carefully</h3><p>Product को cool, dry place में और बच्चों की पहुँच से दूर रखें।</p></article>
+          <article><b>01</b><h3>रोज़ एक कैप्सूल</h3><p>खाना खाने के आधे घंटे बाद हल्के दूध या पानी के साथ लें।</p></article>
+          <article><b>02</b><h3>रोज़ ऑयल मसाज</h3><p>ऑयल से प्रतिदिन 1–2 मिनट हल्की मसाज करें।</p></article>
+          <article><b>03</b><h3>Pack देखें</h3><p>मात्रा, सावधानियों और सामग्री के लिए पैक पर दी जानकारी पढ़ें।</p></article>
         </div>
+        <button className="howVisualButton" onClick={() => setHowOpen(true)}>चित्र के साथ इस्तेमाल देखें</button>
       </section>
 
       <section className="orderBand">
@@ -303,7 +305,7 @@ export default function Home() {
           </details>
           <details>
             <summary>Product कैसे use करना है?</summary>
-            <p>Product label पर लिखी usage directions को follow करें। किसी medical condition या medicine के साथ use करने से पहले qualified professional से सलाह लेना उचित है।</p>
+            <p>रोज़ एक कैप्सूल खाना खाने के आधे घंटे बाद हल्के दूध या पानी के साथ लें। ऑयल से प्रतिदिन 1–2 मिनट हल्की मसाज करें। पैक पर दी सावधानियाँ पढ़ें।</p>
           </details>
           <details>
             <summary>Delivery packing कैसी होगी?</summary>
@@ -318,6 +320,10 @@ export default function Home() {
         <div><b>Support</b><a href={cleanWhatsappUrl} target="_blank" rel="noreferrer">WhatsApp</a><a href="#faq">FAQ</a></div>
         <small>यह product general wellness presentation के लिए है। किसी बीमारी के diagnosis, treatment, cure या prevention का दावा नहीं किया गया है।</small>
       </footer>
+
+      {menuOpen && <div className="menuOverlay" role="dialog" aria-modal="true" aria-label="वेबसाइट मेन्यू"><div className="menuDrawer"><button className="menuClose" onClick={() => setMenuOpen(false)} aria-label="मेन्यू बंद करें">×</button><strong>AMRIT AYURVEDA</strong><a href="#home" onClick={() => setMenuOpen(false)}>होम</a><a href="#product" onClick={() => setMenuOpen(false)}>AMRIT URJA Combo</a><button onClick={() => { setMenuOpen(false); setHowOpen(true); }}>How to use — इस्तेमाल कैसे करें</button><a href="#faq" onClick={() => setMenuOpen(false)}>सवाल और जवाब</a><button className="menuBuy" onClick={() => { setMenuOpen(false); openOrder("cod"); }}>ऑर्डर करें</button></div><button className="menuBackdrop" aria-label="मेन्यू बंद करें" onClick={() => setMenuOpen(false)} /></div>}
+
+      {howOpen && <div className="howOverlay" role="dialog" aria-modal="true" aria-labelledby="how-modal-title"><section className="howCard"><button className="howClose" onClick={() => setHowOpen(false)} aria-label="इस्तेमाल की जानकारी बंद करें">×</button><img src={product.image} alt="AMRIT URJA 30 capsules और 20 ml oil का pack" /><div className="howCardCopy"><small>AMRIT AYURVEDA • HOW TO USE</small><h2 id="how-modal-title">इस्तेमाल कैसे करें</h2><div className="howStep"><b>01 · कैप्सूल</b><p>रोज़ एक कैप्सूल खाना खाने के आधे घंटे बाद हल्के दूध या पानी के साथ लें।</p></div><div className="howStep"><b>02 · ऑयल</b><p>ऑयल से प्रतिदिन 1–2 मिनट हल्की मसाज करें।</p></div><p className="howCaution">सामग्री और सावधानियों के लिए पैक की जानकारी पढ़ें।</p><button onClick={() => { setHowOpen(false); openOrder("cod"); }}>AMRIT URJA ऑर्डर करें</button></div></section></div>}
 
       <button className="mobileOrder" onClick={() => openOrder("cod")}>ORDER NOW • COD AVAILABLE</button>
       <nav className="floatingContact" aria-label="तुरंत संपर्क करें">
