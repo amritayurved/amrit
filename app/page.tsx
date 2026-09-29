@@ -43,7 +43,6 @@ export default function Home() {
 
   const [offerOpen, setOfferOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [slideIndex, setSlideIndex] = useState(0);
   const [howOpen, setHowOpen] = useState(false);
   const [offerShown, setOfferShown] = useState(false);
   const [pack, setPack] = useState<1 | 2 | 3>(1);
@@ -59,17 +58,6 @@ export default function Home() {
   const [orderError, setOrderError] = useState("");
   const [orderSuccess, setOrderSuccess] = useState("");
   const [orderRef, setOrderRef] = useState("");
-
-  const slideMessages = [
-    { title: "रोज़ की ऊर्जा और वेलनेस", accent: "AMRIT URJA", sub: "30 Capsules + 20 ml Massage Oil", image: "/hero-couple.webp" },
-    { title: "अपने दिन की शुरुआत", accent: "आसान wellness routine", sub: "Amrit Ayurveda Capsule + Oil Combo", image: "/romantic-couple-premium.webp" },
-    { title: "अपने लिए सही pack चुनें", accent: "AMRIT URJA", sub: "Cash on Delivery उपलब्ध", image: "/hero-premium.webp" },
-  ] as const;
-
-  useEffect(() => {
-    const timer = window.setInterval(() => setSlideIndex((i) => (i + 1) % slideMessages.length), 4800);
-    return () => window.clearInterval(timer);
-  }, []);
 
   const packPrices = { 1: 999, 2: 1499, 3: 1999 } as const;
   const payable = packPrices[pack];
@@ -208,24 +196,28 @@ export default function Home() {
       </header>
 
       <section className="referenceHero" id="home">
-        <div className="homeCarousel" role="region" aria-roledescription="carousel" aria-label="AMRIT URJA के तीन दृश्य">
-          {slideMessages.map((slide, index) => (
-            <div key={slide.title} className={index === slideIndex ? "homeSlide active" : "homeSlide"} aria-hidden={index !== slideIndex}>
-              <img className="homeSlidePhoto" src={slide.image} alt="" />
-              <div className="homeSlideShade" />
-              <div className="homeSlideContent">
-                <span className="homeSlideBrand">AMRIT AYURVEDA</span>
-                <p>{slide.title}</p>
-                <h1>{slide.accent}</h1>
-                <span>{slide.sub}</span>
-                <img className="homeSlideProduct" src={product.image} alt="AMRIT URJA capsule और oil combo" />
-                <button onClick={() => openOrder("cod")} tabIndex={index === slideIndex ? 0 : -1}>अभी ऑर्डर करें — ₹{money(payable)} COD</button>
-              </div>
-            </div>
-          ))}
-          <button className="homeSlidePrev" onClick={() => setSlideIndex((i) => (i + 2) % 3)} aria-label="पिछला दृश्य">‹</button>
-          <button className="homeSlideNext" onClick={() => setSlideIndex((i) => (i + 1) % 3)} aria-label="अगला दृश्य">›</button>
-          <div className="homeSlideDots">{slideMessages.map((_, i) => <button key={i} aria-label={`दृश्य ${i + 1}`} aria-current={i === slideIndex ? "true" : undefined} onClick={() => setSlideIndex(i)} />)}</div>
+        <div className="heroPoster">
+          <div className="posterCopy">
+            <p className="posterOverline">AMRIT AYURVEDA प्रस्तुत करता है</p>
+            <p className="posterHindi">रोज़ की ऊर्जा और वेलनेस के लिए</p>
+            <h1>AMRIT<br /><span>URJA</span></h1>
+            <p className="posterTag">Ayurvedic Wellness Combo</p>
+            <p className="posterSupport">30 Capsules + 20 ml Massage Oil</p>
+            <ul className="posterPoints">
+              <li>आसान daily routine</li>
+              <li>Capsule और oil का combo</li>
+              <li>सुरक्षित पैकिंग</li>
+            </ul>
+          </div>
+          <div className="posterProduct">
+            <img src={product.image} alt="Amrit Ayurveda AMRIT URJA capsule और oil combo" />
+          </div>
+          <div className="posterFeatureRow">
+            <span>✦<small>AMRIT AYURVEDA</small></span>
+            <span>30<small>CAPSULES</small></span>
+            <span>20 ml<small>MASSAGE OIL</small></span>
+            <span>✓<small>COD AVAILABLE</small></span>
+          </div>
         </div>
         <div className="posterOrder">
           <h2>AMRIT URJA — Capsule + Oil Combo</h2>
