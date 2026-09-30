@@ -308,3 +308,9 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 .discountApplied{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0;padding:10px 12px;border:1px solid #cbdcca;border-radius:12px;background:#eef7ef;color:#215b40;font-size:11px}.discountApplied span{margin-left:auto;color:#53645a}.discountApplied del{color:#9a8e81}
 @media(max-width:560px){.discountStrip{width:calc(100% - 22px);margin:22px auto 88px;padding:13px 14px;border-radius:18px}.discountStripGift{width:44px;height:44px;font-size:23px}.discountStripCopy strong{font-size:15px}.discountStripCopy small{font-size:8px}.discountWheelWrap{width:240px;height:240px}.wheelLabel1{transform:rotate(30deg) translateY(-90px) rotate(-30deg)}.wheelLabel2{transform:rotate(90deg) translateY(-90px) rotate(-90deg)}.wheelLabel3{transform:rotate(150deg) translateY(-90px) rotate(-150deg)}.wheelLabel4{transform:rotate(210deg) translateY(-90px) rotate(-210deg)}.wheelLabel5{transform:rotate(270deg) translateY(-90px) rotate(-270deg)}.wheelLabel6{transform:rotate(330deg) translateY(-90px) rotate(-330deg)}.mobileOrder.discountTrigger{background:linear-gradient(100deg,#d7aa46,#b88625);color:#fff7dc;border:1px solid #f1d07b;box-shadow:0 12px 30px #6d4d1e55;font-size:13px}}
 @media(prefers-reduced-motion:reduce){.discountWheel{transition:none}}
+
+/* Full-width homepage poster, with the entire image preserved. */
+.premiumSite .referenceHero{width:100%;max-width:none;padding:0 0 42px}
+.premiumSite .referenceHero>a{width:100%;margin:0;border-radius:0}
+.premiumSite .referenceHero>a img{display:block;width:100%;height:auto;max-height:none;object-fit:contain}
+.premiumSite .referenceHero .posterOrder{padding:0 16px}

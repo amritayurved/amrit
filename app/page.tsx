@@ -257,8 +257,8 @@ export default function Home() {
       </header>
 
       <section className="referenceHero" id="home">
-        <a href="#product" aria-label="AMRIT URJA के pack और ऑर्डर विकल्प देखें" style={{ display: "block", width: "100%", borderRadius: "20px", overflow: "hidden" }}>
-          <img src="/amrit-urja-green-front.webp" alt="AMRIT URJA हरा–गोल्ड कॉम्बो: 30 कैप्सूल और 20 ml ऑयल, 1 कॉम्बो ₹999" width={853} height={1844} fetchPriority="high" style={{ display: "block", width: "100%", height: "auto" }} />
+        <a href="#product" aria-label="AMRIT URJA के pack और ऑर्डर विकल्प देखें" style={{ display: "block", width: "100%", borderRadius: "0", overflow: "hidden" }}>
+          <img src="/amrit-urja-front-full.webp" alt="AMRIT URJA — 30 Capsules + 20 ml Oil, Amrit Ayurveda" width={853} height={1844} fetchPriority="high" style={{ display: "block", width: "100%", height: "auto" }} />
         </a>
         <div className="posterOrder" id="product">
           <h2>AMRIT URJA — Capsule + Oil Combo</h2>
