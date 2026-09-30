@@ -63,9 +63,15 @@ export default function Home() {
   const [leadSaving, setLeadSaving] = useState(false);
   const [leadMessage, setLeadMessage] = useState("");
   const [leadSaved, setLeadSaved] = useState(false);
+  const [discountOpen, setDiscountOpen] = useState(false);
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [spinning, setSpinning] = useState(false);
+  const [wheelRotation, setWheelRotation] = useState(0);
 
   const packPrices = { 1: 999, 2: 1499, 3: 1999 } as const;
-  const payable = packPrices[pack];
+  const discountPrizes = [50, 75, 100, 125, 150, 200] as const;
+  const basePayable = packPrices[pack];
+  const payable = Math.max(1, basePayable - discountAmount);
 
   useEffect(() => {
     if (offerShown || orderOpen) return;
@@ -126,13 +132,28 @@ export default function Home() {
     }
   }
 
+  function spinDiscountWheel() {
+    if (spinning || discountAmount > 0) return;
+    const index = Math.floor(Math.random() * discountPrizes.length);
+    const prize = discountPrizes[index];
+    const segment = 360 / discountPrizes.length;
+    const targetRotation = 360 * 6 + (360 - (index * segment + segment / 2));
+    setSpinning(true);
+    setWheelRotation(targetRotation);
+    window.setTimeout(() => {
+      setDiscountAmount(prize);
+      setSpinning(false);
+    }, 2400);
+  }
+
   function openOrder(method: PaymentMethod = "cod") {
     setPaymentMethod(method);
     setOrderError("");
     setOrderSuccess("");
     setOfferOpen(false);
+    setDiscountOpen(false);
     setOrderOpen(true);
-    trackPixel("InitiateCheckout", { content_name: product.name, content_ids: [product.shortName], content_type: "product", value: packPrices[pack], currency: "INR" });
+    trackPixel("InitiateCheckout", { content_name: product.name, content_ids: [product.shortName], content_type: "product", value: payable, currency: "INR" });
   }
 
   function updateCustomer(field: keyof CustomerDetails, value: string) {
@@ -176,7 +197,7 @@ export default function Home() {
           pincode: customer.pincode,
           quantity: String(pack),
           product: product.name,
-          notes: `${pack} × ${product.detail}`,
+          notes: `${pack} × ${product.detail}${discountAmount > 0 ? ` | Spin Discount ₹${discountAmount}` : ""}`,
           amount: String(payable),
           payment: paymentMethod === "upi" ? "Prepaid" : "COD",
           order_type: "Order",
@@ -199,7 +220,7 @@ export default function Home() {
           pa: upiId,
           pn: "AMRIT AYURVEDA",
           tn: `${product.shortName} ${ref}`,
-          am: product.onlinePrice.toFixed(2),
+          am: payable.toFixed(2),
           cu: "INR",
         });
         window.location.assign(`upi://pay?${params.toString()}`);
@@ -335,6 +356,19 @@ export default function Home() {
         </div>
       </section>
 
+      <button
+        className="discountStrip"
+        onClick={() => discountAmount > 0 ? openOrder("cod") : setDiscountOpen(true)}
+        aria-label="डिस्काउंट पाने के लिए Spin and Win खोलें"
+      >
+        <span className="discountStripGift">🎁</span>
+        <span className="discountStripCopy">
+          <strong>{discountAmount > 0 ? `₹${discountAmount} OFF मिल चुका है — ऑर्डर करें` : "डिस्काउंट पाने के लिए दबाएँ"}</strong>
+          <small>{discountAmount > 0 ? `आपका नया price ₹${money(payable)}` : "SPIN & WIN • हर spin पर discount"}</small>
+        </span>
+        <span className="discountStripArrow">›</span>
+      </button>
+
       <section className="faqSection" id="faq">
         <div className="sectionHeading">
           <p className="eyebrow">FAQ</p>
@@ -361,9 +395,13 @@ export default function Home() {
       </section>
 
       <footer>
-        <div className="footerBrand"><strong>AMRIT AYURVEDA</strong><span>Premium Ayurvedic Wellness</span></div>
+        <div className="footerBrand">
+          <strong>AMRIT AYURVEDA</strong>
+          <span>Premium Ayurvedic Wellness</span>
+          <a className="footerPhone" href="tel:8290695226">☎ SUPPORT: +91 8290695226</a>
+        </div>
         <div><b>Product</b><a href="#product">AMRIT URJA</a><a href="#how">How to use</a></div>
-        <div><b>Support</b><a href={cleanWhatsappUrl} target="_blank" rel="noreferrer">WhatsApp</a><a href="#faq">FAQ</a></div>
+        <div><b>Contact</b><a href="tel:8290695226">Call: 8290695226</a><a href={cleanWhatsappUrl} target="_blank" rel="noreferrer">WhatsApp Support</a><a href="#faq">FAQ</a></div>
         <small>यह product general wellness presentation के लिए है। किसी बीमारी के diagnosis, treatment, cure या prevention का दावा नहीं किया गया है।</small>
       </footer>
 
@@ -385,7 +423,12 @@ export default function Home() {
         </div>
       )}
 
-      <button className="mobileOrder" onClick={() => openOrder("cod")}>ORDER NOW • COD AVAILABLE</button>
+      <button
+        className="mobileOrder discountTrigger"
+        onClick={() => discountAmount > 0 ? openOrder("cod") : setDiscountOpen(true)}
+      >
+        {discountAmount > 0 ? `🎉 ₹${discountAmount} OFF — अभी ऑर्डर करें` : "🎁 डिस्काउंट पाने के लिए दबाएँ"}
+      </button>
       <nav className="floatingContact" aria-label="तुरंत संपर्क करें">
         <a className="floatingContactButton floatingWhatsapp" href={cleanWhatsappUrl} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp पर बात करें" title="WhatsApp पर बात करें">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20.2 11.6a8.2 8.2 0 0 1-12.1 7.2L3.5 20l1.2-4.5a8.2 8.2 0 1 1 15.5-3.9Z"/><path d="M8.7 8.3c-.5.6-.5 1.2-.2 1.9a10 10 0 0 0 5.2 5.2c.7.3 1.3.3 1.9-.2l.7-.9-2.3-1.2-.8.9a7.2 7.2 0 0 1-2.5-2.5l.9-.8-1.2-2.3-.9.7Z" transform="translate(0 3.7)"/></svg>
@@ -394,6 +437,50 @@ export default function Home() {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 16.2v3a2 2 0 0 1-2.2 2 17.6 17.6 0 0 1-7.7-2.7 17.2 17.2 0 0 1-5.3-5.3A17.6 17.6 0 0 1 3.1 5.4 2 2 0 0 1 5.1 3h3a2 2 0 0 1 2 1.7l.5 2.7a2 2 0 0 1-.6 1.8L8.5 10.7a14 14 0 0 0 4.8 4.8l1.5-1.5a2 2 0 0 1 1.8-.6l2.7.5a2 2 0 0 1 1.7 2.3Z"/></svg>
         </a>
       </nav>
+
+      {discountOpen && !orderOpen && (
+        <div className="discountOverlay" role="dialog" aria-modal="true" aria-labelledby="discount-title">
+          <section className="discountCard">
+            <button className="discountClose" onClick={() => setDiscountOpen(false)} aria-label="Discount wheel बंद करें">×</button>
+            <p className="discountEyebrow">AMRIT AYURVEDA • SPECIAL REWARD</p>
+            <h2 id="discount-title">🎁 Spin & Win Discount</h2>
+            <p className="discountSub">Wheel घुमाएँ — हर spin पर आपको discount मिलेगा।</p>
+
+            <div className="discountWheelWrap">
+              <span className="discountPointer" aria-hidden="true">▼</span>
+              <div className="discountWheel" style={{ transform: `rotate(${wheelRotation}deg)` }}>
+                <span className="wheelLabel wheelLabel1">₹50</span>
+                <span className="wheelLabel wheelLabel2">₹75</span>
+                <span className="wheelLabel wheelLabel3">₹100</span>
+                <span className="wheelLabel wheelLabel4">₹125</span>
+                <span className="wheelLabel wheelLabel5">₹150</span>
+                <span className="wheelLabel wheelLabel6">₹200</span>
+              </div>
+              <button className="wheelCenter" onClick={spinDiscountWheel} disabled={spinning || discountAmount > 0}>
+                {spinning ? "..." : discountAmount > 0 ? "✓" : "SPIN"}
+              </button>
+            </div>
+
+            {discountAmount > 0 ? (
+              <div className="discountResult">
+                <b>🎉 बधाई हो! ₹{discountAmount} OFF मिला</b>
+                <span>1 Combo पर नया price: <del>₹{money(basePayable)}</del> <strong>₹{money(payable)}</strong></span>
+              </div>
+            ) : (
+              <div className="discountHint">₹50 • ₹75 • ₹100 • ₹125 • ₹150 • ₹200</div>
+            )}
+
+            <button
+              className="discountAction"
+              onClick={() => discountAmount > 0 ? openOrder("cod") : spinDiscountWheel()}
+              disabled={spinning}
+            >
+              {spinning ? "Wheel घूम रहा है…" : discountAmount > 0 ? `₹${discountAmount} OFF लागू करें और ऑर्डर करें` : "अभी SPIN करें"}
+            </button>
+            <small className="discountFine">एक visit में एक reward • Discount checkout में automatically apply होगा</small>
+          </section>
+        </div>
+      )}
 
       {orderOpen && (
         <div className="orderOverlay" role="dialog" aria-modal="true" aria-labelledby="order-title">
@@ -445,6 +532,7 @@ export default function Home() {
             ) : (
               <>
                 <div className="packChoices compact" role="group" aria-label="Combo pack चुनें">{([1, 2, 3] as const).map((count) => <button key={count} className={pack === count ? "selected" : ""} onClick={() => setPack(count)}><b>{count} Combo</b><span>₹{money(packPrices[count])}</span></button>)}</div>
+                {discountAmount > 0 && <div className="discountApplied">🎉 Wheel Discount <b>₹{discountAmount} OFF</b><span><del>₹{money(basePayable)}</del> → ₹{money(payable)}</span></div>}
                 <div className="paymentTabs">
                   <button className={paymentMethod === "cod" ? "active" : ""} onClick={() => setPaymentMethod("cod")}>
                     <span>COD</span><b>₹{money(payable)}</b>
