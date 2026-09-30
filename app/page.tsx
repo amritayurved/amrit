@@ -69,20 +69,12 @@ export default function Home() {
 
   useEffect(() => {
     if (offerShown || orderOpen) return;
-    let lastY = window.scrollY;
-    let changedDirection = false;
-    function onScroll() {
-      const y = window.scrollY;
-      if (y > 120 && y < lastY - 8) changedDirection = true;
-      if (changedDirection && y > 70) {
-        setOfferOpen(true);
-        setOfferShown(true);
-        window.removeEventListener("scroll", onScroll);
-      }
-      lastY = y;
-    }
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const timer = window.setTimeout(() => {
+      setPack(1);
+      setOfferOpen(true);
+      setOfferShown(true);
+    }, 650);
+    return () => window.clearTimeout(timer);
   }, [offerShown, orderOpen]);
 
   const upiUrl = useMemo(() => {
@@ -378,6 +370,20 @@ export default function Home() {
       {menuOpen && <div className="menuOverlay" role="dialog" aria-modal="true" aria-label="वेबसाइट मेन्यू"><div className="menuDrawer"><button className="menuClose" onClick={() => setMenuOpen(false)} aria-label="मेन्यू बंद करें">×</button><strong>AMRIT AYURVEDA</strong><a href="#home" onClick={() => setMenuOpen(false)}>होम</a><a href="#product" onClick={() => setMenuOpen(false)}>AMRIT URJA Combo</a><button onClick={() => { setMenuOpen(false); setHowOpen(true); }}>How to use — इस्तेमाल कैसे करें</button><a href="#faq" onClick={() => setMenuOpen(false)}>सवाल और जवाब</a><button className="menuBuy" onClick={() => { setMenuOpen(false); openOrder("cod"); }}>ऑर्डर करें</button></div><button className="menuBackdrop" aria-label="मेन्यू बंद करें" onClick={() => setMenuOpen(false)} /></div>}
 
       {howOpen && <div className="howOverlay" role="dialog" aria-modal="true" aria-labelledby="how-modal-title"><section className="howCard"><button className="howClose" onClick={() => setHowOpen(false)} aria-label="इस्तेमाल की जानकारी बंद करें">×</button><img src={product.image} alt="AMRIT URJA 30 capsules और 20 ml oil का pack" /><div className="howCardCopy"><small>AMRIT AYURVEDA • HOW TO USE</small><h2 id="how-modal-title">इस्तेमाल कैसे करें</h2><div className="howStep"><b>01 · कैप्सूल</b><p>रोज़ एक कैप्सूल खाना खाने के आधे घंटे बाद हल्के दूध या पानी के साथ लें।</p></div><div className="howStep"><b>02 · ऑयल</b><p>ऑयल से प्रतिदिन 1–2 मिनट हल्की मसाज करें।</p></div><p className="howCaution">सामग्री और सावधानियों के लिए पैक की जानकारी पढ़ें।</p><button onClick={() => { setHowOpen(false); openOrder("cod"); }}>AMRIT URJA ऑर्डर करें</button></div></section></div>}
+
+      {offerOpen && !orderOpen && (
+        <div className="offerOverlay" role="dialog" aria-modal="true" aria-labelledby="quick-offer-title">
+          <section className="offerCard">
+            <button className="offerClose" onClick={() => setOfferOpen(false)} aria-label="ऑफर बंद करें">×</button>
+            <span className="offerBadge">⚡ SPECIAL OFFER</span>
+            <h2 id="quick-offer-title">रुकिए! जाने से पहले<br /><span>यह ऑफर देखिए</span></h2>
+            <p>AMRIT URJA 1 Combo अब सिर्फ <b>₹999</b> में</p>
+            <strong className="offerCodLine">✅ Cash on Delivery उपलब्ध</strong>
+            <button className="offerAction" onClick={() => { setPack(1); openOrder("cod"); }}>अभी ऑर्डर करें ₹999 COD</button>
+            <small>🔒 सुरक्षित पैकिंग • आसान ऑर्डर</small>
+          </section>
+        </div>
+      )}
 
       <button className="mobileOrder" onClick={() => openOrder("cod")}>ORDER NOW • COD AVAILABLE</button>
       <nav className="floatingContact" aria-label="तुरंत संपर्क करें">
