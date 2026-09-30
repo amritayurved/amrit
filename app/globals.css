@@ -192,6 +192,13 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 .offerCodLine{display:block;font-size:14px;color:#21592b;margin-bottom:18px}
 .offerAction{width:100%;min-height:54px;border:0;border-radius:12px;background:#080908;color:white;font-weight:900;font-size:16px;box-shadow:0 10px 18px #0004}
 .offerCard small{display:block;margin-top:12px;color:#777;font-size:11px}
+@media(max-width:560px){
+ .offerOverlay{padding:14px}
+ .offerCard{width:min(92vw,355px);padding:26px 18px 19px;border-radius:18px}
+ .offerCard h2{font-size:21px;margin:14px 0 10px}
+ .offerCard p{font-size:14px}
+ .offerAction{min-height:50px;font-size:14px}
+}
 @media(max-width:560px){.packChoices{gap:5px}.packChoices button{min-height:55px;padding:5px}.packChoices b{font-size:12px}.packChoices span{font-size:14px}}
 
 .menuToggle{display:none;border:0;background:transparent;color:#17452f;font-size:24px;line-height:1;padding:8px}
