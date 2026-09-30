@@ -258,6 +258,10 @@ export default function Home() {
             <img src={product.image} alt="Amrit Ayurveda AMRIT URJA capsule और oil combo" />
             <span className="productBadge">30 CAPSULES + 20 ml OIL</span>
           </div>
+          <a className="heroPhone" href="tel:8290695226" aria-label="Call Amrit Ayurveda at 8290695226">
+            <span className="heroPhoneIcon">☎</span>
+            <span><small>CALL / ORDER</small><strong>8290695226</strong></span>
+          </a>
           <div className="posterFeatureRow">
             <span>✦<small>AMRIT AYURVEDA</small></span>
             <span>30<small>CAPSULES</small></span>
