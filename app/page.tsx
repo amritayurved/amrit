@@ -16,9 +16,22 @@ const product = {
 } as const;
 
 type PixelEvent = "InitiateCheckout" | "Purchase";
-function trackPixel(event: PixelEvent, data: Record<string, string | number | string[]>) {
+function trackPixel(
+  event: PixelEvent,
+  data: Record<string, string | number | string[]>,
+  eventId?: string,
+) {
   const fbq = (window as Window & { fbq?: (...args: unknown[]) => void }).fbq;
-  if (typeof fbq === "function") fbq("track", event, data);
+  if (typeof fbq !== "function") return;
+  if (eventId) fbq("track", event, data, { eventID: eventId });
+  else fbq("track", event, data);
+}
+
+function readCookie(name: string) {
+  if (typeof document === "undefined") return "";
+  const prefix = `${name}=`;
+  const part = document.cookie.split("; ").find((item) => item.startsWith(prefix));
+  return part ? decodeURIComponent(part.slice(prefix.length)) : "";
 }
 
 type PaymentMethod = "cod" | "upi";
@@ -180,6 +193,7 @@ export default function Home() {
     setOrderError("");
 
     const ref = `AUR${Date.now()}`;
+    const metaEventId = `purchase_${ref}`;
     setOrderRef(ref);
 
     try {
@@ -202,6 +216,14 @@ export default function Home() {
           payment: paymentMethod === "upi" ? "Prepaid" : "COD",
           order_type: "Order",
           website: window.location.hostname,
+          meta_event_name: "Purchase",
+          meta_event_id: metaEventId,
+          event_id: metaEventId,
+          event_source_url: window.location.href,
+          client_user_agent: navigator.userAgent,
+          fbp: readCookie("_fbp"),
+          fbc: readCookie("_fbc"),
+          fbclid: new URLSearchParams(window.location.search).get("fbclid") || "",
         }),
       });
 
@@ -212,7 +234,11 @@ export default function Home() {
 
       setOrderSuccess(String(result.order.orderCode));
       if (paymentMethod === "cod") {
-        trackPixel("Purchase", { value: Number(result.order.amount) || payable, currency: "INR", content_name: product.name, content_ids: [product.shortName], content_type: "product", num_items: 1, order_id: String(result.order.orderCode) });
+        trackPixel(
+          "Purchase",
+          { value: Number(result.order.amount) || payable, currency: "INR", content_name: product.name, content_ids: [product.shortName], content_type: "product", num_items: 1, order_id: String(result.order.orderCode) },
+          metaEventId,
+        );
       }
 
       if (paymentMethod === "upi") {
