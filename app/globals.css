@@ -283,3 +283,28 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 @media(max-width:700px){.benefitsShowcase{width:100%;margin-top:14px;padding:0 10px 12px}.benefitsPhotoGrid{grid-template-columns:1fr;gap:10px}.benefitsPhotoGrid img{width:100%;border-radius:12px}}
 
 @media (prefers-reduced-motion: reduce){.posterProduct img,.posterProduct:before,.productAura,.productBadge,.productSpark{animation:none!important}}
+
+
+/* Spin & Win discount experience */
+.discountStrip{width:min(940px,calc(100% - 28px));margin:28px auto 8px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:15px;padding:16px 20px;border:1px solid #e1c574;border-radius:22px;background:linear-gradient(100deg,#f8e4a6 0 18%,#bf9432 18% 100%);color:#fff;box-shadow:0 13px 32px #8b661f2d;text-align:left;cursor:pointer}
+.discountStripGift{width:52px;height:52px;display:grid;place-items:center;border-radius:16px;background:#fff4d4;color:#7e5c16;font-size:27px;box-shadow:0 8px 18px #6e4c1524}
+.discountStripCopy{display:grid;gap:3px}.discountStripCopy strong{font-size:19px;letter-spacing:.01em}.discountStripCopy small{font-size:10px;color:#fff6d8;letter-spacing:.08em}.discountStripArrow{font-size:35px;line-height:1}
+.footerPhone{margin-top:18px!important;font-size:18px!important;font-weight:900!important;color:#f0c96a!important;letter-spacing:.025em}
+.discountOverlay{position:fixed;inset:0;z-index:180;display:grid;place-items:center;padding:16px;background:#07140fc9;backdrop-filter:blur(7px)}
+.discountCard{position:relative;width:min(94vw,430px);max-height:calc(100dvh - 28px);overflow:auto;padding:25px 20px 20px;border:1px solid #d6b252;border-radius:25px;background:linear-gradient(180deg,#fffaf0,#f7edd9);box-shadow:0 35px 100px #0009;text-align:center;color:#173b2c}
+.discountClose{position:absolute;top:10px;right:10px;width:34px;height:34px;border:0;border-radius:50%;background:#153f2e;color:#fff;font-size:23px}
+.discountEyebrow{margin:0;color:#a07b31;font-size:9px;font-weight:900;letter-spacing:.16em}.discountCard h2{margin:7px 0 5px;font-family:Georgia,serif;font-size:28px}.discountSub{margin:0 auto 16px;color:#6b746c;font-size:12px}
+.discountWheelWrap{position:relative;width:260px;height:260px;margin:8px auto 16px;display:grid;place-items:center}
+.discountWheel{position:absolute;inset:0;border-radius:50%;border:8px solid #fff4cd;background:conic-gradient(#1d5f43 0 60deg,#d5ad4d 60deg 120deg,#154b37 120deg 180deg,#e1bd65 180deg 240deg,#1d5f43 240deg 300deg,#c99d37 300deg 360deg);box-shadow:0 16px 35px #173b2c35,inset 0 0 0 2px #a57b25;transition:transform 2.4s cubic-bezier(.12,.72,.1,1)}
+.discountWheel:after{content:"";position:absolute;inset:13px;border-radius:50%;border:1px dashed #fff8d999}
+.discountPointer{position:absolute;z-index:4;top:-12px;left:50%;transform:translateX(-50%);color:#c6372b;font-size:31px;text-shadow:0 3px 6px #0003}
+.wheelCenter{position:relative;z-index:5;width:74px;height:74px;border:6px solid #f7e5aa;border-radius:50%;background:#0f3d2c;color:#fff;font-weight:900;box-shadow:0 8px 20px #0005;cursor:pointer}.wheelCenter:disabled{cursor:default}
+.wheelLabel{position:absolute;z-index:2;left:50%;top:50%;width:54px;margin-left:-27px;margin-top:-10px;color:#fff;font-size:13px;font-weight:900;text-shadow:0 2px 4px #0007;text-align:center}
+.wheelLabel1{transform:rotate(30deg) translateY(-98px) rotate(-30deg)}.wheelLabel2{transform:rotate(90deg) translateY(-98px) rotate(-90deg)}.wheelLabel3{transform:rotate(150deg) translateY(-98px) rotate(-150deg)}.wheelLabel4{transform:rotate(210deg) translateY(-98px) rotate(-210deg)}.wheelLabel5{transform:rotate(270deg) translateY(-98px) rotate(-270deg)}.wheelLabel6{transform:rotate(330deg) translateY(-98px) rotate(-330deg)}
+.discountResult{display:grid;gap:6px;margin:8px 0 13px;padding:12px;border:1px solid #caddcf;border-radius:14px;background:#edf7ef}.discountResult b{color:#19563c;font-size:15px}.discountResult span{color:#647268;font-size:12px}.discountResult del{color:#9a8d77;margin-right:5px}.discountResult strong{color:#174f38;font-size:16px}
+.discountHint{margin:4px 0 12px;color:#8c7a55;font-size:10px;letter-spacing:.04em}
+.discountAction{width:100%;min-height:52px;border:0;border-radius:14px;background:linear-gradient(100deg,#0f3d2c,#1b6546);color:#fff;font-size:14px;font-weight:900;box-shadow:0 11px 22px #153f2e3d}.discountAction:disabled{opacity:.7}
+.discountFine{display:block;margin-top:10px;color:#86877f;font-size:8px}
+.discountApplied{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0;padding:10px 12px;border:1px solid #cbdcca;border-radius:12px;background:#eef7ef;color:#215b40;font-size:11px}.discountApplied span{margin-left:auto;color:#53645a}.discountApplied del{color:#9a8e81}
+@media(max-width:560px){.discountStrip{width:calc(100% - 22px);margin:22px auto 88px;padding:13px 14px;border-radius:18px}.discountStripGift{width:44px;height:44px;font-size:23px}.discountStripCopy strong{font-size:15px}.discountStripCopy small{font-size:8px}.discountWheelWrap{width:240px;height:240px}.wheelLabel1{transform:rotate(30deg) translateY(-90px) rotate(-30deg)}.wheelLabel2{transform:rotate(90deg) translateY(-90px) rotate(-90deg)}.wheelLabel3{transform:rotate(150deg) translateY(-90px) rotate(-150deg)}.wheelLabel4{transform:rotate(210deg) translateY(-90px) rotate(-210deg)}.wheelLabel5{transform:rotate(270deg) translateY(-90px) rotate(-270deg)}.wheelLabel6{transform:rotate(330deg) translateY(-90px) rotate(-330deg)}.mobileOrder.discountTrigger{background:linear-gradient(100deg,#d7aa46,#b88625);color:#fff7dc;border:1px solid #f1d07b;box-shadow:0 12px 30px #6d4d1e55;font-size:13px}}
+@media(prefers-reduced-motion:reduce){.discountWheel{transition:none}}
