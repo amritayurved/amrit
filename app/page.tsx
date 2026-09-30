@@ -252,7 +252,11 @@ export default function Home() {
             </ul>
           </div>
           <div className="posterProduct">
+            <span className="productAura" aria-hidden="true" />
+            <span className="productSpark productSparkOne" aria-hidden="true">✦</span>
+            <span className="productSpark productSparkTwo" aria-hidden="true">✦</span>
             <img src={product.image} alt="Amrit Ayurveda AMRIT URJA capsule और oil combo" />
+            <span className="productBadge">30 CAPSULES + 20 ml OIL</span>
           </div>
           <div className="posterFeatureRow">
             <span>✦<small>AMRIT AYURVEDA</small></span>
