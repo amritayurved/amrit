@@ -228,6 +228,7 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 @media(max-width:700px){.photoSlots{padding:0 14px;margin-top:24px}.photoSlotsGrid{gap:8px}.photoSlot{border-radius:10px}.photoSlot span{font-size:14px}.photoSlot small{font-size:12px;padding:0 4px}}
 
 
-.benefitsShowcase{width:100%;max-width:none;margin:24px 0 0;padding:0;overflow:hidden;background:#fff8df}
-.benefitsShowcase img{width:100%;max-width:none;height:auto;display:block;margin:0;object-fit:contain;border-radius:0;image-rendering:auto}
-@media(max-width:700px){.benefitsShowcase{width:100%;margin-top:14px;padding:0}.benefitsShowcase img{width:100%;max-width:none;border-radius:0}}
+.benefitsShowcase{width:100%;max-width:none;margin:24px 0 0;padding:0 18px 18px;overflow:hidden;background:#fff8df}
+.benefitsPhotoGrid{width:min(1400px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.benefitsPhotoGrid img{width:100%;height:auto;display:block;object-fit:contain;border-radius:16px;image-rendering:auto}
+@media(max-width:700px){.benefitsShowcase{width:100%;margin-top:14px;padding:0 10px 12px}.benefitsPhotoGrid{grid-template-columns:1fr;gap:10px}.benefitsPhotoGrid img{width:100%;border-radius:12px}}
