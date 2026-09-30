@@ -256,7 +256,7 @@ export default function Home() {
         <button className="headerOrder" onClick={() => openOrder("cod")}>अभी ऑर्डर करें</button>
       </header>
 
-      <section className="referenceHero" id="home">
+      <section className="referenceHero" id="home"><span id="product" aria-hidden="true" />
         <div className="heroPoster">
           <div className="posterCopy">
             <p className="posterOverline">AMRIT AYURVEDA प्रस्तुत करता है</p>
@@ -317,19 +317,6 @@ export default function Home() {
       </section>
 
       <div className="shopHighlights"><span>✓ Cash on Delivery</span><span>✦ 30 Capsules + 20 ml Oil</span><span>✓ सुरक्षित पैकिंग</span></div>
-
-      <section className="shopSection" id="product">
-        <div className="shopHeading"><p className="eyebrow">AMRIT AYURVEDA</p><h2>अपना AMRIT URJA pack चुनें</h2><p>हर combo में 30 capsules और 20 ml massage oil का pack है। ज़रूरत के अनुसार 1, 2 या 3 combo चुनें।</p></div>
-        <div className="shopGrid">
-          {([1, 2, 3] as const).map((count) => (
-            <article className={count === 2 ? "shopCard featured" : "shopCard"} key={count}>
-              {count === 2 && <span className="shopRibbon">POPULAR PACK</span>}
-              <img src={product.image} alt={`AMRIT URJA ${count} combo pack`} />
-              <div className="shopCardBody"><small>AMRIT AYURVEDA</small><h3>{count} {count === 1 ? "Combo" : "Combos"}</h3><p>{count} × 30 capsules + 20 ml massage oil</p><strong>₹{money(packPrices[count])}</strong><button onClick={() => { setPack(count); openOrder("cod"); }}>अभी ऑर्डर करें</button></div>
-            </article>
-          ))}
-        </div>
-      </section>
 
       <section className="storySection" id="details">
         <div className="storyPhoto"><img src={product.image} alt="AMRIT URJA capsule और oil की बोतलें" /></div>
