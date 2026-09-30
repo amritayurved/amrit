@@ -257,37 +257,9 @@ export default function Home() {
       </header>
 
       <section className="referenceHero" id="home">
-        <div className="heroPoster">
-          <div className="posterCopy">
-            <p className="posterOverline">AMRIT AYURVEDA प्रस्तुत करता है</p>
-            <p className="posterHindi">रोज़ की ऊर्जा और वेलनेस के लिए</p>
-            <h1>AMRIT<br /><span>URJA</span></h1>
-            <p className="posterTag">Ayurvedic Wellness Combo</p>
-            <p className="posterSupport">30 Capsules + 20 ml Massage Oil</p>
-            <ul className="posterPoints">
-              <li>आसान daily routine</li>
-              <li>Capsule और oil का combo</li>
-              <li>सुरक्षित पैकिंग</li>
-            </ul>
-          </div>
-          <div className="posterProduct">
-            <span className="productAura" aria-hidden="true" />
-            <span className="productSpark productSparkOne" aria-hidden="true">✦</span>
-            <span className="productSpark productSparkTwo" aria-hidden="true">✦</span>
-            <img src={product.image} alt="Amrit Ayurveda AMRIT URJA capsule और oil combo" />
-            <span className="productBadge">30 CAPSULES + 20 ml OIL</span>
-          </div>
-          <a className="heroPhone" href="tel:8290695226" aria-label="Call Amrit Ayurveda at 8290695226">
-            <span className="heroPhoneIcon">☎</span>
-            <span><small>CALL / ORDER</small><strong>8290695226</strong></span>
-          </a>
-          <div className="posterFeatureRow">
-            <span>✦<small>AMRIT AYURVEDA</small></span>
-            <span>30<small>CAPSULES</small></span>
-            <span>20 ml<small>MASSAGE OIL</small></span>
-            <span>✓<small>COD AVAILABLE</small></span>
-          </div>
-        </div>
+        <a href="#product" aria-label="AMRIT URJA के pack और ऑर्डर विकल्प देखें" style={{ display: "block", width: "100%", aspectRatio: "1 / 1", background: "#003b25", borderRadius: "20px", overflow: "hidden" }}>
+          <img src="/amrit-urja-green-front.webp" alt="AMRIT URJA हरा–गोल्ड कॉम्बो: 30 कैप्सूल और 20 ml ऑयल, 1 कॉम्बो ₹999" width={853} height={1844} fetchPriority="high" style={{ display: "block", width: "100%", height: "100%", objectFit: "contain" }} />
+        </a>
         <div className="posterOrder" id="product">
           <h2>AMRIT URJA — Capsule + Oil Combo</h2>
           <p className="posterPrice">1 combo ₹999 <span>•</span> 2 combo ₹1,499 <span>•</span> 3 combo ₹1,999</p>
