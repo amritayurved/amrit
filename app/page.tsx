@@ -271,8 +271,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="benefitsShowcase" aria-label="Benefits image">
-        <img src="/my-photos/photo-1.webp" alt="AMRIT URJA benefits information" />
+      <section className="benefitsShowcase" aria-label="AMRIT URJA information gallery">
+        <div className="benefitsPhotoGrid">
+          <img src="/my-photos/photo-1.jpg" alt="AMRIT URJA information 1" />
+          <img src="/my-photos/photo-2.jpg" alt="AMRIT URJA information 2" />
+          <img src="/my-photos/photo-3.jpg" alt="AMRIT URJA information 3" />
+        </div>
       </section>
 
       <section className="callbackSection" aria-labelledby="callbackTitle">
