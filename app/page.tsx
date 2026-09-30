@@ -256,7 +256,7 @@ export default function Home() {
         <button className="headerOrder" onClick={() => openOrder("cod")}>अभी ऑर्डर करें</button>
       </header>
 
-      <section className="referenceHero" id="home"><span id="product" aria-hidden="true" />
+      <section className="referenceHero" id="home">
         <div className="heroPoster">
           <div className="posterCopy">
             <p className="posterOverline">AMRIT AYURVEDA प्रस्तुत करता है</p>
@@ -288,7 +288,7 @@ export default function Home() {
             <span>✓<small>COD AVAILABLE</small></span>
           </div>
         </div>
-        <div className="posterOrder">
+        <div className="posterOrder" id="product">
           <h2>AMRIT URJA — Capsule + Oil Combo</h2>
           <p className="posterPrice">1 combo ₹999 <span>•</span> 2 combo ₹1,499 <span>•</span> 3 combo ₹1,999</p>
           <p className="posterPriceNote">अपना pack चुनें। COD और Online/UPI दोनों उपलब्ध हैं।</p>
