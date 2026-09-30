@@ -406,15 +406,41 @@ export default function Home() {
 
             {orderSuccess ? (
               <div className="successBox">
-                <div className="successTick">✓</div>
+                <div className="successHalo" aria-hidden="true">
+                  <div className="successTick">✓</div>
+                </div>
+                <p className="successEyebrow">AMRIT AYURVEDA</p>
                 <h3>Order successfully saved</h3>
-                <p>Order ID: <b>{orderSuccess}</b></p>
+                <p className="successLead">धन्यवाद! आपका ऑर्डर हमें मिल गया है।</p>
+
+                <div className="successJourney" aria-label="Order next steps">
+                  <div className="successStep">
+                    <span>1</span>
+                    <div><b>ऑर्डर प्राप्त हुआ</b><small>आपकी order request सुरक्षित रूप से दर्ज हो गई है।</small></div>
+                  </div>
+                  <div className="successStep">
+                    <span>2</span>
+                    <div><b>हमारी टीम आपसे संपर्क करेगी</b><small>हम जल्द ही कॉल करके आपका नाम, पता और ऑर्डर confirm करेंगे।</small></div>
+                  </div>
+                  <div className="successStep">
+                    <span>3</span>
+                    <div><b>पैकिंग और डिलीवरी</b><small>Confirmation के बाद आपका parcel delivery के लिए process किया जाएगा।</small></div>
+                  </div>
+                </div>
+
                 {paymentMethod === "cod" ? (
-                  <p>Cash on Delivery order CRM में save हो गया है।</p>
+                  <div className="successCodPill">✓ Cash on Delivery selected</div>
                 ) : (
-                  <a className="primaryButton full" href={upiUrl}>UPI PAYMENT खोलें</a>
+                  <a className="primaryButton full successPay" href={upiUrl}>UPI PAYMENT खोलें</a>
                 )}
-                <button className="secondaryButton full" onClick={() => setOrderOpen(false)}>CLOSE</button>
+
+                <a className="successCall" href="tel:8290695226">
+                  <span>☎</span>
+                  <div><small>किसी मदद के लिए कॉल करें</small><strong>8290695226</strong></div>
+                </a>
+
+                <button className="secondaryButton full successClose" onClick={() => setOrderOpen(false)}>DONE</button>
+                <small className="successFoot">AMRIT AYURVEDA • सुरक्षित पैकिंग • Customer Support</small>
               </div>
             ) : (
               <>
