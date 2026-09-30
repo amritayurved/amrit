@@ -23,8 +23,8 @@ function trackPixel(
 ) {
   const fbq = (window as Window & { fbq?: (...args: unknown[]) => void }).fbq;
   if (typeof fbq !== "function") return;
-  if (eventId) fbq("track", event, data, { eventID: eventId });
-  else fbq("track", event, data);
+  const id = eventId || `${event.toLowerCase()}_${window.crypto.randomUUID()}`;
+  fbq("track", event, data, { eventID: id });
 }
 
 function readCookie(name: string) {
