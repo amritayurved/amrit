@@ -121,6 +121,12 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 @keyframes heroAura{0%,100%{transform:scale(.94);opacity:.65}50%{transform:scale(1.08);opacity:1}}
 @keyframes heroSpark{0%,100%{transform:translateY(0) scale(.75) rotate(0);opacity:.45}50%{transform:translateY(-9px) scale(1.18) rotate(18deg);opacity:1}}
 @keyframes heroBadgeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.heroPhone{position:absolute;z-index:6;right:28px;top:28px;display:flex;align-items:center;gap:10px;padding:10px 15px;border:1px solid #f0cc75aa;border-radius:16px;background:linear-gradient(135deg,#17140ee8,#332818df);box-shadow:0 10px 28px #0006,0 0 24px #e9bd5422;color:#fff;text-decoration:none;backdrop-filter:blur(8px);transition:transform .2s ease,box-shadow .2s ease}
+.heroPhone:hover{transform:translateY(-2px);box-shadow:0 14px 32px #0008,0 0 30px #e9bd5440}
+.heroPhoneIcon{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#e6bb51,#f3d98a);color:#21190c;font-size:20px;box-shadow:0 5px 14px #0005}
+.heroPhone span:last-child{display:grid;line-height:1.05}
+.heroPhone small{font-size:9px;letter-spacing:.12em;color:#e9d9a7;font-weight:800}
+.heroPhone strong{font-size:19px;letter-spacing:.04em;color:#fff6d3}
 .posterFeatureRow{position:absolute;bottom:15px;left:3%;right:3%;display:grid;grid-template-columns:repeat(4,1fr);padding:12px;border:1px solid #a87931;border-radius:12px;background:#0b0c0be8;text-align:center;color:#e9bd54}
 .posterFeatureRow span{display:grid;gap:3px;place-items:center;font-size:28px;font-weight:800}
 .posterFeatureRow span+span{border-left:1px solid #765d32}
@@ -156,6 +162,10 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
  .posterProduct img{height:auto;width:min(88vw,390px);max-height:330px;object-fit:contain;filter:drop-shadow(0 20px 22px #000b)}
  .productBadge{right:12px;bottom:13px;font-size:9px;padding:7px 9px}
  .productSparkOne{right:9%;top:8%}.productSparkTwo{left:7%;top:54%}
+ .heroPhone{top:14px;right:12px;padding:7px 10px;border-radius:13px;gap:7px}
+ .heroPhoneIcon{width:31px;height:31px;font-size:16px}
+ .heroPhone small{font-size:7px}
+ .heroPhone strong{font-size:14px}
  .posterFeatureRow{left:12px;right:12px;bottom:12px;padding:8px 3px}
  .posterFeatureRow span{font-size:20px}
  .posterFeatureRow small{font-size:8px}
