@@ -16,7 +16,7 @@ const product = {
   onlinePrice: 1499,
 } as const;
 
-type PixelEvent = "ViewContent" | "InitiateCheckout" | "Purchase";
+type PixelEvent = "ViewContent" | "AddToCart" | "InitiateCheckout" | "Purchase";
 function trackPixel(
   event: PixelEvent,
   data: Record<string, string | number | string[]>,
@@ -78,7 +78,13 @@ export default function Home() {
   const [leadMessage, setLeadMessage] = useState("");
   const [leadSaved, setLeadSaved] = useState(false);
 
+  const packCatalog = {
+    1: { id: "hdwo1ljwss", title: "AMRIT URJA — 1 Combo", price: 999 },
+    2: { id: "amrit-urja-2-combo", title: "AMRIT URJA — 2 Combo", price: 1499 },
+    3: { id: "amrit-urja-3-combo", title: "AMRIT URJA — 3 Combo", price: 1999 },
+  } as const;
   const packPrices = { 1: 999, 2: 1499, 3: 1999 } as const;
+  const selectedCatalog = packCatalog[pack];
   const basePayable = packPrices[pack];
   const payable = basePayable;
 
@@ -103,10 +109,10 @@ export default function Home() {
       if (sent || !visible || typeof fbq !== "function") return;
       sent = true;
       trackPixel("ViewContent", {
-        content_name: product.name,
-        content_ids: [product.catalogId],
+        content_name: packCatalog[1].title,
+        content_ids: [packCatalog[1].id],
         content_type: "product",
-        value: 999,
+        value: packCatalog[1].price,
         currency: "INR",
       });
     };
@@ -177,7 +183,15 @@ export default function Home() {
     setOrderSuccess("");
     setOfferOpen(false);
     setOrderOpen(true);
-    trackPixel("InitiateCheckout", { content_name: product.name, content_ids: [product.catalogId], content_type: "product", value: payable, currency: "INR" });
+    const eventData = {
+      content_name: selectedCatalog.title,
+      content_ids: [selectedCatalog.id],
+      content_type: "product",
+      value: payable,
+      currency: "INR",
+    };
+    trackPixel("AddToCart", eventData);
+    trackPixel("InitiateCheckout", eventData);
   }
 
   function updateCustomer(field: keyof CustomerDetails, value: string) {
@@ -221,7 +235,7 @@ export default function Home() {
           state: "Unknown",
           pincode: customer.pincode,
           quantity: String(pack),
-          product: product.name,
+          product: selectedCatalog.title,
           notes: `${pack} × ${product.detail}`,
           amount: String(payable),
           payment: paymentMethod === "upi" ? "Prepaid" : "COD",
@@ -247,7 +261,7 @@ export default function Home() {
       if (paymentMethod === "cod") {
         trackPixel(
           "Purchase",
-          { value: Number(result.order.amount) || payable, currency: "INR", content_name: product.name, content_ids: [product.catalogId], content_type: "product", num_items: 1, order_id: String(result.order.orderCode) },
+          { value: Number(result.order.amount) || payable, currency: "INR", content_name: selectedCatalog.title, content_ids: [selectedCatalog.id], content_type: "product", num_items: 1, order_id: String(result.order.orderCode) },
           metaEventId,
         );
       }
@@ -295,7 +309,7 @@ export default function Home() {
           <h2>AMRIT URJA — Capsule + Oil Combo</h2>
           <p className="posterPrice">1 combo ₹999 <span>•</span> 2 combo ₹1,499 <span>•</span> 3 combo ₹1,999</p>
           <p className="posterPriceNote">अपना pack चुनें। COD और Online/UPI दोनों उपलब्ध हैं।</p>
-          <div className="packChoices" role="group" aria-label="Combo pack चुनें">{([1, 2, 3] as const).map((count) => <button key={count} className={pack === count ? "selected" : ""} onClick={() => setPack(count)}><b>{count} Combo</b><span>₹{money(packPrices[count])}</span></button>)}</div>
+          <div className="packChoices" role="group" aria-label="Combo pack चुनें">{([1, 2, 3] as const).map((count) => <button key={count} className={pack === count ? "selected" : ""} onClick={() => { setPack(count); trackPixel("ViewContent", { content_name: packCatalog[count].title, content_ids: [packCatalog[count].id], content_type: "product", value: packCatalog[count].price, currency: "INR" }); }}><b>{count} Combo</b><span>₹{money(packPrices[count])}</span></button>)}</div>
           <button className="posterCod" onClick={() => openOrder("cod")}>🛒 अभी ऑर्डर करें — ₹{money(payable)} COD</button>
           <button className="posterOnline" onClick={() => openOrder("upi")}>▣ Online / UPI — ₹{money(payable)}</button>
         </div>
