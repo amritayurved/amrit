@@ -9,13 +9,14 @@ const crmOrderEndpoint = "/api/website-order";
 const product = {
   name: "AMRIT URJA Capsule + Oil Combo",
   shortName: "AMRIT URJA",
+  catalogId: "hdwo1ljwss",
   image: "/amrit-urja-product.png",
   detail: "30 Capsules + 20 ml Massage Oil",
   codPrice: 2500,
   onlinePrice: 1499,
 } as const;
 
-type PixelEvent = "InitiateCheckout" | "Purchase";
+type PixelEvent = "ViewContent" | "InitiateCheckout" | "Purchase";
 function trackPixel(
   event: PixelEvent,
   data: Record<string, string | number | string[]>,
@@ -91,6 +92,36 @@ export default function Home() {
     return () => window.clearTimeout(timer);
   }, [offerShown, orderOpen]);
 
+
+  useEffect(() => {
+    const section = document.getElementById("product");
+    if (!section) return;
+    let sent = false;
+    let visible = false;
+    const sendView = () => {
+      const fbq = (window as Window & { fbq?: (...args: unknown[]) => void }).fbq;
+      if (sent || !visible || typeof fbq !== "function") return;
+      sent = true;
+      trackPixel("ViewContent", {
+        content_name: product.name,
+        content_ids: [product.catalogId],
+        content_type: "product",
+        value: 999,
+        currency: "INR",
+      });
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      sendView();
+    }, { threshold: 0.1 });
+    observer.observe(section);
+    const retry = window.setInterval(sendView, 500);
+    return () => {
+      observer.disconnect();
+      window.clearInterval(retry);
+    };
+  }, []);
+
   const upiUrl = useMemo(() => {
     const ref = orderRef || "AMRIT-URJA";
     const params = new URLSearchParams({
@@ -146,7 +177,7 @@ export default function Home() {
     setOrderSuccess("");
     setOfferOpen(false);
     setOrderOpen(true);
-    trackPixel("InitiateCheckout", { content_name: product.name, content_ids: [product.shortName], content_type: "product", value: payable, currency: "INR" });
+    trackPixel("InitiateCheckout", { content_name: product.name, content_ids: [product.catalogId], content_type: "product", value: payable, currency: "INR" });
   }
 
   function updateCustomer(field: keyof CustomerDetails, value: string) {
@@ -216,7 +247,7 @@ export default function Home() {
       if (paymentMethod === "cod") {
         trackPixel(
           "Purchase",
-          { value: Number(result.order.amount) || payable, currency: "INR", content_name: product.name, content_ids: [product.shortName], content_type: "product", num_items: 1, order_id: String(result.order.orderCode) },
+          { value: Number(result.order.amount) || payable, currency: "INR", content_name: product.name, content_ids: [product.catalogId], content_type: "product", num_items: 1, order_id: String(result.order.orderCode) },
           metaEventId,
         );
       }
