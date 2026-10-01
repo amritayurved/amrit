@@ -8,6 +8,14 @@ export async function POST(request: Request) {
     if (raw.length > 12000) return NextResponse.json({ ok: false, error: "Request too large" }, { status: 413 });
     let fields: unknown;
     try { fields = JSON.parse(raw); } catch { return NextResponse.json({ ok: false, error: "Invalid JSON" }, { status: 400 }); }
+    // Catalogue titles identify packs; CRM uses one product and its combo quantity.
+    if (fields && typeof fields === "object" && !Array.isArray(fields)) {
+      const order = fields as Record<string, unknown>;
+      const comboTitles = ["AMRIT URJA — 1 Combo", "AMRIT URJA — 2 Combo", "AMRIT URJA — 3 Combo"];
+      if (typeof order.product === "string" && comboTitles.includes(order.product)) {
+        order.product = "AMRIT URJA Capsule + Oil Combo";
+      }
+    }
     const response = await fetch(CRM_INTAKE, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
