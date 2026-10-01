@@ -177,19 +177,22 @@ export default function Home() {
     }
   }
 
-  function openOrder(method: PaymentMethod = "cod") {
+  function openOrder(method: PaymentMethod = "cod", orderPack: 1 | 2 | 3 = pack) {
+    const catalog = packCatalog[orderPack];
+    setPack(orderPack);
     setPaymentMethod(method);
     setOrderError("");
     setOrderSuccess("");
     setOfferOpen(false);
     setOrderOpen(true);
     const eventData = {
-      content_name: selectedCatalog.title,
-      content_ids: [selectedCatalog.id],
+      content_name: catalog.title,
+      content_ids: [catalog.id],
       content_type: "product",
-      value: payable,
+      value: catalog.price,
       currency: "INR",
     };
+    trackPixel("ViewContent", eventData);
     trackPixel("AddToCart", eventData);
     trackPixel("InitiateCheckout", eventData);
   }
@@ -236,6 +239,10 @@ export default function Home() {
           pincode: customer.pincode,
           quantity: String(pack),
           product: selectedCatalog.title,
+          content_ids: [selectedCatalog.id],
+          content_type: "product",
+          currency: "INR",
+          contents: [{ id: selectedCatalog.id, quantity: 1, item_price: payable }],
           notes: `${pack} × ${product.detail}`,
           amount: String(payable),
           payment: paymentMethod === "upi" ? "Prepaid" : "COD",
@@ -337,7 +344,7 @@ export default function Home() {
 
       <section className="storySection" id="details">
         <div className="storyPhoto"><img src={product.image} alt="AMRIT URJA capsule और oil की बोतलें" /></div>
-        <div className="storyCopy"><p className="eyebrow">ONE SIMPLE ROUTINE</p><h2>Capsule और oil, एक ही combo में</h2><p>AMRIT URJA को आसान daily wellness routine के लिए साथ रखा गया है। पैक की जानकारी पढ़ें और अपनी पसंद का combo चुनें।</p><div className="storyFacts"><span><b>30</b> Capsules प्रति combo</span><span><b>20 ml</b> Massage oil प्रति combo</span><span><b>COD</b> और Online / UPI</span></div><button className="darkButton" onClick={() => { setPack(1); openOrder("cod"); }}>₹999 से ऑर्डर करें</button></div>
+        <div className="storyCopy"><p className="eyebrow">ONE SIMPLE ROUTINE</p><h2>Capsule और oil, एक ही combo में</h2><p>AMRIT URJA को आसान daily wellness routine के लिए साथ रखा गया है। पैक की जानकारी पढ़ें और अपनी पसंद का combo चुनें।</p><div className="storyFacts"><span><b>30</b> Capsules प्रति combo</span><span><b>20 ml</b> Massage oil प्रति combo</span><span><b>COD</b> और Online / UPI</span></div><button className="darkButton" onClick={() => { openOrder("cod", 1); }}>₹999 से ऑर्डर करें</button></div>
       </section>
 
       <section className="routineSection" id="how">
@@ -414,7 +421,7 @@ export default function Home() {
             <h2 id="quick-offer-title">रुकिए! जाने से पहले<br /><span>यह ऑफर देखिए</span></h2>
             <p>AMRIT URJA 1 Combo अब सिर्फ <b>₹999</b> में</p>
             <strong className="offerCodLine">✅ Cash on Delivery उपलब्ध</strong>
-            <button className="offerAction" onClick={() => { setPack(1); openOrder("cod"); }}>अभी ऑर्डर करें ₹999 COD</button>
+            <button className="offerAction" onClick={() => { openOrder("cod", 1); }}>अभी ऑर्डर करें ₹999 COD</button>
             <small>🔒 सुरक्षित पैकिंग • आसान ऑर्डर</small>
           </section>
         </div>
