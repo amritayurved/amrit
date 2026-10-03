@@ -1,8 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 
-const phone = "918290695226";
 const upiId = "8295820654@okbizaxis";
 const crmOrderEndpoint = "/api/website-order";
 
@@ -12,8 +12,8 @@ const product = {
   catalogId: "hdwo1ljwss",
   image: "/amrit-urja-product.png",
   detail: "30 Capsules + 20 ml Massage Oil",
-  codPrice: 2500,
-  onlinePrice: 1499,
+  codPrice: 999,
+  onlinePrice: 999,
 } as const;
 
 type PixelEvent = "ViewContent" | "AddToCart" | "InitiateCheckout" | "Purchase";
@@ -54,7 +54,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [howOpen, setHowOpen] = useState(false);
   const [offerShown, setOfferShown] = useState(false);
-  const [pack, setPack] = useState<1 | 2 | 3>(1);
+  const pack = 1 as const;
   const [orderOpen, setOrderOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cod");
   const [customer, setCustomer] = useState<CustomerDetails>({
@@ -70,10 +70,8 @@ export default function Home() {
 
   const packCatalog = {
     1: { id: "hdwo1ljwss", title: "AMRIT URJA — 1 Combo", price: 999 },
-    2: { id: "amrit-urja-2-combo", title: "AMRIT URJA — 2 Combo", price: 1499 },
-    3: { id: "amrit-urja-3-combo", title: "AMRIT URJA — 3 Combo", price: 1999 },
   } as const;
-  const packPrices = { 1: 999, 2: 1499, 3: 1999 } as const;
+  const packPrices = { 1: 999 } as const;
   const selectedCatalog = packCatalog[pack];
   const basePayable = packPrices[pack];
   const payable = basePayable;
@@ -81,7 +79,6 @@ export default function Home() {
   useEffect(() => {
     if (offerShown || orderOpen) return;
     const timer = window.setTimeout(() => {
-      setPack(1);
       setOfferOpen(true);
       setOfferShown(true);
     }, 650);
@@ -130,9 +127,8 @@ export default function Home() {
     return `upi://pay?${params.toString()}`;
   }, [orderRef, payable]);
 
-  function openOrder(method: PaymentMethod = "cod", orderPack: 1 | 2 | 3 = pack) {
+  function openOrder(method: PaymentMethod = "cod", orderPack: 1 = pack) {
     const catalog = packCatalog[orderPack];
-    setPack(orderPack);
     setPaymentMethod(method);
     setOrderError("");
     setOrderSuccess("");
@@ -262,23 +258,22 @@ export default function Home() {
 
       <section className="referenceHero" id="home">
         <a href="#product" aria-label="AMRIT URJA के pack और ऑर्डर विकल्प देखें" style={{ display: "block", width: "100%", borderRadius: "0", overflow: "hidden" }}>
-          <img src="/amrit-urja-front-full.webp" alt="AMRIT URJA — 30 Capsules + 20 ml Oil, Amrit Ayurveda" width={853} height={1844} fetchPriority="high" style={{ display: "block", width: "100%", height: "auto" }} />
+          <Image sizes="100vw" preload src="/amrit-urja-front-full.webp" alt="AMRIT URJA — 30 Capsules + 20 ml Oil, Amrit Ayurveda" width={853} height={1844} fetchPriority="high" style={{ display: "block", width: "100%", height: "auto" }} />
         </a>
         <div className="posterOrder" id="product">
           <h2>AMRIT URJA — Capsule + Oil Combo</h2>
-          <p className="posterPrice">1 combo ₹999 <span>•</span> 2 combo ₹1,499 <span>•</span> 3 combo ₹1,999</p>
-          <p className="posterPriceNote">अपना pack चुनें। COD और Online/UPI दोनों उपलब्ध हैं।</p>
-          <div className="packChoices" role="group" aria-label="Combo pack चुनें">{([1, 2, 3] as const).map((count) => <button key={count} className={pack === count ? "selected" : ""} onClick={() => { setPack(count); trackPixel("ViewContent", { content_name: packCatalog[count].title, content_ids: [packCatalog[count].id], content_type: "product", value: packCatalog[count].price, currency: "INR" }); }}><b>{count} Combo</b><span>₹{money(packPrices[count])}</span></button>)}</div>
-          <button className="posterCod" onClick={() => openOrder("cod")}>🛒 अभी ऑर्डर करें — ₹{money(payable)} COD</button>
+          <p className="posterPrice">1 Combo — ₹999</p>
+          <p className="posterPriceNote">कैश ऑन डिलीवरी उपलब्ध है। Online/UPI से भी भुगतान कर सकते हैं।</p>
+          <button className="posterCod" onClick={() => openOrder("cod")}>अभी ऑर्डर करें — कैश ऑन डिलीवरी ₹999</button>
           <button className="posterOnline" onClick={() => openOrder("upi")}>▣ Online / UPI — ₹{money(payable)}</button>
         </div>
       </section>
 
       <section className="benefitsShowcase" aria-label="AMRIT URJA information gallery">
         <div className="benefitsPhotoGrid">
-          <img src="/my-photos/photo-1.jpg" alt="AMRIT URJA information 1" />
-          <img src="/my-photos/photo-2.jpg" alt="AMRIT URJA information 2" />
-          <img src="/my-photos/photo-3.jpg" alt="AMRIT URJA information 3" />
+          <Image width={1010} height={1600} sizes="(max-width: 768px) 100vw, 33vw" loading="lazy" src="/my-photos/photo-1.jpg" alt="AMRIT URJA information 1" />
+          <Image width={1067} height={1600} sizes="(max-width: 768px) 100vw, 33vw" loading="lazy" src="/my-photos/photo-2.jpg" alt="AMRIT URJA information 2" />
+          <Image width={915} height={1600} sizes="(max-width: 768px) 100vw, 33vw" loading="lazy" src="/my-photos/photo-3.jpg" alt="AMRIT URJA information 3" />
         </div>
       </section>
 
@@ -300,11 +295,11 @@ export default function Home() {
         <div>
           <p className="eyebrow light">AMRIT URJA COMBO</p>
           <h2>30 Capsules + 20 ml Oil</h2>
-          <p>1 combo ₹999 • 2 combo ₹1,499 • 3 combo ₹1,999</p>
+          <p>1 Combo — ₹999</p>
         </div>
         <div className="orderBandActions">
           <button onClick={() => openOrder("upi")}>ONLINE PAYMENT</button>
-          <button onClick={() => openOrder("cod")}>CASH ON DELIVERY</button>
+          <button onClick={() => openOrder("cod")}>अभी ऑर्डर करें — कैश ऑन डिलीवरी ₹999</button>
         </div>
       </section>
 
@@ -320,7 +315,7 @@ export default function Home() {
           </details>
           <details>
             <summary>Payment options क्या हैं?</summary>
-            <p>1 combo ₹999, 2 combo ₹1,499 और 3 combo ₹1,999 में चुन सकते हैं। Cash on Delivery और Online / UPI दोनों विकल्प उपलब्ध हैं।</p>
+            <p>1 Combo ₹999 में उपलब्ध है। Cash on Delivery और Online / UPI दोनों विकल्प उपलब्ध हैं।</p>
           </details>
           <details>
             <summary>Product कैसे use करना है?</summary>
@@ -346,7 +341,7 @@ export default function Home() {
 
       {menuOpen && <div className="menuOverlay" role="dialog" aria-modal="true" aria-label="वेबसाइट मेन्यू"><div className="menuDrawer"><button className="menuClose" onClick={() => setMenuOpen(false)} aria-label="मेन्यू बंद करें">×</button><strong>AMRIT AYURVEDA</strong><a href="#home" onClick={() => setMenuOpen(false)}>होम</a><a href="#product" onClick={() => setMenuOpen(false)}>AMRIT URJA Combo</a><button onClick={() => { setMenuOpen(false); setHowOpen(true); }}>How to use — इस्तेमाल कैसे करें</button><a href="#faq" onClick={() => setMenuOpen(false)}>सवाल और जवाब</a><button className="menuBuy" onClick={() => { setMenuOpen(false); openOrder("cod"); }}>ऑर्डर करें</button></div><button className="menuBackdrop" aria-label="मेन्यू बंद करें" onClick={() => setMenuOpen(false)} /></div>}
 
-      {howOpen && <div className="howOverlay" role="dialog" aria-modal="true" aria-labelledby="how-modal-title"><section className="howCard"><button className="howClose" onClick={() => setHowOpen(false)} aria-label="इस्तेमाल की जानकारी बंद करें">×</button><img src={product.image} alt="AMRIT URJA 30 capsules और 20 ml oil का pack" /><div className="howCardCopy"><small>AMRIT AYURVEDA • HOW TO USE</small><h2 id="how-modal-title">इस्तेमाल कैसे करें</h2><div className="howStep"><b>01 · कैप्सूल</b><p>रोज़ एक कैप्सूल खाना खाने के आधे घंटे बाद हल्के दूध या पानी के साथ लें।</p></div><div className="howStep"><b>02 · ऑयल</b><p>ऑयल से प्रतिदिन 1–2 मिनट हल्की मसाज करें।</p></div><p className="howCaution">सामग्री और सावधानियों के लिए पैक की जानकारी पढ़ें।</p><button onClick={() => { setHowOpen(false); openOrder("cod"); }}>AMRIT URJA ऑर्डर करें</button></div></section></div>}
+      {howOpen && <div className="howOverlay" role="dialog" aria-modal="true" aria-labelledby="how-modal-title"><section className="howCard"><button className="howClose" onClick={() => setHowOpen(false)} aria-label="इस्तेमाल की जानकारी बंद करें">×</button><Image width={941} height={1672} sizes="(max-width: 768px) 160px, 400px" src={product.image} alt="AMRIT URJA 30 capsules और 20 ml oil का pack" /><div className="howCardCopy"><small>AMRIT AYURVEDA • HOW TO USE</small><h2 id="how-modal-title">इस्तेमाल कैसे करें</h2><div className="howStep"><b>01 · कैप्सूल</b><p>रोज़ एक कैप्सूल खाना खाने के आधे घंटे बाद हल्के दूध या पानी के साथ लें।</p></div><div className="howStep"><b>02 · ऑयल</b><p>ऑयल से प्रतिदिन 1–2 मिनट हल्की मसाज करें।</p></div><p className="howCaution">सामग्री और सावधानियों के लिए पैक की जानकारी पढ़ें।</p><button onClick={() => { setHowOpen(false); openOrder("cod"); }}>AMRIT URJA ऑर्डर करें</button></div></section></div>}
 
       {offerOpen && !orderOpen && (
         <div className="offerOverlay" role="dialog" aria-modal="true" aria-labelledby="quick-offer-title">
@@ -356,7 +351,7 @@ export default function Home() {
             <h2 id="quick-offer-title">रुकिए! जाने से पहले<br /><span>यह ऑफर देखिए</span></h2>
             <p>AMRIT URJA 1 Combo अब सिर्फ <b>₹999</b> में</p>
             <strong className="offerCodLine">✅ Cash on Delivery उपलब्ध</strong>
-            <button className="offerAction" onClick={() => { openOrder("cod", 1); }}>अभी ऑर्डर करें ₹999 COD</button>
+            <button className="offerAction" onClick={() => { openOrder("cod", 1); }}>अभी ऑर्डर करें — कैश ऑन डिलीवरी ₹999</button>
             <small>🔒 सुरक्षित पैकिंग • आसान ऑर्डर</small>
           </section>
         </div>
@@ -368,7 +363,7 @@ export default function Home() {
           <section className="orderCard">
             <button className="closeButton" onClick={() => setOrderOpen(false)} aria-label="Close">×</button>
             <div className="orderProduct">
-              <img src={product.image} alt="AMRIT URJA" />
+              <Image width={941} height={1672} sizes="(max-width: 768px) 160px, 400px" src={product.image} alt="AMRIT URJA" />
               <div><small>AMRIT AYURVEDA</small><strong id="order-title">AMRIT URJA</strong><span>{pack} × {product.detail}</span></div>
             </div>
 
@@ -412,7 +407,6 @@ export default function Home() {
               </div>
             ) : (
               <>
-                <div className="packChoices compact" role="group" aria-label="Combo pack चुनें">{([1, 2, 3] as const).map((count) => <button key={count} className={pack === count ? "selected" : ""} onClick={() => setPack(count)}><b>{count} Combo</b><span>₹{money(packPrices[count])}</span></button>)}</div>
                 <div className="paymentTabs">
                   <button className={paymentMethod === "cod" ? "active" : ""} onClick={() => setPaymentMethod("cod")}>
                     <span>COD</span><b>₹{money(payable)}</b>
