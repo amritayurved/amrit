@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const phone = "918290695226";
 const upiId = "8295820654@okbizaxis";
@@ -44,11 +44,6 @@ type CustomerDetails = {
   pincode: string;
 };
 
-const cleanWhatsappUrl =
-  `https://wa.me/${phone}?text=${encodeURIComponent(
-    "नमस्ते, मुझे AMRIT URJA Capsule + Oil Combo के बारे में जानकारी चाहिए।"
-  )}`;
-
 function money(value: number) {
   return value.toLocaleString("en-IN", { maximumFractionDigits: 0 });
 }
@@ -72,11 +67,6 @@ export default function Home() {
   const [orderError, setOrderError] = useState("");
   const [orderSuccess, setOrderSuccess] = useState("");
   const [orderRef, setOrderRef] = useState("");
-  const [leadName, setLeadName] = useState("");
-  const [leadMobile, setLeadMobile] = useState("");
-  const [leadSaving, setLeadSaving] = useState(false);
-  const [leadMessage, setLeadMessage] = useState("");
-  const [leadSaved, setLeadSaved] = useState(false);
 
   const packCatalog = {
     1: { id: "hdwo1ljwss", title: "AMRIT URJA — 1 Combo", price: 999 },
@@ -139,43 +129,6 @@ export default function Home() {
     });
     return `upi://pay?${params.toString()}`;
   }, [orderRef, payable]);
-
-  async function submitCallbackLead(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (leadSaving || leadSaved) return;
-    if (leadName.trim().length < 2 || !/^[6-9]\\d{9}$/.test(leadMobile)) {
-      setLeadMessage("पूरा नाम और सही 10-digit मोबाइल नंबर भरें।");
-      return;
-    }
-    setLeadSaving(true);
-    setLeadMessage("");
-    try {
-      const params = new URLSearchParams(window.location.search);
-      const response = await fetch("/api/website-lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: leadName.trim(),
-          mobile: leadMobile,
-          session_id: window.crypto.randomUUID(),
-          path: window.location.pathname,
-          source: "Website Call Me Back",
-          product: product.name,
-          utm_source: params.get("utm_source") || "",
-          utm_campaign: params.get("utm_campaign") || "",
-          fbclid: params.get("fbclid") || "",
-        }),
-      });
-      const result = await response.json().catch(() => null);
-      if (!response.ok || result?.ok !== true) throw new Error("लीड सेव नहीं हुई। कृपया दोबारा कोशिश करें।");
-      setLeadSaved(true);
-      setLeadMessage("धन्यवाद! आपका नंबर मिल गया है। हमारी टीम आपसे संपर्क करेगी।");
-    } catch (error) {
-      setLeadMessage(error instanceof Error ? error.message : "लीड सेव नहीं हुई।");
-    } finally {
-      setLeadSaving(false);
-    }
-  }
 
   function openOrder(method: PaymentMethod = "cod", orderPack: 1 | 2 | 3 = pack) {
     const catalog = packCatalog[orderPack];
@@ -301,7 +254,6 @@ export default function Home() {
         </a>
         <nav>
           <a href="#product">Product</a>
-          <a href="#details">Details</a>
           <button className="navHow" onClick={() => setHowOpen(true)}>How to use</button>
           <a href="#faq">FAQ</a>
         </nav>
@@ -328,23 +280,6 @@ export default function Home() {
           <img src="/my-photos/photo-2.jpg" alt="AMRIT URJA information 2" />
           <img src="/my-photos/photo-3.jpg" alt="AMRIT URJA information 3" />
         </div>
-      </section>
-
-      <section className="callbackSection" aria-labelledby="callbackTitle">
-        <div><p className="eyebrow">AMRIT AYURVEDA</p><h2 id="callbackTitle">ऑर्डर से पहले बात करना चाहते हैं?</h2><p>अपना नाम और मोबाइल नंबर दें। हमारी टीम आपको कॉल करेगी।</p></div>
-        <form onSubmit={submitCallbackLead}>
-          <label>आपका नाम<input value={leadName} onChange={(e) => setLeadName(e.target.value)} type="text" autoComplete="name" required minLength={2} maxLength={80} disabled={leadSaved} placeholder="पूरा नाम" /></label>
-          <label>मोबाइल नंबर<input value={leadMobile} onChange={(e) => setLeadMobile(e.target.value.replace(/\\D/g, "").slice(0, 10))} type="tel" inputMode="numeric" autoComplete="tel-national" pattern="[6-9][0-9]{9}" required disabled={leadSaved} placeholder="10 अंकों का नंबर" /></label>
-          <button type="submit" disabled={leadSaving || leadSaved}>{leadSaved ? "रिक्वेस्ट भेज दी" : leadSaving ? "भेज रहे हैं…" : "मुझे कॉल करें"}</button>
-          {leadMessage && <p className={leadSaved ? "callbackSuccess" : "callbackError"} role="status">{leadMessage}</p>}
-        </form>
-      </section>
-
-      <div className="shopHighlights"><span>✓ Cash on Delivery</span><span>✦ 30 Capsules + 20 ml Oil</span><span>✓ सुरक्षित पैकिंग</span></div>
-
-      <section className="storySection" id="details">
-        <div className="storyPhoto"><img src={product.image} alt="AMRIT URJA capsule और oil की बोतलें" /></div>
-        <div className="storyCopy"><p className="eyebrow">ONE SIMPLE ROUTINE</p><h2>Capsule और oil, एक ही combo में</h2><p>AMRIT URJA को आसान daily wellness routine के लिए साथ रखा गया है। पैक की जानकारी पढ़ें और अपनी पसंद का combo चुनें।</p><div className="storyFacts"><span><b>30</b> Capsules प्रति combo</span><span><b>20 ml</b> Massage oil प्रति combo</span><span><b>COD</b> और Online / UPI</span></div><button className="darkButton" onClick={() => { openOrder("cod", 1); }}>₹999 से ऑर्डर करें</button></div>
       </section>
 
       <section className="routineSection" id="how">
@@ -405,7 +340,7 @@ export default function Home() {
           <a className="footerPhone" href="tel:8290695226">☎ SUPPORT: +91 8290695226</a>
         </div>
         <div><b>Product</b><a href="#product">AMRIT URJA</a><a href="#how">How to use</a></div>
-        <div><b>Contact</b><a href="tel:8290695226">Call: 8290695226</a><a href={cleanWhatsappUrl} target="_blank" rel="noreferrer">WhatsApp Support</a><a href="#faq">FAQ</a></div>
+        <div><b>Contact</b><a href="tel:8290695226">Call: 8290695226</a><a href="#faq">FAQ</a></div>
         <small>यह product general wellness presentation के लिए है। किसी बीमारी के diagnosis, treatment, cure या prevention का दावा नहीं किया गया है।</small>
       </footer>
 
@@ -428,9 +363,6 @@ export default function Home() {
       )}
 
       <nav className="floatingContact" aria-label="तुरंत संपर्क करें">
-        <a className="floatingContactButton floatingWhatsapp" href={cleanWhatsappUrl} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp पर बात करें" title="WhatsApp पर बात करें">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20.2 11.6a8.2 8.2 0 0 1-12.1 7.2L3.5 20l1.2-4.5a8.2 8.2 0 1 1 15.5-3.9Z"/><path d="M8.7 8.3c-.5.6-.5 1.2-.2 1.9a10 10 0 0 0 5.2 5.2c.7.3 1.3.3 1.9-.2l.7-.9-2.3-1.2-.8.9a7.2 7.2 0 0 1-2.5-2.5l.9-.8-1.2-2.3-.9.7Z" transform="translate(0 3.7)"/></svg>
-        </a>
         <a className="floatingContactButton floatingCall" href={`tel:+${phone}`} aria-label="अभी कॉल करें" title="अभी कॉल करें">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 16.2v3a2 2 0 0 1-2.2 2 17.6 17.6 0 0 1-7.7-2.7 17.2 17.2 0 0 1-5.3-5.3A17.6 17.6 0 0 1 3.1 5.4 2 2 0 0 1 5.1 3h3a2 2 0 0 1 2 1.7l.5 2.7a2 2 0 0 1-.6 1.8L8.5 10.7a14 14 0 0 0 4.8 4.8l1.5-1.5a2 2 0 0 1 1.8-.6l2.7.5a2 2 0 0 1 1.7 2.3Z"/></svg>
         </a>
