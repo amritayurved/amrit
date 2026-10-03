@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const upiId = "8295820654@okbizaxis";
 const crmOrderEndpoint = "/api/website-order";
@@ -64,6 +64,8 @@ export default function Home() {
     pincode: "",
   });
   const [saving, setSaving] = useState(false);
+  const submitting = useRef(false);
+  const checkoutAttempt = useRef({ fingerprint: "", ref: "" });
   const [orderError, setOrderError] = useState("");
   const [orderSuccess, setOrderSuccess] = useState("");
   const [orderRef, setOrderRef] = useState("");
@@ -160,16 +162,26 @@ export default function Home() {
   }
 
   async function submitOrder() {
+    if (submitting.current || saving || orderSuccess) return;
     const error = validate();
     if (error) {
       setOrderError(error);
       return;
     }
 
+    submitting.current = true;
     setSaving(true);
     setOrderError("");
 
-    const ref = `AUR${Date.now()}`;
+    const fingerprint = JSON.stringify([customer.name.trim(), customer.mobile, customer.address.trim(), customer.pincode, pack, payable, paymentMethod]);
+    let attempt = checkoutAttempt.current;
+    try {
+      const cached = JSON.parse(sessionStorage.getItem("amrit-checkout-attempt") || "null");
+      if (cached?.fingerprint === fingerprint && typeof cached.ref === "string") attempt = cached;
+    } catch {}
+    const ref = attempt.fingerprint === fingerprint && attempt.ref ? attempt.ref : `AUR${window.crypto.randomUUID().replaceAll("-", "")}`;
+    checkoutAttempt.current = { fingerprint, ref };
+    try { sessionStorage.setItem("amrit-checkout-attempt", JSON.stringify(checkoutAttempt.current)); } catch {}
     const metaEventId = `purchase_${ref}`;
     setOrderRef(ref);
 
@@ -214,7 +226,7 @@ export default function Home() {
       }
 
       setOrderSuccess(String(result.order.orderCode));
-      if (paymentMethod === "cod") {
+      if (paymentMethod === "cod" && !result.duplicate) {
         trackPixel(
           "Purchase",
           { value: Number(result.order.amount) || payable, currency: "INR", content_name: selectedCatalog.title, content_ids: [selectedCatalog.id], content_type: "product", num_items: 1, order_id: String(result.order.orderCode) },
@@ -235,6 +247,7 @@ export default function Home() {
     } catch (e) {
       setOrderError(e instanceof Error ? e.message : "Order save नहीं हुआ। कृपया दोबारा कोशिश करें।");
     } finally {
+      submitting.current = false;
       setSaving(false);
     }
   }
