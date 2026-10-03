@@ -65,7 +65,7 @@ export default function Home() {
   });
   const [saving, setSaving] = useState(false);
   const submitting = useRef(false);
-  const checkoutAttempt = useRef({ fingerprint: "", ref: "" });
+  const checkoutAttempt = useRef({ fingerprint: "", ref: "", createdAt: 0 });
   const [orderError, setOrderError] = useState("");
   const [orderSuccess, setOrderSuccess] = useState("");
   const [orderRef, setOrderRef] = useState("");
@@ -177,10 +177,10 @@ export default function Home() {
     let attempt = checkoutAttempt.current;
     try {
       const cached = JSON.parse(sessionStorage.getItem("amrit-checkout-attempt") || "null");
-      if (cached?.fingerprint === fingerprint && typeof cached.ref === "string") attempt = cached;
+      if (cached?.fingerprint === fingerprint && typeof cached.ref === "string" && Date.now() - cached.createdAt < 86400000) attempt = cached;
     } catch {}
-    const ref = attempt.fingerprint === fingerprint && attempt.ref ? attempt.ref : `AUR${window.crypto.randomUUID().replaceAll("-", "")}`;
-    checkoutAttempt.current = { fingerprint, ref };
+    const ref = attempt.fingerprint === fingerprint && attempt.ref && Date.now() - attempt.createdAt < 86400000 ? attempt.ref : `AUR${window.crypto.randomUUID().replaceAll("-", "")}`;
+    checkoutAttempt.current = { fingerprint, ref, createdAt: attempt.ref === ref ? attempt.createdAt : Date.now() };
     try { sessionStorage.setItem("amrit-checkout-attempt", JSON.stringify(checkoutAttempt.current)); } catch {}
     const metaEventId = `purchase_${ref}`;
     setOrderRef(ref);
