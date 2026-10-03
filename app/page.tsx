@@ -362,11 +362,6 @@ export default function Home() {
         </div>
       )}
 
-      <nav className="floatingContact" aria-label="तुरंत संपर्क करें">
-        <a className="floatingContactButton floatingCall" href={`tel:+${phone}`} aria-label="अभी कॉल करें" title="अभी कॉल करें">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 16.2v3a2 2 0 0 1-2.2 2 17.6 17.6 0 0 1-7.7-2.7 17.2 17.2 0 0 1-5.3-5.3A17.6 17.6 0 0 1 3.1 5.4 2 2 0 0 1 5.1 3h3a2 2 0 0 1 2 1.7l.5 2.7a2 2 0 0 1-.6 1.8L8.5 10.7a14 14 0 0 0 4.8 4.8l1.5-1.5a2 2 0 0 1 1.8-.6l2.7.5a2 2 0 0 1 1.7 2.3Z"/></svg>
-        </a>
-      </nav>
 
       {orderOpen && (
         <div className="orderOverlay" role="dialog" aria-modal="true" aria-labelledby="order-title">
