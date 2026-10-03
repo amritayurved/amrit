@@ -258,11 +258,11 @@ export default function Home() {
 
       <section className="referenceHero" id="home">
         <a href="#product" aria-label="AMRIT URJA के pack और ऑर्डर विकल्प देखें" style={{ display: "block", width: "100%", borderRadius: "0", overflow: "hidden" }}>
-          <Image sizes="100vw" preload src="/amrit-urja-front-full.webp" alt="AMRIT URJA — 30 Capsules + 20 ml Oil, Amrit Ayurveda" width={853} height={1844} fetchPriority="high" style={{ display: "block", width: "100%", height: "auto" }} />
+          <Image sizes="100vw" preload src="/amrit-urja-front-no-phone.webp" alt="AMRIT URJA — 30 Capsules + 20 ml Oil, Amrit Ayurveda" width={853} height={1844} fetchPriority="high" style={{ display: "block", width: "100%", height: "auto" }} />
         </a>
         <div className="posterOrder" id="product">
           <h2>AMRIT URJA — Capsule + Oil Combo</h2>
-          <p className="posterPrice">1 Combo — ₹999</p>
+          <p className="posterPrice">Only ₹999</p>
           <p className="posterPriceNote">कैश ऑन डिलीवरी उपलब्ध है। Online/UPI से भी भुगतान कर सकते हैं।</p>
           <button className="posterCod" onClick={() => openOrder("cod")}>अभी ऑर्डर करें — कैश ऑन डिलीवरी ₹999</button>
           <button className="posterOnline" onClick={() => openOrder("upi")}>▣ Online / UPI — ₹{money(payable)}</button>
@@ -295,7 +295,7 @@ export default function Home() {
         <div>
           <p className="eyebrow light">AMRIT URJA COMBO</p>
           <h2>30 Capsules + 20 ml Oil</h2>
-          <p>1 Combo — ₹999</p>
+          <p>Only ₹999</p>
         </div>
         <div className="orderBandActions">
           <button onClick={() => openOrder("upi")}>ONLINE PAYMENT</button>
@@ -315,7 +315,7 @@ export default function Home() {
           </details>
           <details>
             <summary>Payment options क्या हैं?</summary>
-            <p>1 Combo ₹999 में उपलब्ध है। Cash on Delivery और Online / UPI दोनों विकल्प उपलब्ध हैं।</p>
+            <p>Only ₹999 में उपलब्ध है। Cash on Delivery और Online / UPI दोनों विकल्प उपलब्ध हैं।</p>
           </details>
           <details>
             <summary>Product कैसे use करना है?</summary>
@@ -349,7 +349,7 @@ export default function Home() {
             <button className="offerClose" onClick={() => setOfferOpen(false)} aria-label="ऑफर बंद करें">×</button>
             <span className="offerBadge">⚡ SPECIAL OFFER</span>
             <h2 id="quick-offer-title">रुकिए! जाने से पहले<br /><span>यह ऑफर देखिए</span></h2>
-            <p>AMRIT URJA 1 Combo अब सिर्फ <b>₹999</b> में</p>
+            <p>AMRIT URJA — Only <b>₹999</b> में</p>
             <strong className="offerCodLine">✅ Cash on Delivery उपलब्ध</strong>
             <button className="offerAction" onClick={() => { openOrder("cod", 1); }}>अभी ऑर्डर करें — कैश ऑन डिलीवरी ₹999</button>
             <small>🔒 सुरक्षित पैकिंग • आसान ऑर्डर</small>
