@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 const upiId = "8295820654@okbizaxis";
+const whatsappBusinessNumber = "918290695226";
 const crmOrderEndpoint = "/api/website-order";
 
 const product = {
@@ -149,6 +150,18 @@ export default function Home() {
     return `upi://pay?${params.toString()}`;
   }, [orderRef, payable]);
 
+  const whatsappConfirmUrl = useMemo(() => {
+    const orderCode = orderSuccess || orderRef || "AMRIT-URJA";
+    const message = [
+      "YES, मेरा AMRIT URJA COD ऑर्डर Confirm है।",
+      `Order ID: ${orderCode}`,
+      `नाम: ${customer.name.trim()}`,
+      `मोबाइल: ${normalizeIndianMobile(customer.mobile)}`,
+      "मैं यह parcel receive करूँगा।",
+    ].join("\n");
+    return `https://wa.me/${whatsappBusinessNumber}?text=${encodeURIComponent(message)}`;
+  }, [orderSuccess, orderRef, customer.name, customer.mobile]);
+
   function openOrder(method: PaymentMethod = "cod", orderPack: 1 = pack) {
     const catalog = packCatalog[orderPack];
     setPaymentMethod(method);
@@ -243,6 +256,9 @@ export default function Home() {
           amount: String(payable),
           payment: paymentMethod === "upi" ? "Prepaid" : "COD",
           order_type: "Order",
+          status: "Pending Confirm",
+          confirmation_status: paymentMethod === "cod" ? "WhatsApp Pending" : "Payment Pending",
+          source: "Website",
           website: window.location.hostname,
           meta_event_name: "Purchase",
           meta_event_id: metaEventId,
@@ -436,16 +452,27 @@ export default function Home() {
                   </div>
                   <div className="successStep">
                     <span>2</span>
-                    <div><b>हमारी टीम आपसे संपर्क करेगी</b><small>हम जल्द ही कॉल करके आपका नाम, पता और ऑर्डर confirm करेंगे।</small></div>
+                    <div><b>WhatsApp पर YES भेजें</b><small>नीचे दिए हरे बटन से WhatsApp खोलकर पहले से लिखा confirmation message भेजें।</small></div>
                   </div>
                   <div className="successStep">
                     <span>3</span>
-                    <div><b>पैकिंग और डिलीवरी</b><small>Confirmation के बाद आपका parcel delivery के लिए process किया जाएगा।</small></div>
+                    <div><b>Confirmation के बाद dispatch</b><small>WhatsApp या call confirmation मिलने के बाद ही parcel delivery के लिए process किया जाएगा।</small></div>
                   </div>
                 </div>
 
                 {paymentMethod === "cod" ? (
-                  <div className="successCodPill">✓ Cash on Delivery selected</div>
+                  <>
+                    <div className="successCodPill">✓ Cash on Delivery selected • Confirmation pending</div>
+                    <a
+                      className="primaryButton full successPay"
+                      href={whatsappConfirmUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      WhatsApp पर YES भेजकर Order Confirm करें
+                    </a>
+                    <small className="successFoot">WhatsApp पर confirmation मिलने तक आपका order Pending Confirm रहेगा।</small>
+                  </>
                 ) : (
                   <a className="primaryButton full successPay" href={upiUrl}>UPI PAYMENT खोलें</a>
                 )}
