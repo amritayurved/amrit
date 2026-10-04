@@ -71,16 +71,13 @@ function money(value: number) {
   return value.toLocaleString("en-IN", { maximumFractionDigits: 0 });
 }
 
-type Pack = 1 | 2 | 3;
-
 export default function Home() {
 
   const [offerOpen, setOfferOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [howOpen, setHowOpen] = useState(false);
   const [offerShown, setOfferShown] = useState(false);
-  const [pack, setPack] = useState<Pack>(1);
-  const [cartOpen, setCartOpen] = useState(false);
+  const pack = 1 as const;
   const [orderOpen, setOrderOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cod");
   const [customer, setCustomer] = useState<CustomerDetails>({
@@ -103,22 +100,20 @@ export default function Home() {
 
   const packCatalog = {
     1: { id: "hdwo1ljwss", title: "AMRIT URJA — 1 Combo", price: 999 },
-    2: { id: "amrit-urja-2-combo", title: "AMRIT URJA — 2 Combo", price: 1499 },
-    3: { id: "amrit-urja-3-combo", title: "AMRIT URJA — 3 Combo", price: 1999 },
   } as const;
-  const packPrices = { 1: 999, 2: 1499, 3: 1999 } as const;
+  const packPrices = { 1: 999 } as const;
   const selectedCatalog = packCatalog[pack];
   const basePayable = packPrices[pack];
   const payable = basePayable;
 
   useEffect(() => {
-    if (offerShown || orderOpen || cartOpen) return;
+    if (offerShown || orderOpen) return;
     const timer = window.setTimeout(() => {
       setOfferOpen(true);
       setOfferShown(true);
     }, 650);
     return () => window.clearTimeout(timer);
-  }, [offerShown, orderOpen, cartOpen]);
+  }, [offerShown, orderOpen]);
 
 
   useEffect(() => {
@@ -189,53 +184,27 @@ export default function Home() {
     return () => window.clearInterval(timer);
   }, [orderSuccess, paymentMethod, orderConfirmed]);
 
-  function commerceEventData(orderPack: Pack) {
+  function openOrder(method: PaymentMethod = "cod", orderPack: 1 = pack) {
     const catalog = packCatalog[orderPack];
-    return {
+    setPaymentMethod(method);
+    setOrderError("");
+    setOrderSuccess("");
+    setDuplicateOrder(false);
+    setOrderConfirmed(false);
+    setConfirmError("");
+    setConfirmCountdown(8);
+    setOfferOpen(false);
+    setOrderOpen(true);
+    const eventData = {
       content_name: catalog.title,
       content_ids: [catalog.id],
       content_type: "product",
       value: catalog.price,
       currency: "INR",
     };
-  }
-
-  function openCart(method: PaymentMethod = "cod", orderPack: Pack = pack) {
-    setPack(orderPack);
-    setPaymentMethod(method);
-    setOrderError("");
-    setOrderSuccess("");
-    setDuplicateOrder(false);
-    setOrderConfirmed(false);
-    setConfirmError("");
-    setConfirmCountdown(8);
-    setOfferOpen(false);
-    setOrderOpen(false);
-    setCartOpen(true);
-    const eventData = commerceEventData(orderPack);
     trackPixel("ViewContent", eventData);
     trackPixel("AddToCart", eventData);
-  }
-
-  function choosePack(nextPack: Pack) {
-    setPack(nextPack);
-    setOrderError("");
-    trackPixel("AddToCart", commerceEventData(nextPack));
-  }
-
-  function openOrder(method: PaymentMethod = paymentMethod, orderPack: Pack = pack) {
-    setPack(orderPack);
-    setPaymentMethod(method);
-    setOrderError("");
-    setOrderSuccess("");
-    setDuplicateOrder(false);
-    setOrderConfirmed(false);
-    setConfirmError("");
-    setConfirmCountdown(8);
-    setOfferOpen(false);
-    setCartOpen(false);
-    setOrderOpen(true);
-    trackPixel("InitiateCheckout", commerceEventData(orderPack));
+    trackPixel("InitiateCheckout", eventData);
   }
 
   function updateCustomer(field: keyof CustomerDetails, value: string) {
@@ -428,7 +397,7 @@ export default function Home() {
           <button className="navHow" onClick={() => setHowOpen(true)}>How to use</button>
           <a href="#faq">FAQ</a>
         </nav>
-        <button className="headerOrder" onClick={() => openCart("cod")}>अभी ऑर्डर करें</button>
+        <button className="headerOrder" onClick={() => openOrder("cod")}>अभी ऑर्डर करें</button>
       </header>
 
       <section className="referenceHero" id="home">
@@ -439,8 +408,8 @@ export default function Home() {
           <h2>AMRIT URJA — Capsule + Oil Combo</h2>
           <p className="posterPrice">Only ₹999</p>
           <p className="posterPriceNote">कैश ऑन डिलीवरी उपलब्ध है। Online/UPI से भी भुगतान कर सकते हैं।</p>
-          <button className="posterCod" onClick={() => openCart("cod")}>अभी ऑर्डर करें — कैश ऑन डिलीवरी ₹999</button>
-          <button className="posterOnline" onClick={() => openCart("upi")}>▣ Online / UPI — ₹{money(payable)}</button>
+          <button className="posterCod" onClick={() => openOrder("cod")}>अभी ऑर्डर करें — कैश ऑन डिलीवरी ₹999</button>
+          <button className="posterOnline" onClick={() => openOrder("upi")}>▣ Online / UPI — ₹{money(payable)}</button>
         </div>
       </section>
 
@@ -473,8 +442,8 @@ export default function Home() {
           <p>Only ₹999</p>
         </div>
         <div className="orderBandActions">
-          <button onClick={() => openCart("upi")}>ONLINE PAYMENT</button>
-          <button onClick={() => openCart("cod")}>अभी ऑर्डर करें — कैश ऑन डिलीवरी ₹999</button>
+          <button onClick={() => openOrder("upi")}>ONLINE PAYMENT</button>
+          <button onClick={() => openOrder("cod")}>अभी ऑर्डर करें — कैश ऑन डिलीवरी ₹999</button>
         </div>
       </section>
 
@@ -514,11 +483,11 @@ export default function Home() {
         <small>यह product general wellness presentation के लिए है। किसी बीमारी के diagnosis, treatment, cure या prevention का दावा नहीं किया गया है।</small>
       </footer>
 
-      {menuOpen && <div className="menuOverlay" role="dialog" aria-modal="true" aria-label="वेबसाइट मेन्यू"><div className="menuDrawer"><button className="menuClose" onClick={() => setMenuOpen(false)} aria-label="मेन्यू बंद करें">×</button><strong>AMRIT AYURVEDA</strong><a href="#home" onClick={() => setMenuOpen(false)}>होम</a><a href="#product" onClick={() => setMenuOpen(false)}>AMRIT URJA Combo</a><button onClick={() => { setMenuOpen(false); setHowOpen(true); }}>How to use — इस्तेमाल कैसे करें</button><a href="#faq" onClick={() => setMenuOpen(false)}>सवाल और जवाब</a><button className="menuBuy" onClick={() => { setMenuOpen(false); openCart("cod"); }}>ऑर्डर करें</button></div><button className="menuBackdrop" aria-label="मेन्यू बंद करें" onClick={() => setMenuOpen(false)} /></div>}
+      {menuOpen && <div className="menuOverlay" role="dialog" aria-modal="true" aria-label="वेबसाइट मेन्यू"><div className="menuDrawer"><button className="menuClose" onClick={() => setMenuOpen(false)} aria-label="मेन्यू बंद करें">×</button><strong>AMRIT AYURVEDA</strong><a href="#home" onClick={() => setMenuOpen(false)}>होम</a><a href="#product" onClick={() => setMenuOpen(false)}>AMRIT URJA Combo</a><button onClick={() => { setMenuOpen(false); setHowOpen(true); }}>How to use — इस्तेमाल कैसे करें</button><a href="#faq" onClick={() => setMenuOpen(false)}>सवाल और जवाब</a><button className="menuBuy" onClick={() => { setMenuOpen(false); openOrder("cod"); }}>ऑर्डर करें</button></div><button className="menuBackdrop" aria-label="मेन्यू बंद करें" onClick={() => setMenuOpen(false)} /></div>}
 
-      {howOpen && <div className="howOverlay" role="dialog" aria-modal="true" aria-labelledby="how-modal-title"><section className="howCard"><button className="howClose" onClick={() => setHowOpen(false)} aria-label="इस्तेमाल की जानकारी बंद करें">×</button><Image width={941} height={1672} sizes="(max-width: 768px) 160px, 400px" src={product.image} alt="AMRIT URJA 30 capsules और 20 ml oil का pack" /><div className="howCardCopy"><small>AMRIT AYURVEDA • HOW TO USE</small><h2 id="how-modal-title">इस्तेमाल कैसे करें</h2><div className="howStep"><b>01 · कैप्सूल</b><p>रोज़ एक कैप्सूल खाना खाने के आधे घंटे बाद हल्के दूध या पानी के साथ लें।</p></div><div className="howStep"><b>02 · ऑयल</b><p>ऑयल से प्रतिदिन 1–2 मिनट हल्की मसाज करें।</p></div><p className="howCaution">सामग्री और सावधानियों के लिए पैक की जानकारी पढ़ें।</p><button onClick={() => { setHowOpen(false); openCart("cod"); }}>AMRIT URJA ऑर्डर करें</button></div></section></div>}
+      {howOpen && <div className="howOverlay" role="dialog" aria-modal="true" aria-labelledby="how-modal-title"><section className="howCard"><button className="howClose" onClick={() => setHowOpen(false)} aria-label="इस्तेमाल की जानकारी बंद करें">×</button><Image width={941} height={1672} sizes="(max-width: 768px) 160px, 400px" src={product.image} alt="AMRIT URJA 30 capsules और 20 ml oil का pack" /><div className="howCardCopy"><small>AMRIT AYURVEDA • HOW TO USE</small><h2 id="how-modal-title">इस्तेमाल कैसे करें</h2><div className="howStep"><b>01 · कैप्सूल</b><p>रोज़ एक कैप्सूल खाना खाने के आधे घंटे बाद हल्के दूध या पानी के साथ लें।</p></div><div className="howStep"><b>02 · ऑयल</b><p>ऑयल से प्रतिदिन 1–2 मिनट हल्की मसाज करें।</p></div><p className="howCaution">सामग्री और सावधानियों के लिए पैक की जानकारी पढ़ें।</p><button onClick={() => { setHowOpen(false); openOrder("cod"); }}>AMRIT URJA ऑर्डर करें</button></div></section></div>}
 
-      {offerOpen && !orderOpen && !cartOpen && (
+      {offerOpen && !orderOpen && (
         <div className="offerOverlay" role="dialog" aria-modal="true" aria-labelledby="quick-offer-title">
           <section className="offerCard">
             <button className="offerClose" onClick={() => setOfferOpen(false)} aria-label="ऑफर बंद करें">×</button>
@@ -526,59 +495,12 @@ export default function Home() {
             <h2 id="quick-offer-title">रुकिए! जाने से पहले<br /><span>यह ऑफर देखिए</span></h2>
             <p>AMRIT URJA — Only <b>₹999</b> में</p>
             <strong className="offerCodLine">✅ Cash on Delivery उपलब्ध</strong>
-            <button className="offerAction" onClick={() => { openCart("cod", 1); }}>अभी ऑर्डर करें — कैश ऑन डिलीवरी ₹999</button>
+            <button className="offerAction" onClick={() => { openOrder("cod", 1); }}>अभी ऑर्डर करें — कैश ऑन डिलीवरी ₹999</button>
             <small>🔒 सुरक्षित पैकिंग • आसान ऑर्डर</small>
           </section>
         </div>
       )}
 
-
-
-      {cartOpen && (
-        <div className="cartOverlay" role="dialog" aria-modal="true" aria-labelledby="cart-title">
-          <section className="cartCard">
-            <button className="cartClose" onClick={() => setCartOpen(false)} aria-label="Cart बंद करें">×</button>
-            <div className="cartHeader">
-              <p>AMRIT AYURVEDA</p>
-              <h2 id="cart-title">Shopping Cart</h2>
-              <span>Home <b>›</b> Your Shopping Cart</span>
-            </div>
-
-            <div className="cartColumns"><b>Product</b><b>Price</b></div>
-            <div className="cartProductRow">
-              <Image width={941} height={1672} sizes="92px" src={product.image} alt="AMRIT URJA" />
-              <div className="cartProductCopy">
-                <strong>{product.name}</strong>
-                <span>Pack: {pack} Combo{pack > 1 ? "s" : ""}</span>
-                <button type="button" onClick={() => setCartOpen(false)}>Remove</button>
-              </div>
-              <strong className="cartPrice">₹{money(payable)}</strong>
-            </div>
-
-            <div className="cartQtyLine">
-              <div className="cartQty" aria-label="Quantity">
-                <button type="button" disabled={pack === 1} onClick={() => choosePack((pack - 1) as Pack)}>−</button>
-                <span>{pack}</span>
-                <button type="button" disabled={pack === 3} onClick={() => choosePack((pack + 1) as Pack)}>+</button>
-              </div>
-              <small>1 = ₹999 · 2 = ₹1,499 · 3 = ₹1,999</small>
-            </div>
-
-            <div className="cartTools" aria-label="Order benefits">
-              <span>✎<small>Address at checkout</small></span>
-              <span>🚚<small>Secure delivery</small></span>
-              <span>🎟<small>COD / UPI</small></span>
-            </div>
-
-            <div className="cartSubtotal">
-              <div><strong>Subtotal</strong><small>Shipping details checkout पर confirm होंगी</small></div>
-              <strong>₹{money(payable)}</strong>
-            </div>
-            <button className="cartCheckout" onClick={() => openOrder(paymentMethod, pack)}>CHECKOUT</button>
-            <button className="cartContinue" onClick={() => setCartOpen(false)}>← Shopping जारी रखें</button>
-          </section>
-        </div>
-      )}
 
       {orderOpen && (
         <div className="orderOverlay" role="dialog" aria-modal="true" aria-labelledby="order-title">
@@ -681,20 +603,6 @@ export default function Home() {
           </section>
         </div>
       )}
-
-      <style>{`
-        .cartOverlay{position:fixed;inset:0;z-index:165;display:grid;place-items:center;padding:12px;background:#0009;backdrop-filter:blur(5px)}
-        .cartCard{position:relative;width:min(100%,620px);max-height:calc(100dvh - 24px);overflow:auto;padding:24px 24px 20px;background:#fff;color:#1f211f;border-radius:18px;box-shadow:0 28px 90px #0007}
-        .cartClose{position:absolute;right:14px;top:14px;width:38px;height:38px;border:0;border-radius:50%;background:#f0f0ed;color:#202520;font-size:26px;line-height:1}
-        .cartHeader{text-align:center;padding:8px 36px 25px}.cartHeader p{margin:0 0 8px;color:#946f28;font-size:9px;font-weight:900;letter-spacing:.18em}.cartHeader h2{margin:0;font-family:Georgia,serif;font-size:38px;font-weight:500}.cartHeader span{display:block;margin-top:18px;color:#5c625d;font-size:13px}.cartHeader b{padding:0 9px;color:#9a9d98}
-        .cartColumns{display:grid;grid-template-columns:1fr auto;padding:0 0 12px;border-bottom:1px solid #e4e4df;font-size:13px}.cartColumns b:last-child{text-align:right}
-        .cartProductRow{display:grid;grid-template-columns:92px 1fr auto;gap:14px;align-items:start;padding:22px 0 18px;border-bottom:1px solid #ecece8}.cartProductRow>img{width:92px;height:112px;object-fit:contain;background:#faf8f1;border-radius:10px}.cartProductCopy{display:grid;gap:7px}.cartProductCopy strong{font-size:18px;line-height:1.35}.cartProductCopy span{color:#727772;font-size:12px}.cartProductCopy button{width:max-content;padding:0;border:0;border-bottom:1px solid currentColor;background:transparent;color:#646963;font-size:12px}.cartPrice{font-size:18px;white-space:nowrap;padding-top:36px}
-        .cartQtyLine{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:17px 0;border-bottom:1px solid #ededeb}.cartQty{display:grid;grid-template-columns:44px 56px 44px;border:1px solid #d9dad5}.cartQty button,.cartQty span{height:44px;display:grid;place-items:center;border:0;background:#fff;color:#202420;font-size:20px}.cartQty button:disabled{opacity:.25;cursor:default}.cartQty span{font-size:16px;font-weight:800}.cartQtyLine>small{color:#767b76;font-size:10px;text-align:right}
-        .cartTools{display:flex;gap:8px;padding:18px 0}.cartTools>span{flex:1;min-height:58px;display:grid;place-items:center;padding:7px;background:#f8f8f5;font-size:20px}.cartTools small{display:block;color:#6f756f;font-size:8px;text-align:center}
-        .cartSubtotal{display:flex;align-items:start;justify-content:space-between;gap:20px;padding:13px 0 18px}.cartSubtotal>div{display:grid;gap:5px}.cartSubtotal strong{font-size:22px}.cartSubtotal small{color:#737873;font-size:11px}.cartSubtotal>strong{white-space:nowrap}
-        .cartCheckout{width:100%;min-height:56px;border:0;background:#070807;color:#fff;font-size:16px;font-weight:900;letter-spacing:.17em}.cartContinue{width:100%;margin-top:10px;padding:10px;border:0;background:transparent;color:#536056;font-weight:700}
-        @media(max-width:560px){.cartOverlay{padding:0;background:#fff}.cartCard{width:100%;height:100dvh;max-height:none;border-radius:0;padding:18px 16px 22px}.cartHeader{padding:12px 34px 23px}.cartHeader h2{font-size:34px}.cartProductRow{grid-template-columns:82px 1fr auto;gap:10px}.cartProductRow>img{width:82px;height:105px}.cartProductCopy strong{font-size:16px}.cartPrice{font-size:16px;padding-top:34px}.cartQtyLine{align-items:flex-start;flex-direction:column}.cartQtyLine>small{text-align:left}.cartTools{gap:5px}.cartSubtotal strong{font-size:20px}.cartCheckout{min-height:58px}}
-      `}</style>
     </main>
   );
 }
