@@ -1,11 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import Script from "next/script";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 const upiId = "8295820654@okbizaxis";
-const whatsappBusinessNumber = "918290695226";
 const crmOrderEndpoint = "/api/website-order";
 
 const product = {
@@ -92,10 +90,6 @@ export default function Home() {
   const [orderError, setOrderError] = useState("");
   const [orderSuccess, setOrderSuccess] = useState("");
   const [duplicateOrder, setDuplicateOrder] = useState(false);
-  const [orderConfirmed, setOrderConfirmed] = useState(false);
-  const [confirmCountdown, setConfirmCountdown] = useState(8);
-  const [confirmSaving, setConfirmSaving] = useState(false);
-  const [confirmError, setConfirmError] = useState("");
   const [orderRef, setOrderRef] = useState("");
 
   const packCatalog = {
@@ -157,42 +151,12 @@ export default function Home() {
     return `upi://pay?${params.toString()}`;
   }, [orderRef, payable]);
 
-  const whatsappConfirmUrl = useMemo(() => {
-    const orderCode = orderSuccess || orderRef || "AMRIT-URJA";
-    const message = [
-      "YES, मेरा AMRIT URJA COD ऑर्डर Confirm है।",
-      `Order ID: ${orderCode}`,
-      `नाम: ${customer.name.trim()}`,
-      `मोबाइल: ${normalizeIndianMobile(customer.mobile)}`,
-      "मैं यह parcel receive करूँगा।",
-    ].join("\n");
-    return `https://wa.me/${whatsappBusinessNumber}?text=${encodeURIComponent(message)}`;
-  }, [orderSuccess, orderRef, customer.name, customer.mobile]);
-
-  useEffect(() => {
-    if (!orderSuccess || paymentMethod !== "cod" || orderConfirmed) return;
-    setConfirmCountdown(8);
-    const timer = window.setInterval(() => {
-      setConfirmCountdown((current) => {
-        if (current <= 1) {
-          window.clearInterval(timer);
-          return 0;
-        }
-        return current - 1;
-      });
-    }, 1000);
-    return () => window.clearInterval(timer);
-  }, [orderSuccess, paymentMethod, orderConfirmed]);
-
   function openOrder(method: PaymentMethod = "cod", orderPack: 1 = pack) {
     const catalog = packCatalog[orderPack];
     setPaymentMethod(method);
     setOrderError("");
     setOrderSuccess("");
     setDuplicateOrder(false);
-    setOrderConfirmed(false);
-    setConfirmError("");
-    setConfirmCountdown(8);
     setOfferOpen(false);
     setOrderOpen(true);
     const eventData = {
@@ -237,7 +201,6 @@ export default function Home() {
         setDuplicateOrder(true);
         setOrderSuccess(receipt.orderCode);
         setOrderRef(receipt.orderRef || receipt.orderCode);
-        setOrderConfirmed(receipt.confirmed === true);
         return;
       }
       if (receipt) localStorage.removeItem(phoneDuplicateKey);
@@ -282,8 +245,8 @@ export default function Home() {
           amount: String(payable),
           payment: paymentMethod === "upi" ? "Prepaid" : "COD",
           order_type: "Order",
-          status: "Pending Confirm",
-          confirmation_status: paymentMethod === "cod" ? "WhatsApp Pending" : "Payment Pending",
+          status: "New",
+          confirmation_status: paymentMethod === "cod" ? "Order Saved" : "Payment Pending",
           source: "Website",
           website: window.location.hostname,
           meta_event_name: "Lead",
@@ -306,7 +269,7 @@ export default function Home() {
       setDuplicateOrder(result.duplicate === true);
       setOrderSuccess(savedOrderCode);
       try {
-        localStorage.setItem(phoneDuplicateKey, JSON.stringify({ orderCode: savedOrderCode, orderRef: ref, savedAt: Date.now(), confirmed: false } satisfies SavedOrderReceipt));
+        localStorage.setItem(phoneDuplicateKey, JSON.stringify({ orderCode: savedOrderCode, orderRef: ref, savedAt: Date.now() } satisfies SavedOrderReceipt));
       } catch {}
 
       if (paymentMethod === "upi") {
@@ -327,64 +290,8 @@ export default function Home() {
     }
   }
 
-  async function submitDoubleConfirmation() {
-    if (!orderSuccess || paymentMethod !== "cod" || orderConfirmed || confirmSaving || confirmCountdown > 0) return;
-    setConfirmSaving(true);
-    setConfirmError("");
-    try {
-      const wp = (window as Window & {
-        WP?: {
-          sapi: (projectId: number) => {
-            submitForm: (formName: string, fields: Record<string, string>) => Promise<{
-              ok: boolean;
-              data?: { success?: boolean; error?: { message?: string }; message?: string };
-            }>;
-          };
-        };
-      }).WP;
-      if (!wp?.sapi) throw new Error("Confirmation system अभी load हो रहा है। 2 सेकंड बाद दोबारा दबाएँ।");
-      const sapi = wp.sapi(26522);
-      const result = await sapi.submitForm("website_order_v2", {
-        order_id: orderRef || orderSuccess,
-        crm_order_code: orderSuccess,
-        phone: normalizeIndianMobile(customer.mobile),
-        customer: customer.name.trim(),
-        confirmation: "YES",
-        payment: "COD",
-        amount: String(payable),
-        product: selectedCatalog.title,
-        confirmed_at: new Date().toISOString(),
-        website: "",
-      });
-      const payload = result?.data || {};
-      if (!result?.ok || payload.success === false) {
-        throw new Error(payload.error?.message || payload.message || "Order confirmation save नहीं हुई।");
-      }
-
-      setOrderConfirmed(true);
-      const normalizedMobile = normalizeIndianMobile(customer.mobile);
-      try {
-        localStorage.setItem(
-          duplicateStorageKey(normalizedMobile),
-          JSON.stringify({ orderCode: orderSuccess, orderRef: orderRef || orderSuccess, savedAt: Date.now(), confirmed: true } satisfies SavedOrderReceipt),
-        );
-      } catch {}
-
-      trackPixel(
-        "Purchase",
-        { value: payable, currency: "INR", content_name: selectedCatalog.title, content_ids: [selectedCatalog.id], content_type: "product", num_items: 1, order_id: orderSuccess },
-        `purchase_${orderRef || orderSuccess}`,
-      );
-    } catch (e) {
-      setConfirmError(e instanceof Error ? e.message : "Confirmation save नहीं हुई। कृपया दोबारा कोशिश करें।");
-    } finally {
-      setConfirmSaving(false);
-    }
-  }
-
   return (
     <main className="premiumSite">
-      <Script src="https://cdn.websitepublisher.ai/js/sapi-client.js" strategy="afterInteractive" />
       <div className="announcement">🌿 सुरक्षित पैकिंग <span>•</span> Cash on Delivery उपलब्ध <span>•</span> Amrit Ayurveda</div>
       <header className="topbar">
         <button className="menuToggle" onClick={() => setMenuOpen(true)} aria-label="मेन्यू खोलें" aria-expanded={menuOpen}>☰</button>
@@ -537,30 +444,8 @@ export default function Home() {
 
                 {paymentMethod === "cod" ? (
                   <>
-                    {orderConfirmed ? (
-                      <>
-                        <div className="successCodPill">✓ आपका COD Order CONFIRMED है</div>
-                        <p className="successLead">धन्यवाद। अब यह order CRM में Confirm होकर dispatch के लिए तैयार रहेगा।</p>
-                      </>
-                    ) : (
-                      <>
-                        <div className="successCodPill">Cash on Delivery • अभी Pending Confirm</div>
-                        <button
-                          className="primaryButton full successPay"
-                          type="button"
-                          disabled={confirmSaving || confirmCountdown > 0}
-                          onClick={() => void submitDoubleConfirmation()}
-                        >
-                          {confirmSaving
-                            ? "CONFIRM हो रहा है…"
-                            : confirmCountdown > 0
-                              ? `${confirmCountdown} सेकंड बाद Order Confirm करें`
-                              : `हाँ, मैं ₹${money(payable)} COD parcel लूँगा — CONFIRM ORDER`}
-                        </button>
-                        <small className="successFoot">ऊपर नाम, नंबर, पता और amount देखकर ही Confirm करें।</small>
-                        {confirmError && <p className="orderError">{confirmError}</p>}
-                      </>
-                    )}
+                    <div className="successCodPill">✓ Cash on Delivery Order received</div>
+                    <p className="successLead">आपका ऑर्डर सेव हो गया है। हमारी टीम आपसे संपर्क करेगी।</p>
                   </>
                 ) : (
                   <a className="primaryButton full successPay" href={upiUrl}>UPI PAYMENT खोलें</a>
