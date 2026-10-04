@@ -44,6 +44,25 @@ type CustomerDetails = {
   pincode: string;
 };
 
+const DUPLICATE_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+function normalizeIndianMobile(value: string) {
+  let digits = value.replace(/\D/g, "");
+  if (digits.length === 14 && digits.startsWith("0091")) digits = digits.slice(4);
+  else if (digits.length === 12 && digits.startsWith("91")) digits = digits.slice(2);
+  else if (digits.length === 11 && digits.startsWith("0")) digits = digits.slice(1);
+  return digits;
+}
+
+function duplicateStorageKey(mobile: string) {
+  return `amrit-order-24h:${product.catalogId}:${mobile}`;
+}
+
+type SavedOrderReceipt = {
+  orderCode: string;
+  savedAt: number;
+};
+
 function money(value: number) {
   return value.toLocaleString("en-IN", { maximumFractionDigits: 0 });
 }
@@ -68,6 +87,7 @@ export default function Home() {
   const checkoutAttempt = useRef({ fingerprint: "", ref: "", createdAt: 0 });
   const [orderError, setOrderError] = useState("");
   const [orderSuccess, setOrderSuccess] = useState("");
+  const [duplicateOrder, setDuplicateOrder] = useState(false);
   const [orderRef, setOrderRef] = useState("");
 
   const packCatalog = {
@@ -134,6 +154,7 @@ export default function Home() {
     setPaymentMethod(method);
     setOrderError("");
     setOrderSuccess("");
+    setDuplicateOrder(false);
     setOfferOpen(false);
     setOrderOpen(true);
     const eventData = {
@@ -155,7 +176,8 @@ export default function Home() {
 
   function validate() {
     if (customer.name.trim().length < 2) return "कृपया पूरा नाम भरें।";
-    if (!/^[6-9]\d{9}$/.test(customer.mobile)) return "सही 10-digit mobile number भरें।";
+    const mobile = normalizeIndianMobile(customer.mobile);
+    if (!/^[6-9]\d{9}$/.test(mobile)) return "सही 10-digit mobile number भरें।";
     if (customer.address.trim().length < 5) return "पूरा delivery address भरें।";
     if (!/^\d{6}$/.test(customer.pincode)) return "सही 6-digit PIN code भरें।";
     return "";
@@ -169,11 +191,24 @@ export default function Home() {
       return;
     }
 
+    const normalizedMobile = normalizeIndianMobile(customer.mobile);
+    const phoneDuplicateKey = duplicateStorageKey(normalizedMobile);
+    try {
+      const receipt = JSON.parse(localStorage.getItem(phoneDuplicateKey) || "null") as SavedOrderReceipt | null;
+      if (receipt?.orderCode && typeof receipt.savedAt === "number" && Date.now() - receipt.savedAt < DUPLICATE_WINDOW_MS) {
+        setDuplicateOrder(true);
+        setOrderSuccess(receipt.orderCode);
+        setOrderRef(receipt.orderCode);
+        return;
+      }
+      if (receipt) localStorage.removeItem(phoneDuplicateKey);
+    } catch {}
+
     submitting.current = true;
     setSaving(true);
     setOrderError("");
 
-    const fingerprint = JSON.stringify([customer.name.trim(), customer.mobile, customer.address.trim(), customer.pincode, pack, payable, paymentMethod]);
+    const fingerprint = JSON.stringify([customer.name.trim(), normalizedMobile, customer.address.trim(), customer.pincode, pack, payable, paymentMethod]);
     let attempt = checkoutAttempt.current;
     try {
       const cached = JSON.parse(sessionStorage.getItem("amrit-checkout-attempt") || "null");
@@ -192,7 +227,7 @@ export default function Home() {
         body: JSON.stringify({
           order_id: ref,
           customer: customer.name.trim(),
-          phone: customer.mobile,
+          phone: normalizedMobile,
           address: customer.address.trim(),
           city: "Unknown",
           district: "Unknown",
@@ -225,7 +260,12 @@ export default function Home() {
         throw new Error(result?.error || "Order save नहीं हुआ।");
       }
 
-      setOrderSuccess(String(result.order.orderCode));
+      const savedOrderCode = String(result.order.orderCode);
+      setDuplicateOrder(result.duplicate === true);
+      setOrderSuccess(savedOrderCode);
+      try {
+        localStorage.setItem(phoneDuplicateKey, JSON.stringify({ orderCode: savedOrderCode, savedAt: Date.now() } satisfies SavedOrderReceipt));
+      } catch {}
       if (paymentMethod === "cod" && !result.duplicate) {
         trackPixel(
           "Purchase",
@@ -386,8 +426,8 @@ export default function Home() {
                   <div className="successTick">✓</div>
                 </div>
                 <p className="successEyebrow">AMRIT AYURVEDA</p>
-                <h3>Order successfully saved</h3>
-                <p className="successLead">धन्यवाद! आपका ऑर्डर हमें मिल गया है।</p>
+                <h3>{duplicateOrder ? "Order already received" : "Order successfully saved"}</h3>
+                <p className="successLead">{duplicateOrder ? "इस मोबाइल नंबर से पिछले 24 घंटे में ऑर्डर पहले से मौजूद है। नया duplicate order नहीं बनाया गया।" : "धन्यवाद! आपका ऑर्डर हमें मिल गया है।"}</p>
 
                 <div className="successJourney" aria-label="Order next steps">
                   <div className="successStep">
@@ -431,7 +471,7 @@ export default function Home() {
 
                 <div className="orderFields">
                   <label>पूरा नाम<input value={customer.name} onChange={(e) => updateCustomer("name", e.target.value)} autoComplete="name" placeholder="Customer Name" /></label>
-                  <label>मोबाइल नंबर<input type="tel" value={customer.mobile} onChange={(e) => updateCustomer("mobile", e.target.value.replace(/\D/g, "").slice(0, 10))} onPaste={(e) => { e.preventDefault(); let digits = e.clipboardData.getData("text").replace(/\D/g, ""); if (digits.length === 14 && digits.startsWith("0091")) digits = digits.slice(4); else if (digits.length === 12 && digits.startsWith("91")) digits = digits.slice(2); else if (digits.length === 11 && digits.startsWith("0")) digits = digits.slice(1); if (digits.length > 10) { setOrderError("केवल 10 अंकों का मोबाइल नंबर भरें।"); return; } updateCustomer("mobile", digits); }} inputMode="numeric" autoComplete="tel-national" minLength={10} maxLength={10} pattern="[6-9][0-9]{9}" required placeholder="10 अंकों का मोबाइल नंबर" /></label>
+                  <label>मोबाइल नंबर<input type="tel" value={customer.mobile} onChange={(e) => updateCustomer("mobile", normalizeIndianMobile(e.target.value).slice(0, 10))} onPaste={(e) => { e.preventDefault(); let digits = e.clipboardData.getData("text").replace(/\D/g, ""); if (digits.length === 14 && digits.startsWith("0091")) digits = digits.slice(4); else if (digits.length === 12 && digits.startsWith("91")) digits = digits.slice(2); else if (digits.length === 11 && digits.startsWith("0")) digits = digits.slice(1); if (digits.length > 10) { setOrderError("केवल 10 अंकों का मोबाइल नंबर भरें।"); return; } updateCustomer("mobile", digits); }} inputMode="numeric" autoComplete="tel-national" minLength={10} maxLength={10} pattern="[6-9][0-9]{9}" required placeholder="10 अंकों का मोबाइल नंबर" /></label>
                   <label>पूरा पता<textarea value={customer.address} onChange={(e) => updateCustomer("address", e.target.value)} autoComplete="street-address" rows={3} placeholder="House, street, area, city" /></label>
                   <label>PIN code<input value={customer.pincode} onChange={(e) => updateCustomer("pincode", e.target.value.replace(/\D/g, "").slice(0, 6))} inputMode="numeric" autoComplete="postal-code" placeholder="6 digit PIN code" /></label>
                 </div>
