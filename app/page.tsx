@@ -185,6 +185,19 @@ export default function Home() {
     return "";
   }
 
+  function openUpiPayment() {
+    const ua = navigator.userAgent || "";
+    const isMetaInAppBrowser = /FBAN|FBAV|Instagram|Messenger/i.test(ua);
+
+    if (isMetaInAppBrowser) {
+      try { navigator.clipboard?.writeText(upiId); } catch {}
+      window.alert(`Instagram/Facebook के अंदर UPI app सीधे नहीं खुल रहा है। ऊपर ⋮ से Open in browser चुनें, फिर UPI PAYMENT दबाएँ। UPI ID: ${upiId}`);
+      return;
+    }
+
+    window.location.assign(upiUrl);
+  }
+
   async function submitOrder() {
     if (submitting.current || saving || orderSuccess) return;
     const error = validate();
@@ -272,16 +285,6 @@ export default function Home() {
         localStorage.setItem(phoneDuplicateKey, JSON.stringify({ orderCode: savedOrderCode, orderRef: ref, savedAt: Date.now() } satisfies SavedOrderReceipt));
       } catch {}
 
-      if (paymentMethod === "upi") {
-        const params = new URLSearchParams({
-          pa: upiId,
-          pn: "AMRIT AYURVEDA",
-          tn: `${product.shortName} ${ref}`,
-          am: payable.toFixed(2),
-          cu: "INR",
-        });
-        window.location.assign(`upi://pay?${params.toString()}`);
-      }
     } catch (e) {
       setOrderError(e instanceof Error ? e.message : "Order save नहीं हुआ। कृपया दोबारा कोशिश करें।");
     } finally {
@@ -448,7 +451,7 @@ export default function Home() {
                     <p className="successLead">आपका ऑर्डर सेव हो गया है। हमारी टीम आपसे संपर्क करेगी।</p>
                   </>
                 ) : (
-                  <a className="primaryButton full successPay" href={upiUrl}>UPI PAYMENT खोलें</a>
+                  <button className="primaryButton full successPay" type="button" onClick={openUpiPayment}>UPI PAYMENT खोलें</button>
                 )}
 
                 <a className="successCall" href="tel:8290695226">
