@@ -21,13 +21,13 @@ export const metadata: Metadata = {
     siteName: "Amrit Ayurveda",
     locale: "hi_IN",
     type: "website",
-    images: [{ url: "/amrit-urja-combo.webp", width: 360, height: 640, alt: "AMRIT URJA Capsule + Oil Combo" }]
+    images: [{ url: "/amrit-urja-share-v2.jpg", width: 1200, height: 630, type: "image/jpeg", alt: "AMRIT URJA Capsule + Oil Combo" }]
   },
   twitter: {
     card: "summary_large_image",
     title: "AMRIT URJA | Amrit Ayurveda",
     description: "30 Capsules + 20 ml Massage Oil premium wellness combo.",
-    images: ["/amrit-urja-combo.webp"]
+    images: ["/amrit-urja-share-v2.jpg"]
   },
   icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" }
 };
