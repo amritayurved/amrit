@@ -315,6 +315,23 @@ export default function Home() {
         throw new Error(result?.error || "Order save नहीं हुआ।");
       }
 
+      // A saved COD order completes checkout; a pending UPI payment does not.
+      // Never count a duplicate response as a second purchase.
+      if (paymentMethod === "cod" && result.duplicate !== true) {
+        try {
+          trackPixel("Purchase", {
+            content_name: selectedCatalog.title,
+            content_ids: [selectedCatalog.id],
+            content_type: "product",
+            value: payable,
+            currency: "INR",
+            num_items: pack,
+          }, `purchase_${ref}`);
+        } catch {
+          // Analytics must not turn a saved order into a checkout error.
+        }
+      }
+
       const savedOrderCode = String(result.order.orderCode);
       setDuplicateOrder(result.duplicate === true);
       setOrderSuccess(savedOrderCode);
