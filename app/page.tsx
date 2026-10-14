@@ -91,6 +91,25 @@ export default function Home() {
   const [orderSuccess, setOrderSuccess] = useState("");
   const [duplicateOrder, setDuplicateOrder] = useState(false);
   const [orderRef, setOrderRef] = useState("");
+  const [followUpConsent, setFollowUpConsent] = useState(false);
+  const cartCompleted = useRef(false);
+
+  useEffect(() => {
+    const mobile = normalizeIndianMobile(customer.mobile);
+    if (!followUpConsent || !/^[6-9]\d{9}$/.test(mobile) || orderSuccess || cartCompleted.current) return;
+    const payload = { name: customer.name.trim(), mobile, address: customer.address.trim(), pincode: customer.pincode, consent: true };
+    const send = (departed: boolean) => {
+      if (cartCompleted.current) return;
+      void fetch("/api/abandoned-cart", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...payload, departed }), keepalive: true,
+      }).catch(() => {});
+    };
+    const timer = window.setTimeout(() => send(!orderOpen), 800);
+    const leave = () => send(true);
+    window.addEventListener("pagehide", leave);
+    return () => { window.clearTimeout(timer); window.removeEventListener("pagehide", leave); };
+  }, [customer, followUpConsent, orderOpen, orderSuccess]);
 
   const packCatalog = {
     1: { id: "hdwo1ljwss", title: "AMRIT URJA — 1 Combo", price: 999 },
@@ -196,6 +215,7 @@ export default function Home() {
     setDuplicateOrder(false);
     setOfferOpen(false);
     setOrderOpen(true);
+    cartCompleted.current = false;
     const eventData = {
       content_name: catalog.title,
       content_ids: [catalog.id],
@@ -249,6 +269,7 @@ export default function Home() {
       const receipt = JSON.parse(localStorage.getItem(phoneDuplicateKey) || "null") as SavedOrderReceipt | null;
       if (receipt?.orderCode && typeof receipt.savedAt === "number" && Date.now() - receipt.savedAt < DUPLICATE_WINDOW_MS) {
         setDuplicateOrder(true);
+        cartCompleted.current = true;
         setOrderSuccess(receipt.orderCode);
         setOrderRef(receipt.orderRef || receipt.orderCode);
         return;
@@ -333,6 +354,7 @@ export default function Home() {
       }
 
       const savedOrderCode = String(result.order.orderCode);
+      cartCompleted.current = true;
       setDuplicateOrder(result.duplicate === true);
       setOrderSuccess(savedOrderCode);
       try {
@@ -528,6 +550,7 @@ export default function Home() {
                 </div>
 
                 <div className="orderFields">
+                  <label style={{display:"flex",gap:10,alignItems:"flex-start",fontSize:14}}><input type="checkbox" checked={followUpConsent} onChange={e=>setFollowUpConsent(e.target.checked)} style={{width:18,height:18,flexShrink:0}} />ऑर्डर अधूरा रहने पर Amrit Ayurveda मेरी दी हुई जानकारी सेव करके कॉल या WhatsApp पर सहायता के लिए संपर्क कर सकती है।</label>
                   <label>पूरा नाम<input value={customer.name} onChange={(e) => updateCustomer("name", e.target.value)} autoComplete="name" placeholder="Customer Name" /></label>
                   <label>मोबाइल नंबर<input type="tel" value={customer.mobile} onChange={(e) => updateCustomer("mobile", normalizeIndianMobile(e.target.value).slice(0, 10))} onPaste={(e) => { e.preventDefault(); let digits = e.clipboardData.getData("text").replace(/\D/g, ""); if (digits.length === 14 && digits.startsWith("0091")) digits = digits.slice(4); else if (digits.length === 12 && digits.startsWith("91")) digits = digits.slice(2); else if (digits.length === 11 && digits.startsWith("0")) digits = digits.slice(1); if (digits.length > 10) { setOrderError("केवल 10 अंकों का मोबाइल नंबर भरें।"); return; } updateCustomer("mobile", digits); }} inputMode="numeric" autoComplete="tel-national" minLength={10} maxLength={10} pattern="[6-9][0-9]{9}" required placeholder="10 अंकों का मोबाइल नंबर" /></label>
                   <label>पूरा पता<textarea value={customer.address} onChange={(e) => updateCustomer("address", e.target.value)} autoComplete="street-address" rows={3} placeholder="House, street, area, city" /></label>
@@ -548,3 +571,4 @@ export default function Home() {
     </main>
   );
 }
+
