@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://amritayurveda.shop"),
-  title: "AMRIT URJA Capsule + Oil Combo | Amrit Ayurveda",
-  description: "AMRIT URJA by Amrit Ayurveda — 30 capsules और 20 ml massage oil का premium Ayurvedic wellness combo. COD और online payment available.",
+  metadataBase: new URL("https://www.amritayurveda.shop"),
+  title: "Amrit Urja | Amrit Ayurveda Official Website",
+description: "AMRIT URJA by Amrit Ayurveda – Ayurvedic men's wellness capsules and oil combo. Explore product details, usage and ₹999 Cash on Delivery ordering.",
   keywords: [
     "AMRIT URJA",
     "Amrit Ayurveda",
