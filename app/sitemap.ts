@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const siteUrl = const siteUrl = "https://www.amritayurveda.shop";
+const siteUrl = "https://www.amritayurveda.shop";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
