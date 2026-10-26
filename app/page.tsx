@@ -216,7 +216,7 @@ export default function Home() {
 
   useEffect(() => {
     const mobile = normalizeIndianMobile(customer.mobile);
-    if (!orderOpen || orderSuccess || !leadConsent || !/^[6-9]\\d{9}$/.test(mobile)) return;
+    if (!orderOpen || orderSuccess || !leadConsent || !/^[6-9]\d{9}$/.test(mobile)) return;
     if (capturedLead.current === mobile) return;
     const timer = window.setTimeout(async () => {
       try {
