@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   let endpoint: URL;
   try {
     endpoint = new URL(configured);
-    if (endpoint.protocol !== "https:" || endpoint.hostname !== "amrit-ayurveda-crm-new.amritayurveda.chatgpt.site" || endpoint.pathname !== "/crm/api/abandoned-cart") {
+    if (endpoint.protocol !== "https:" || endpoint.hostname !== "amrit-ayurveda-crm-new.amritayurveda.chatgpt.site" || !["/api/abandoned-cart", "/crm/api/abandoned-cart"].includes(endpoint.pathname) || endpoint.search || endpoint.hash) {
       throw new Error("Invalid CRM host");
     }
   } catch {
