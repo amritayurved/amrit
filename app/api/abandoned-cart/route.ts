@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const configured = process.env.CRM_ABANDONED_CART_ENDPOINT;
-  if (!configured) {
+  const token = process.env.CRM_ABANDONED_CART_API_TOKEN;
+  if (!configured || !token) {
     return NextResponse.json({ ok: false, error: "CRM lead intake is not configured" }, { status: 503 });
   }
   // Prevent arbitrary external endpoints from being configured accidentally.
@@ -33,7 +34,7 @@ export async function POST(request: Request) {
     }
     const response = await fetch(endpoint, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify({
         phone, customer: String(payload.name ?? "").slice(0, 120),
         product: "AMRIT URJA Capsule + Oil Combo",
