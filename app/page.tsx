@@ -377,24 +377,33 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="benefitsShowcase" aria-label="AMRIT URJA information gallery">
+      <section className="benefitsShowcase" aria-label="AMRIT URJA की पूरी फोटो गैलरी">
+        <div className="galleryIntro">
+          <span>AMRIT AYURVEDA • PRODUCT GALLERY</span>
+          <h2>Amrit Urja की पूरी जानकारी, हर तस्वीर में</h2>
+          <p>हर फोटो को पूरा देखने के लिए नीचे स्क्रॉल करें — कोई फोटो कटेगी नहीं।</p>
+        </div>
         <div className="benefitsPhotoGrid">
-          <Image width={1010} height={1600} sizes="(max-width: 768px) 100vw, 33vw" loading="lazy" src="/my-photos/photo-1.jpg" alt="AMRIT URJA information 1" />
-          <Image width={1067} height={1600} sizes="(max-width: 768px) 100vw, 33vw" loading="lazy" src="/my-photos/photo-2.jpg" alt="AMRIT URJA information 2" />
-          <Image width={915} height={1600} sizes="(max-width: 768px) 100vw, 33vw" loading="lazy" src="/my-photos/photo-3.jpg" alt="AMRIT URJA information 3" />
+          <figure><Image width={1010} height={1600} sizes="(max-width: 800px) 100vw, 900px" loading="lazy" src="/my-photos/photo-1.jpg" alt="Amrit Urja प्रोडक्ट जानकारी — पहली पूरी तस्वीर" /><figcaption>01 / 03 · पूरी तस्वीर</figcaption></figure>
+          <figure><Image width={1067} height={1600} sizes="(max-width: 800px) 100vw, 900px" loading="lazy" src="/my-photos/photo-2.jpg" alt="Amrit Urja प्रोडक्ट जानकारी — दूसरी पूरी तस्वीर" /><figcaption>02 / 03 · पूरी तस्वीर</figcaption></figure>
+          <figure><Image width={915} height={1600} sizes="(max-width: 800px) 100vw, 900px" loading="lazy" src="/my-photos/photo-3.jpg" alt="Amrit Urja प्रोडक्ट जानकारी — तीसरी पूरी तस्वीर" /><figcaption>03 / 03 · पूरी तस्वीर</figcaption></figure>
         </div>
       </section>
 
       <section className="routineSection" id="how">
         <div className="sectionHeading">
-          <p className="eyebrow">HOW TO USE</p>
-          <h2>AMRIT URJA कैसे इस्तेमाल करें</h2>
-          <p>Pack पर लिखी जानकारी भी पढ़ें।</p>
+          <p className="eyebrow">YOUR DAILY WELLNESS GUIDE</p>
+          <h2>Amrit Urja कैसे इस्तेमाल करें?</h2>
+          <p>आसान स्टेप्स में कैप्सूल और ऑयल की जानकारी — इस्तेमाल से पहले पैक पर दी गई मात्रा, सामग्री और सावधानियाँ ज़रूर पढ़ें।</p>
         </div>
         <div className="routineGrid">
-          <article><b>01</b><h3>रोज़ एक कैप्सूल</h3><p>खाना खाने के आधे घंटे बाद हल्के दूध या पानी के साथ लें।</p></article>
-          <article><b>02</b><h3>रोज़ ऑयल मसाज</h3><p>ऑयल से प्रतिदिन 1–2 मिनट हल्की मसाज करें।</p></article>
-          <article><b>03</b><h3>Pack देखें</h3><p>मात्रा, सावधानियों और सामग्री के लिए पैक पर दी जानकारी पढ़ें।</p></article>
+          <article><span className="routineIcon" aria-hidden="true">01</span><b>STEP 01</b><h3>कैप्सूल की जानकारी</h3><p>पैक पर दिए निर्देशों के अनुसार ही कैप्सूल लें। मौजूदा पैक पर खाने के बाद दूध या पानी के साथ लेने की जानकारी देखें।</p></article>
+          <article><span className="routineIcon" aria-hidden="true">02</span><b>STEP 02</b><h3>ऑयल इस्तेमाल करने का तरीका</h3><p>मसाज ऑयल केवल पैक के निर्देशों और सावधानियों के अनुसार इस्तेमाल करें। त्वचा पर परेशानी होने पर उपयोग रोकें।</p></article>
+          <article><span className="routineIcon" aria-hidden="true">03</span><b>STEP 03</b><h3>पैक और सावधानियाँ देखें</h3><p>सामग्री, उपयोग की मात्रा, उपयुक्तता और अन्य ज़रूरी जानकारी के लिए पैक की लेबलिंग पढ़ें। शंका हो तो योग्य स्वास्थ्य विशेषज्ञ से सलाह लें।</p></article>
+        </div>
+        <div className="routineDetails">
+          <div><span className="routineDetailsEyebrow">WHAT'S INSIDE</span><h3>एक कॉम्बो, दो प्रोडक्ट</h3><p>Amrit Urja पैक में 30 कैप्सूल और 20 ml मसाज ऑयल शामिल है। प्रोडक्ट को इस्तेमाल करने से पहले दोनों के लेबल अलग-अलग पढ़ें।</p><div className="routinePills"><span>30 Capsules</span><span>20 ml Massage Oil</span><span>₹999 Combo</span></div></div>
+          <div className="routineHelp"><h3>इस्तेमाल को लेकर कोई सवाल?</h3><p>सही पैक, सामग्री या इस्तेमाल की जानकारी के लिए हमारी सपोर्ट टीम से बात करें।</p><a href="tel:8290695226">☎ सहायता के लिए कॉल करें</a></div>
         </div>
         <button className="howVisualButton" onClick={() => setHowOpen(true)}>चित्र के साथ इस्तेमाल देखें</button>
       </section>
