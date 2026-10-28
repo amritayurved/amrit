@@ -506,7 +506,7 @@ export default function Home() {
                   </div>
                   <div className="successStep">
                     <span>3</span>
-                    <div><b>COD Amount</b><small>₹{money(payable)} — parcel receive करते समय payment करें।</small></div>
+                    <div><b>{paymentMethod === "cod" ? "COD Amount" : "Online payment"}</b><small>{paymentMethod === "cod" ? `₹${money(payable)} — parcel receive करते समय payment करें।` : `₹${money(payable)} — अभी Payment Pending है। भुगतान की पुष्टि के बाद ही Paid माना जाएगा।`}</small></div>
                   </div>
                 </div>
 
@@ -516,7 +516,7 @@ export default function Home() {
                     <p className="successLead">आपका ऑर्डर सेव हो गया है। हमारी टीम आपसे संपर्क करेगी।</p>
                   </>
                 ) : (
-                  <button className="primaryButton full successPay" type="button" onClick={openUpiPayment}>UPI PAYMENT खोलें</button>
+                  <div className="upiEasyPay"><p><b>अगला स्टेप: ₹{money(payable)} का UPI पेमेंट</b></p><p>UPI ऐप खोलें और भुगतान करें। अगर ऐप नहीं खुलता तो नीचे UPI ID कॉपी करके PhonePe / Google Pay / Paytm में भुगतान कर सकते हैं।</p><button className="primaryButton full successPay" type="button" onClick={openUpiPayment}>UPI ऐप में ₹{money(payable)} पेमेंट करें</button><button className="upiCopyButton" type="button" onClick={() => { void navigator.clipboard?.writeText(upiId); }}>UPI ID कॉपी करें: {upiId}</button><p className="upiPendingNote">ऑर्डर सेव है, लेकिन पेमेंट अभी Pending है। UPI में पेमेंट पूरा होने पर ही भुगतान माना जाएगा।</p></div>
                 )}
 
                 <a className="successCall" href="tel:8290695226">
@@ -529,15 +529,16 @@ export default function Home() {
               </div>
             ) : (
               <>
-                <div className="paymentTabs">
+                <p className="checkoutIntro">अपना नाम, 10 अंकों का मोबाइल नंबर और डिलीवरी पता भरें। फिर पेमेंट का तरीका चुनें।</p><div className="paymentTabs">
                   <button className={paymentMethod === "cod" ? "active" : ""} onClick={() => setPaymentMethod("cod")}>
-                    <span>COD</span><b>₹{money(payable)}</b>
+                    <span>घर पर भुगतान (COD)</span><b>₹{money(payable)}</b>
                   </button>
                   <button className={paymentMethod === "upi" ? "active" : ""} onClick={() => setPaymentMethod("upi")}>
-                    <span>ONLINE / UPI</span><b>₹{money(payable)}</b>
+                    <span>अभी ऑनलाइन भुगतान</span><b>₹{money(payable)}</b>
                   </button>
                 </div>
 
+                {paymentMethod === "upi" && <p className="onlinePaymentHint">पहले ऑर्डर की जानकारी सेव होगी, उसके बाद UPI Payment का आसान विकल्प खुलेगा। पेमेंट पूरा होने तक Status Pending रहेगा।</p>}
                 <div className="orderFields">
                   <label>पूरा नाम<input value={customer.name} onChange={(e) => updateCustomer("name", e.target.value)} autoComplete="name" placeholder="Customer Name" /></label>
                   <label>मोबाइल नंबर (बिना +91)<input type="tel" value={customer.mobile} onChange={(e) => { const next = e.target.value; if (!/^\d*$/.test(next) || next.length > 10) { setOrderError("कृपया +91 या देश कोड न डालें। केवल अपने मोबाइल के 10 अंक भरें।"); return; } updateCustomer("mobile", next); }} onPaste={(e) => { e.preventDefault(); const pasted = e.clipboardData.getData("text").trim(); if (!/^[6-9]\d{9}$/.test(pasted)) { setOrderError("+91, 0 या अतिरिक्त अंक वाला नंबर स्वीकार नहीं है। केवल अपना 10 अंकों का मोबाइल नंबर डालें।"); return; } updateCustomer("mobile", pasted); }} inputMode="numeric" autoComplete="off" minLength={10} maxLength={10} pattern="[6-9][0-9]{9}" required placeholder="केवल 10 अंक, +91 नहीं" /><small style={{ display: "block", marginTop: 6 }}>देश का कोड +91 न जोड़ें। अपने नंबर के पूरे 10 अंक भरें।</small></label>
@@ -548,7 +549,7 @@ export default function Home() {
                 {orderError && <p className="orderError">{orderError}</p>}
 
                 <button className="confirmButton" disabled={saving} onClick={() => void submitOrder()}>
-                  {saving ? "ORDER SAVE हो रहा है…" : paymentMethod === "cod" ? `COD ORDER CONFIRM • ₹${money(payable)}` : `ONLINE ORDER CONFIRM • ₹${money(payable)}`}
+                  {saving ? "ORDER SAVE हो रहा है…" : paymentMethod === "cod" ? `COD ऑर्डर करें • ₹${money(payable)}` : `आगे बढ़ें: UPI पेमेंट • ₹${money(payable)}`}
                 </button>
                 <small className="privacyLine">आपकी details केवल order processing और delivery के लिए उपयोग होंगी।</small>
               </>
