@@ -459,3 +459,10 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 .premiumSite .urjaFrontTrust{grid-template-columns:repeat(4,minmax(0,1fr))}
 .premiumSite .urjaFrontPolicies{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
+/* Bigger, uncropped original Amrit Urja front product image */
+.premiumSite .urjaOriginalProduct{width:100%;min-width:0;padding:0!important;overflow:visible}
+.premiumSite .urjaOriginalProduct img{display:block!important;width:100%!important;max-width:none!important;max-height:none!important;height:auto!important;object-fit:contain!important;object-position:center!important;border-radius:0!important;margin:0 auto!important;box-shadow:none!important}
+.premiumSite .urjaOriginalLabel{margin:5px auto 10px}
+@media(min-width:701px){.premiumSite .urjaFrontHero{grid-template-columns:minmax(0,40%) minmax(0,60%)}.premiumSite .urjaOriginalProduct{align-self:center}.premiumSite .urjaOriginalProduct img{max-height:900px!important;max-width:100%!important}}
+@media(max-width:700px){.premiumSite .urjaOriginalProduct{padding:0!important}.premiumSite .urjaOriginalProduct img{width:100vw!important;max-width:100vw!important;max-height:none!important;object-fit:contain!important}}
