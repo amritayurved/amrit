@@ -47,11 +47,9 @@ type CustomerDetails = {
 const DUPLICATE_WINDOW_MS = 24 * 60 * 60 * 1000;
 
 function normalizeIndianMobile(value: string) {
-  let digits = value.replace(/\D/g, "");
-  if (digits.length === 14 && digits.startsWith("0091")) digits = digits.slice(4);
-  else if (digits.length === 12 && digits.startsWith("91")) digits = digits.slice(2);
-  else if (digits.length === 11 && digits.startsWith("0")) digits = digits.slice(1);
-  return digits;
+  // Website orders must contain exactly the customer's own ten digits.
+  // Never strip +91/0091/0 automatically: that can silently save a wrong number.
+  return value.trim();
 }
 
 function duplicateStorageKey(mobile: string) {
@@ -542,7 +540,7 @@ export default function Home() {
 
                 <div className="orderFields">
                   <label>पूरा नाम<input value={customer.name} onChange={(e) => updateCustomer("name", e.target.value)} autoComplete="name" placeholder="Customer Name" /></label>
-                  <label>मोबाइल नंबर<input type="tel" value={customer.mobile} onChange={(e) => updateCustomer("mobile", normalizeIndianMobile(e.target.value).slice(0, 10))} onPaste={(e) => { e.preventDefault(); let digits = e.clipboardData.getData("text").replace(/\D/g, ""); if (digits.length === 14 && digits.startsWith("0091")) digits = digits.slice(4); else if (digits.length === 12 && digits.startsWith("91")) digits = digits.slice(2); else if (digits.length === 11 && digits.startsWith("0")) digits = digits.slice(1); if (digits.length > 10) { setOrderError("केवल 10 अंकों का मोबाइल नंबर भरें।"); return; } updateCustomer("mobile", digits); }} inputMode="numeric" autoComplete="tel-national" minLength={10} maxLength={10} pattern="[6-9][0-9]{9}" required placeholder="10 अंकों का मोबाइल नंबर" /></label>
+                  <label>मोबाइल नंबर (बिना +91)<input type="tel" value={customer.mobile} onChange={(e) => { const next = e.target.value; if (!/^\\d*$/.test(next) || next.length > 10) { setOrderError("कृपया +91 या देश कोड न डालें। केवल अपने मोबाइल के 10 अंक भरें।"); return; } updateCustomer("mobile", next); }} onPaste={(e) => { e.preventDefault(); const pasted = e.clipboardData.getData("text").trim(); if (!/^[6-9]\\d{9}$/.test(pasted)) { setOrderError("+91, 0 या अतिरिक्त अंक वाला नंबर स्वीकार नहीं है। केवल अपना 10 अंकों का मोबाइल नंबर डालें।"); return; } updateCustomer("mobile", pasted); }} inputMode="numeric" autoComplete="off" minLength={10} maxLength={10} pattern="[6-9][0-9]{9}" required placeholder="केवल 10 अंक, +91 नहीं" /><small style={{ display: "block", marginTop: 6 }}>देश का कोड +91 न जोड़ें। अपने नंबर के पूरे 10 अंक भरें।</small></label>
                   <label>पूरा पता<textarea value={customer.address} onChange={(e) => updateCustomer("address", e.target.value)} autoComplete="street-address" rows={3} placeholder="House, street, area, city" /></label>
                   <label>PIN code<input value={customer.pincode} onChange={(e) => updateCustomer("pincode", e.target.value.replace(/\D/g, "").slice(0, 6))} inputMode="numeric" autoComplete="postal-code" placeholder="6 digit PIN code" /></label>
                 </div>
