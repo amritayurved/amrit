@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const siteUrl = "https://amrit-kohl.vercel.app";
+const siteUrl = "https://www.amritayurveda.shop";
 
 export default function robots(): MetadataRoute.Robots {
   return {
