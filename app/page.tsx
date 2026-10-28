@@ -365,39 +365,36 @@ export default function Home() {
       <section className="referenceHero" id="home">
         <div className="urjaFrontHero">
           <div className="urjaFrontMessage">
-            <p className="urjaHeroEyebrow">AMRIT AYURVEDA · NATURAL WELLNESS</p>
-            <h2>Natural Strength.<br /><em>Confidence.</em><br />A Happier You.</h2>
-            <p className="urjaHeroSub">AMRIT URJA · CAPSULE + OIL COMBO</p>
-            <div className="urjaHeroBenefits" aria-label="Amrit Urja wellness highlights">
-              <span><strong>✦</strong> Natural Vitality</span>
-              <span><strong>✦</strong> Daily Wellness</span>
-              <span><strong>✦</strong> Ayurvedic Care</span>
-              <span><strong>✦</strong> Confidence</span>
+            <h2><em>NATURAL</em><br/>STRENGTH<br/><em>CONFIDENCE</em><br/>A HAPPIER YOU</h2>
+            <p className="urjaHeroSub">REKINDLE YOUR<br/>NATURAL ENERGY<br/>THE AYURVEDIC WAY</p>
+            <div className="urjaHeroBenefits" aria-label="Wellness highlights">
+              <span><strong>✦</strong>MORE STAMINA</span>
+              <span><strong>✦</strong>BETTER PERFORMANCE</span>
+              <span><strong>❀</strong>NATURAL VITALITY</span>
+              <span><strong>♥</strong>LONG LASTING CONFIDENCE</span>
             </div>
           </div>
           <div className="urjaOriginalProduct">
-            <Image sizes="(max-width: 700px) 94vw, 52vw" preload src="/amrit-urja-front-no-phone.webp" alt="Original Amrit Urja Capsule और 20 ml Oil पैक" width={853} height={1844} fetchPriority="high" />
-            <span className="urjaOriginalLabel">ORIGINAL AMRIT URJA PRODUCT</span>
+            <Image sizes="100vw" preload src="/amrit-urja-front-no-phone.webp" alt="Original Amrit Urja Capsule and Oil product" width={853} height={1844} fetchPriority="high" />
           </div>
         </div>
         <div className="urjaFrontCheckout" id="product">
-          <p className="urjaFrontKicker">SPECIAL COMBO OFFER</p>
-          <h1>Amrit Urja Capsule &amp; Oil Combo | Amrit Ayurveda</h1>
-          <p className="urjaFrontPack">30 Capsules + 20 ml Massage Oil</p>
+          <h1>AMRIT URJA<br/><span>CAPSULE + OIL COMBO</span></h1>
+          <p className="urjaFrontPack">AMRIT AYURVEDA · 30 CAPSULES + 20 ML OIL</p>
           <p className="urjaFrontPrice">₹999 <del>₹1,499</del><span>33% OFF</span></p>
           <div className="urjaFrontButtons">
             <button className="posterCod" onClick={() => openOrder("cod")}><span aria-hidden="true">🛒</span> ORDER NOW <small>(CASH ON DELIVERY)</small></button>
             <button className="posterOnline" onClick={() => openOrder("upi")}><span aria-hidden="true">▣</span> PAY ONLINE / UPI <small>₹999 · UPI Payment</small></button>
           </div>
-          <div className="urjaFrontTrust" aria-label="Product and ordering highlights">
-            <span>🌿 <b>Ayurvedic Wellness</b></span>
-            <span>📦 <b>Secure Packaging</b></span>
-            <span>🚚 <b>Shipping Across India</b></span>
-            <span>💳 <b>COD / UPI Available</b></span>
+          <div className="urjaFrontTrust">
+            <span><strong>❀</strong><b>Ayurvedic<br/>Wellness</b></span>
+            <span><strong>✧</strong><b>Secure<br/>Packaging</b></span>
+            <span><strong>♧</strong><b>Shipping<br/>Across India</b></span>
+            <span><strong>▣</strong><b>COD / UPI<br/>Available</b></span>
           </div>
           <div className="urjaFrontPolicies">
-            <span>🚚 Shipping: पता और पिनकोड के अनुसार</span>
-            <span>↩ Return Policy: शर्तों के लिए <a href="mailto:contact@amritayurveda.shop?subject=Amrit%20Urja%20Return%20Policy">संपर्क करें</a></span>
+            <span>🚚 <b>CASH ON DELIVERY</b><small>Available Across India</small></span>
+            <span>↩ <b>Return Policy</b><small><a href="mailto:contact@amritayurveda.shop?subject=Amrit%20Urja%20Return%20Policy">Contact for terms</a></small></span>
           </div>
         </div>
       </section>
