@@ -368,7 +368,7 @@ export default function Home() {
           <Image sizes="100vw" preload src="/amrit-urja-front-no-phone.webp" alt="AMRIT URJA — 30 Capsules + 20 ml Oil, Amrit Ayurveda" width={853} height={1844} fetchPriority="high" style={{ display: "block", width: "100%", height: "auto" }} />
         </a>
         <div className="posterOrder" id="product">
-          <h2>AMRIT URJA — Capsule + Oil Combo</h2>
+          <h1>Amrit Urja Capsule & Oil Combo | Amrit Ayurveda</h1>
           <p className="posterPrice">Only ₹999</p>
           <p className="posterPriceNote">कैश ऑन डिलीवरी उपलब्ध है। Online/UPI से भी भुगतान कर सकते हैं।</p>
           <button className="posterCod" onClick={() => openOrder("cod")}>अभी ऑर्डर करें — कैश ऑन डिलीवरी ₹999</button>
