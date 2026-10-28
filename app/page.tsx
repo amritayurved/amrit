@@ -384,10 +384,10 @@ export default function Home() {
           <p className="urjaFrontKicker">SPECIAL COMBO OFFER</p>
           <h1>Amrit Urja Capsule &amp; Oil Combo | Amrit Ayurveda</h1>
           <p className="urjaFrontPack">30 Capsules + 20 ml Massage Oil</p>
-          <p className="urjaFrontPrice">₹999 <span>कॉम्बो ऑफर</span></p>
+          <p className="urjaFrontPrice">₹999 <del>₹1,499</del><span>33% OFF</span></p>
           <div className="urjaFrontButtons">
-            <button className="posterCod" onClick={() => openOrder("cod")}>▣ Cash on Delivery · ₹999</button>
-            <button className="posterOnline" onClick={() => openOrder("upi")}>▣ Online / UPI Payment · ₹999</button>
+            <button className="posterCod" onClick={() => openOrder("cod")}><span aria-hidden="true">🛒</span> ORDER NOW <small>(CASH ON DELIVERY)</small></button>
+            <button className="posterOnline" onClick={() => openOrder("upi")}><span aria-hidden="true">▣</span> PAY ONLINE / UPI <small>₹999 · UPI Payment</small></button>
           </div>
           <div className="urjaFrontTrust" aria-label="Product and ordering highlights">
             <span>🌿 <b>Ayurvedic Wellness</b></span>
