@@ -532,3 +532,13 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 .premiumSite .urjaFrontPolicies{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 .premiumSite .urjaFrontPolicies span{font-size:9px!important}
 }
+
+/* Couple portrait in the reference hero — preserve original product and other sections */
+.premiumSite .referenceHero .urjaFrontHero{background-image:linear-gradient(90deg,rgba(4,14,8,.94) 0%,rgba(5,23,12,.64) 40%,rgba(7,18,11,.12) 100%),url("https://images.unsplash.com/photo-1720105761832-927de5f2ecce?auto=format&fit=crop&w=1500&q=85")!important;background-size:cover!important;background-position:center 35%!important;background-repeat:no-repeat!important}
+.premiumSite .referenceHero .urjaFrontMessage{position:relative!important;z-index:1}
+.premiumSite .referenceHero .urjaOriginalProduct{position:relative!important;z-index:1}
+@media(max-width:700px){
+.premiumSite .referenceHero .urjaFrontHero{background-image:none!important;background:#091b11!important}
+.premiumSite .referenceHero .urjaFrontMessage{min-height:500px!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important;background-image:linear-gradient(90deg,rgba(2,11,6,.89) 0%,rgba(4,12,7,.54) 53%,rgba(3,14,7,.08) 100%),url("https://images.unsplash.com/photo-1720105761832-927de5f2ecce?auto=format&fit=crop&w=1000&q=85")!important;background-size:cover!important;background-position:center center!important}
+.premiumSite .referenceHero .urjaHeroBenefits{margin-top:auto!important;padding:20px 0 4px!important}
+}
