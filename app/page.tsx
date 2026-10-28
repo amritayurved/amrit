@@ -418,6 +418,10 @@ export default function Home() {
         </div>
         <div className="faqList">
           <details>
+            <summary>Amrit Urja क्या है?</summary>
+            <p>Amrit Urja, Amrit Ayurveda का wellness capsule और massage oil combo है। इसके एक पैक में 30 कैप्सूल और 20 ml मसाज ऑयल मिलता है। इसकी कीमत ₹999 है। ग्राहक Cash on Delivery या Online / UPI से ऑर्डर कर सकते हैं। सामग्री, उपयोग और सावधानियों के लिए पैक पर दी गई जानकारी पढ़ें।</p>
+          </details>
+          <details>
             <summary>AMRIT URJA combo में क्या मिलता है?</summary>
             <p>एक 30-capsule bottle और एक 20 ml massage oil bottle।</p>
           </details>
