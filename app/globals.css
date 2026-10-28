@@ -383,3 +383,55 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 .urjaFrontPolicies{display:flex;justify-content:center;flex-wrap:wrap;gap:16px;color:#526158;font-size:12px;border:1px solid #e1d9c6;border-radius:12px;background:#fff;padding:14px}
 .urjaFrontPolicies a{color:#125e39;font-weight:800;text-decoration:underline}
 @media(max-width:700px){.urjaFrontHero{grid-template-columns:1fr}.urjaFrontMessage{padding:34px 20px 10px}.urjaFrontMessage h2{font-size:clamp(36px,9vw,56px);margin:14px 0}.urjaHeroBenefits{margin-top:20px}.urjaOriginalProduct{padding:12px 18px 30px}.urjaOriginalProduct img{width:100%;max-height:560px}.urjaOriginalLabel{bottom:38px;font-size:8px}.premiumSite .referenceHero .urjaFrontCheckout{padding:27px 15px 20px}.urjaFrontButtons{grid-template-columns:1fr}.urjaFrontTrust{grid-template-columns:repeat(2,1fr);gap:14px}.urjaFrontTrust span{font-size:11px}.urjaFrontPolicies{flex-direction:column;gap:8px}}
+
+/* Reference-style compact front hero ONLY; lower sections remain untouched */
+.premiumSite .referenceHero{max-width:980px;margin:0 auto;padding:0 0 14px;background:#faf5e8;border-radius:0 0 20px 20px;overflow:hidden}
+.premiumSite .urjaFrontHero{grid-template-columns:1fr;position:relative;background:linear-gradient(160deg,#061b13,#093a26 65%,#03170f);text-align:left}
+.premiumSite .urjaFrontMessage{padding:32px 28px 7px;max-width:none;position:relative;z-index:1}
+.premiumSite .urjaFrontMessage h2{font-size:clamp(34px,5vw,58px);line-height:1.07;margin:10px 0 14px}
+.premiumSite .urjaHeroBenefits{grid-template-columns:repeat(4,minmax(0,1fr));max-width:820px;margin:22px auto 0;gap:5px}
+.premiumSite .urjaHeroBenefits span{flex-direction:column;gap:7px;text-align:center;font-size:clamp(9px,1.4vw,13px)}
+.premiumSite .urjaHeroBenefits strong{width:40px;height:40px;font-size:21px}
+.premiumSite .urjaOriginalProduct{padding:0 18px 8px}
+.premiumSite .urjaOriginalProduct img{width:min(94%,660px);max-height:560px;object-fit:contain;box-shadow:none}
+.premiumSite .urjaOriginalLabel{position:static;transform:none;margin:5px auto 9px;font-size:9px}
+.premiumSite .referenceHero .urjaFrontCheckout{padding:20px 18px 18px;max-width:980px}
+.premiumSite .urjaFrontKicker{margin:0 0 5px}
+.premiumSite .urjaFrontCheckout h1{font-size:clamp(25px,4vw,37px);margin-bottom:5px}
+.premiumSite .urjaFrontPack{margin:7px 0;font-size:13px}
+.premiumSite .urjaFrontPrice{display:flex;justify-content:center;align-items:center;gap:12px;font-size:clamp(32px,5vw,45px);margin:8px 0 13px}
+.premiumSite .urjaFrontPrice del{font-size:clamp(13px,2vw,18px);font-weight:500;color:#777}
+.premiumSite .urjaFrontPrice span{padding:7px 12px;font-size:14px;background:#e7c067}
+.premiumSite .urjaFrontButtons{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;max-width:none;gap:9px;margin-bottom:15px}
+.premiumSite .urjaFrontButtons button{display:flex;flex-wrap:wrap;justify-content:center;align-content:center;align-items:center;column-gap:7px;row-gap:1px;min-width:0;min-height:63px;padding:8px 5px;border-radius:12px;font-size:clamp(11px,1.8vw,17px);line-height:1.25;letter-spacing:0}
+.premiumSite .urjaFrontButtons button span{font-size:18px}
+.premiumSite .urjaFrontButtons button small{display:block;flex-basis:100%;font-size:10px;font-weight:700}
+.premiumSite .urjaFrontTrust{gap:4px;grid-template-columns:repeat(4,minmax(0,1fr));padding:14px 0}
+.premiumSite .urjaFrontTrust span{display:flex;flex-direction:column;gap:3px;text-align:center;line-height:1.25;font-size:12px;padding:0 2px}
+.premiumSite .urjaFrontTrust span:first-letter{font-size:22px}
+.premiumSite .urjaFrontPolicies{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:13px 5px}
+.premiumSite .urjaFrontPolicies span{font-size:12px;padding:2px 10px}
+.premiumSite .urjaFrontPolicies span+span{border-left:1px solid #d7cbb1}
+@media(max-width:700px){
+.premiumSite .referenceHero{margin:0;border-radius:0}
+.premiumSite .urjaFrontMessage{padding:26px 19px 2px}
+.premiumSite .urjaFrontMessage h2{font-size:clamp(31px,8.4vw,45px)}
+.premiumSite .urjaHeroEyebrow{font-size:9px}
+.premiumSite .urjaHeroSub{font-size:10px}
+.premiumSite .urjaHeroBenefits{grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;margin-top:20px}
+.premiumSite .urjaHeroBenefits span{font-size:8px}
+.premiumSite .urjaHeroBenefits strong{height:35px;width:35px}
+.premiumSite .urjaOriginalProduct{padding:3px 9px 4px}
+.premiumSite .urjaOriginalProduct img{width:min(92%,420px);max-height:480px}
+.premiumSite .urjaOriginalLabel{font-size:8px}
+.premiumSite .referenceHero .urjaFrontCheckout{padding:16px 12px}
+.premiumSite .urjaFrontCheckout h1{font-size:clamp(25px,6.6vw,34px)}
+.premiumSite .urjaFrontPack{font-size:12px}
+.premiumSite .urjaFrontButtons{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px}
+.premiumSite .urjaFrontButtons button{font-size:11px;min-height:64px}
+.premiumSite .urjaFrontButtons button small{font-size:9px}
+.premiumSite .urjaFrontTrust{grid-template-columns:repeat(4,minmax(0,1fr));gap:3px}
+.premiumSite .urjaFrontTrust span{font-size:9px}
+.premiumSite .urjaFrontPolicies{grid-template-columns:repeat(2,minmax(0,1fr))}
+.premiumSite .urjaFrontPolicies span{font-size:10px;padding:3px 5px}
+}
