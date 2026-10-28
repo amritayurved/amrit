@@ -476,3 +476,9 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 .premiumSite .referenceHero .urjaOriginalProduct img{display:block!important;width:100vw!important;height:100svh!important;min-height:100svh!important;max-width:none!important;max-height:none!important;object-fit:cover!important;object-position:center center!important;margin:0!important;border-radius:0!important}
 .premiumSite .referenceHero .urjaOriginalLabel{display:none!important}
 }
+
+/* FINAL: show the COMPLETE original Amrit Urja artwork; no cover-cropping */
+@media(max-width:700px){
+.premiumSite .referenceHero .urjaOriginalProduct{position:relative!important;left:auto!important;transform:none!important;width:100%!important;min-width:0!important;max-width:100%!important;height:auto!important;min-height:0!important;overflow:visible!important;margin:0!important;padding:0!important}
+.premiumSite .referenceHero .urjaOriginalProduct img{display:block!important;width:100%!important;max-width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;object-fit:contain!important;object-position:center!important;margin:0!important;border-radius:0!important}
+}
