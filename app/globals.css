@@ -468,3 +468,11 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 @media(max-width:700px){.premiumSite .urjaOriginalProduct{padding:0!important}.premiumSite .urjaOriginalProduct img{width:100vw!important;max-width:100vw!important;max-height:none!important;object-fit:contain!important}}
 
 @media(max-width:700px){.premiumSite .referenceHero .urjaOriginalProduct{width:100vw!important;max-width:none!important;margin:0!important;padding:0!important}.premiumSite .referenceHero .urjaOriginalProduct img{width:100vw!important;max-width:none!important;height:auto!important;display:block!important;margin:0!important;border-radius:0!important}}
+
+/* Full viewport original product photo on mobile, not a small image card. */
+@media(max-width:700px){
+.premiumSite .urjaFrontHero{display:flex!important;flex-direction:column!important;width:100vw!important;max-width:100vw!important}
+.premiumSite .referenceHero .urjaOriginalProduct{position:relative!important;left:auto!important;transform:none!important;display:block!important;width:100vw!important;min-width:100vw!important;max-width:100vw!important;height:100svh!important;min-height:100svh!important;margin:0!important;padding:0!important;overflow:hidden!important}
+.premiumSite .referenceHero .urjaOriginalProduct img{display:block!important;width:100vw!important;height:100svh!important;min-height:100svh!important;max-width:none!important;max-height:none!important;object-fit:cover!important;object-position:center center!important;margin:0!important;border-radius:0!important}
+.premiumSite .referenceHero .urjaOriginalLabel{display:none!important}
+}
