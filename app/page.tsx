@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 const upiId = "8295820654@okbizaxis";
@@ -346,7 +345,7 @@ export default function Home() {
 
   return (
     <main className="premiumSite">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: "{\"@context\":\"https://schema.org\",\"@type\":\"Product\",\"name\":\"Amrit Urja Capsule + Oil Combo\",\"description\":\"Amrit Ayurveda wellness combo containing 30 capsules and 20 ml massage oil.\",\"image\":[\"https://www.amritayurveda.shop/amrit-urja-product.png\"],\"brand\":{\"@type\":\"Brand\",\"name\":\"Amrit Ayurveda\"},\"sku\":\"hdwo1ljwss\",\"offers\":{\"@type\":\"Offer\",\"url\":\"https://www.amritayurveda.shop/\",\"priceCurrency\":\"INR\",\"price\":\"999\",\"itemCondition\":\"https://schema.org/NewCondition\",\"availability\":\"https://schema.org/InStock\"}}" }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: "{\"@context\":\"https://schema.org\",\"@type\":\"Product\",\"name\":\"Amrit Urja Capsule + Oil Combo\",\"description\":\"Amrit Ayurveda combo containing 30 capsules and 20 ml massage oil.\",\"brand\":{\"@type\":\"Brand\",\"name\":\"Amrit Ayurveda\"},\"sku\":\"hdwo1ljwss\",\"offers\":{\"@type\":\"Offer\",\"url\":\"https://www.amritayurveda.shop/\",\"priceCurrency\":\"INR\",\"price\":\"999\",\"itemCondition\":\"https://schema.org/NewCondition\",\"availability\":\"https://schema.org/InStock\"}}" }} />
       <div className="announcement">🌿 सुरक्षित पैकिंग <span>•</span> Cash on Delivery उपलब्ध <span>•</span> Amrit Ayurveda</div>
       <header className="topbar">
         <button className="menuToggle" onClick={() => setMenuOpen(true)} aria-label="मेन्यू खोलें" aria-expanded={menuOpen}>☰</button>
@@ -365,17 +364,9 @@ export default function Home() {
       <section className="referenceHero" id="home">
         <div className="urjaFrontHero">
           <div className="urjaFrontMessage">
-            <h2><em>NATURAL</em><br/>STRENGTH<br/><em>CONFIDENCE</em><br/>A HAPPIER YOU</h2>
-            <p className="urjaHeroSub">REKINDLE YOUR<br/>NATURAL ENERGY<br/>THE AYURVEDIC WAY</p>
-            <div className="urjaHeroBenefits" aria-label="Wellness highlights">
-              <span><strong>✦</strong>MORE STAMINA</span>
-              <span><strong>✦</strong>BETTER PERFORMANCE</span>
-              <span><strong>❀</strong>NATURAL VITALITY</span>
-              <span><strong>♥</strong>LONG LASTING CONFIDENCE</span>
-            </div>
-          </div>
-          <div className="urjaOriginalProduct">
-            <Image sizes="100vw" preload src="/amrit-urja-front-no-phone.webp" alt="Original Amrit Urja Capsule and Oil product" width={853} height={1844} fetchPriority="high" />
+            <h2>AMRIT<br/>URJA</h2>
+            <p className="urjaHeroSub">CAPSULE + OIL COMBO</p>
+            <p>पैक में 30 कैप्सूल और 20 ml मसाज ऑयल। सामग्री, उपयोग और सावधानियाँ पैक के लेबल पर देखें।</p>
           </div>
         </div>
         <div className="urjaFrontCheckout" id="product">
@@ -387,7 +378,7 @@ export default function Home() {
             <button className="posterOnline" onClick={() => openOrder("upi")}><span aria-hidden="true">▣</span> PAY ONLINE / UPI <small>₹999 · UPI Payment</small></button>
           </div>
           <div className="urjaFrontTrust">
-            <span><strong>❀</strong><b>Ayurvedic<br/>Wellness</b></span>
+            <span><strong>❀</strong><b>Pack<br/>Information</b></span>
             <span><strong>✧</strong><b>Secure<br/>Packaging</b></span>
             <span><strong>♧</strong><b>Shipping<br/>Across India</b></span>
             <span><strong>▣</strong><b>COD / UPI<br/>Available</b></span>
@@ -399,22 +390,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="benefitsShowcase" aria-label="AMRIT URJA की पूरी फोटो गैलरी">
-        <div className="galleryIntro">
-          <span>AMRIT AYURVEDA • PRODUCT GALLERY</span>
-          <h2>Amrit Urja की पूरी जानकारी, हर तस्वीर में</h2>
-          <p>हर फोटो को पूरा देखने के लिए नीचे स्क्रॉल करें — कोई फोटो कटेगी नहीं।</p>
-        </div>
-        <div className="benefitsPhotoGrid">
-          <figure><Image width={1010} height={1600} sizes="(max-width: 800px) 100vw, 900px" loading="lazy" src="/my-photos/photo-1.jpg" alt="Amrit Urja प्रोडक्ट जानकारी — पहली पूरी तस्वीर" /><figcaption>01 / 03 · पूरी तस्वीर</figcaption></figure>
-          <figure><Image width={1067} height={1600} sizes="(max-width: 800px) 100vw, 900px" loading="lazy" src="/my-photos/photo-2.jpg" alt="Amrit Urja प्रोडक्ट जानकारी — दूसरी पूरी तस्वीर" /><figcaption>02 / 03 · पूरी तस्वीर</figcaption></figure>
-          <figure><Image width={915} height={1600} sizes="(max-width: 800px) 100vw, 900px" loading="lazy" src="/my-photos/photo-3.jpg" alt="Amrit Urja प्रोडक्ट जानकारी — तीसरी पूरी तस्वीर" /><figcaption>03 / 03 · पूरी तस्वीर</figcaption></figure>
-        </div>
-      </section>
 
       <section className="routineSection" id="how">
         <div className="sectionHeading">
-          <p className="eyebrow">YOUR DAILY WELLNESS GUIDE</p>
+          <p className="eyebrow">PRODUCT INFORMATION</p>
           <h2>Amrit Urja कैसे इस्तेमाल करें?</h2>
           <p>आसान स्टेप्स में कैप्सूल और ऑयल की जानकारी — इस्तेमाल से पहले पैक पर दी गई मात्रा, सामग्री और सावधानियाँ ज़रूर पढ़ें।</p>
         </div>
@@ -427,7 +406,7 @@ export default function Home() {
           <div><span className="routineDetailsEyebrow">WHAT'S INSIDE</span><h3>एक कॉम्बो, दो प्रोडक्ट</h3><p>Amrit Urja पैक में 30 कैप्सूल और 20 ml मसाज ऑयल शामिल है। प्रोडक्ट को इस्तेमाल करने से पहले दोनों के लेबल अलग-अलग पढ़ें।</p><div className="routinePills"><span>30 Capsules</span><span>20 ml Massage Oil</span><span>₹999 Combo</span></div></div>
           <div className="routineHelp"><h3>इस्तेमाल को लेकर कोई सवाल?</h3><p>सही पैक, सामग्री या इस्तेमाल की जानकारी के लिए हमारी सपोर्ट टीम से बात करें।</p><a href="tel:8290695226">☎ सहायता के लिए कॉल करें</a></div>
         </div>
-        <button className="howVisualButton" onClick={() => setHowOpen(true)}>चित्र के साथ इस्तेमाल देखें</button>
+        <button className="howVisualButton" onClick={() => setHowOpen(true)}>उपयोग की जानकारी देखें</button>
       </section>
 
       <section className="orderBand">
@@ -450,7 +429,7 @@ export default function Home() {
         <div className="faqList">
           <details>
             <summary>Amrit Urja क्या है?</summary>
-            <p>Amrit Urja, Amrit Ayurveda का wellness capsule और massage oil combo है। इसके एक पैक में 30 कैप्सूल और 20 ml मसाज ऑयल मिलता है। इसकी कीमत ₹999 है। ग्राहक Cash on Delivery या Online / UPI से ऑर्डर कर सकते हैं। सामग्री, उपयोग और सावधानियों के लिए पैक पर दी गई जानकारी पढ़ें।</p>
+            <p>Amrit Urja, Amrit Ayurveda का capsule और massage oil combo है। इसके एक पैक में 30 कैप्सूल और 20 ml मसाज ऑयल मिलता है। इसकी कीमत ₹999 है। ग्राहक Cash on Delivery या Online / UPI से ऑर्डर कर सकते हैं। सामग्री, उपयोग और सावधानियों के लिए पैक पर दी गई जानकारी पढ़ें।</p>
           </details>
           <details>
             <summary>AMRIT URJA combo में क्या मिलता है?</summary>
@@ -462,7 +441,7 @@ export default function Home() {
           </details>
           <details>
             <summary>Product कैसे use करना है?</summary>
-            <p>रोज़ एक कैप्सूल खाना खाने के आधे घंटे बाद हल्के दूध या पानी के साथ लें। ऑयल से प्रतिदिन 1–2 मिनट हल्की मसाज करें। पैक पर दी सावधानियाँ पढ़ें।</p>
+            <p>कैप्सूल और ऑयल का उपयोग केवल संबंधित पैक के लेबल पर दिए निर्देशों के अनुसार करें।</p>
           </details>
           <details>
             <summary>Delivery packing कैसी होगी?</summary>
@@ -474,17 +453,17 @@ export default function Home() {
       <footer>
         <div className="footerBrand">
           <strong>AMRIT AYURVEDA</strong>
-          <span>Premium Ayurvedic Wellness</span>
+          <span>Product Information & Customer Support</span>
           <a className="footerPhone" href="tel:8290695226">☎ SUPPORT: +91 8290695226</a>
         </div>
         <div><b>Product</b><a href="#product">AMRIT URJA</a><a href="#how">How to use</a></div>
         <div><b>Contact</b><a href="tel:8290695226">Call: 8290695226</a><a href="mailto:contact@amritayurveda.shop">contact@amritayurveda.shop</a><a href="#faq">FAQ</a></div>
-        <small>यह product general wellness presentation के लिए है। किसी बीमारी के diagnosis, treatment, cure या prevention का दावा नहीं किया गया है।</small>
+        <small>इस्तेमाल से पहले पैक पर दी गई सामग्री, उपयोग और सावधानियाँ पढ़ें। उपयुक्तता को लेकर सवाल होने पर योग्य स्वास्थ्य विशेषज्ञ से सलाह लें।</small>
       </footer>
 
       {menuOpen && <div className="menuOverlay" role="dialog" aria-modal="true" aria-label="वेबसाइट मेन्यू"><div className="menuDrawer"><button className="menuClose" onClick={() => setMenuOpen(false)} aria-label="मेन्यू बंद करें">×</button><strong>AMRIT AYURVEDA</strong><a href="#home" onClick={() => setMenuOpen(false)}>होम</a><a href="#product" onClick={() => setMenuOpen(false)}>AMRIT URJA Combo</a><button onClick={() => { setMenuOpen(false); setHowOpen(true); }}>How to use — इस्तेमाल कैसे करें</button><a href="#faq" onClick={() => setMenuOpen(false)}>सवाल और जवाब</a><button className="menuBuy" onClick={() => { setMenuOpen(false); openOrder("cod"); }}>ऑर्डर करें</button></div><button className="menuBackdrop" aria-label="मेन्यू बंद करें" onClick={() => setMenuOpen(false)} /></div>}
 
-      {howOpen && <div className="howOverlay" role="dialog" aria-modal="true" aria-labelledby="how-modal-title"><section className="howCard"><button className="howClose" onClick={() => setHowOpen(false)} aria-label="इस्तेमाल की जानकारी बंद करें">×</button><Image width={941} height={1672} sizes="(max-width: 768px) 160px, 400px" src={product.image} alt="AMRIT URJA 30 capsules और 20 ml oil का pack" /><div className="howCardCopy"><small>AMRIT AYURVEDA • HOW TO USE</small><h2 id="how-modal-title">इस्तेमाल कैसे करें</h2><div className="howStep"><b>01 · कैप्सूल</b><p>रोज़ एक कैप्सूल खाना खाने के आधे घंटे बाद हल्के दूध या पानी के साथ लें।</p></div><div className="howStep"><b>02 · ऑयल</b><p>ऑयल से प्रतिदिन 1–2 मिनट हल्की मसाज करें।</p></div><p className="howCaution">सामग्री और सावधानियों के लिए पैक की जानकारी पढ़ें।</p><button onClick={() => { setHowOpen(false); openOrder("cod"); }}>AMRIT URJA ऑर्डर करें</button></div></section></div>}
+      {howOpen && <div className="howOverlay" role="dialog" aria-modal="true" aria-labelledby="how-modal-title"><section className="howCard"><button className="howClose" onClick={() => setHowOpen(false)} aria-label="इस्तेमाल की जानकारी बंद करें">×</button><div className="howCardCopy"><small>AMRIT AYURVEDA • HOW TO USE</small><h2 id="how-modal-title">इस्तेमाल कैसे करें</h2><div className="howStep"><b>01 · कैप्सूल</b><p>कैप्सूल की मात्रा और उपयोग के लिए पैक के लेबल पर दिए निर्देश पढ़ें।</p></div><div className="howStep"><b>02 · ऑयल</b><p>ऑयल का उपयोग पैक के लेबल पर दिए निर्देशों के अनुसार करें।</p></div><p className="howCaution">सामग्री और सावधानियों के लिए पैक की जानकारी पढ़ें।</p><button onClick={() => { setHowOpen(false); openOrder("cod"); }}>AMRIT URJA ऑर्डर करें</button></div></section></div>}
 
       {offerOpen && !orderOpen && (
         <div className="offerOverlay" role="dialog" aria-modal="true" aria-labelledby="quick-offer-title">
@@ -506,7 +485,7 @@ export default function Home() {
           <section className="orderCard">
             <button className="closeButton" onClick={() => setOrderOpen(false)} aria-label="Close">×</button>
             <div className="orderProduct">
-              <Image width={941} height={1672} sizes="(max-width: 768px) 160px, 400px" src={product.image} alt="AMRIT URJA" />
+              
               <div><small>AMRIT AYURVEDA</small><strong id="order-title">AMRIT URJA</strong><span>{pack} × {product.detail}</span></div>
             </div>
 
