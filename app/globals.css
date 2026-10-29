@@ -534,12 +534,12 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 }
 
 /* Couple portrait in the reference hero — preserve original product and other sections */
-.premiumSite .referenceHero .urjaFrontHero{background-image:linear-gradient(90deg,rgba(4,14,8,.94) 0%,rgba(5,23,12,.64) 40%,rgba(7,18,11,.12) 100%),url("https://images.unsplash.com/photo-1720105761832-927de5f2ecce?auto=format&fit=crop&w=1500&q=85")!important;background-size:cover!important;background-position:center 35%!important;background-repeat:no-repeat!important}
+.premiumSite .referenceHero .urjaFrontHero{background-image:linear-gradient(90deg,rgba(4,14,8,.94) 0%,rgba(5,23,12,.64) 40%,rgba(7,18,11,.12) 100%)!important;background-size:cover!important;background-position:center 35%!important;background-repeat:no-repeat!important}
 .premiumSite .referenceHero .urjaFrontMessage{position:relative!important;z-index:1}
 .premiumSite .referenceHero .urjaOriginalProduct{position:relative!important;z-index:1}
 @media(max-width:700px){
 .premiumSite .referenceHero .urjaFrontHero{background-image:none!important;background:#091b11!important}
-.premiumSite .referenceHero .urjaFrontMessage{min-height:500px!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important;background-image:linear-gradient(90deg,rgba(2,11,6,.89) 0%,rgba(4,12,7,.54) 53%,rgba(3,14,7,.08) 100%),url("https://images.unsplash.com/photo-1720105761832-927de5f2ecce?auto=format&fit=crop&w=1000&q=85")!important;background-size:cover!important;background-position:center center!important}
+.premiumSite .referenceHero .urjaFrontMessage{min-height:500px!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important;background-image:linear-gradient(90deg,rgba(2,11,6,.89) 0%,rgba(4,12,7,.54) 53%,rgba(3,14,7,.08) 100%)!important;background-size:cover!important;background-position:center center!important}
 .premiumSite .referenceHero .urjaHeroBenefits{margin-top:auto!important;padding:20px 0 4px!important}
 }
 
@@ -554,4 +554,31 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 .premiumSite .referenceHero .urjaFrontMessage>*{position:relative;z-index:1}
 .premiumSite .referenceHero .urjaOriginalProduct{margin-top:-45px!important;z-index:2!important;background:#061b10!important}
 .premiumSite .referenceHero .urjaOriginalProduct img{width:100%!important;height:auto!important;object-fit:contain!important;-webkit-mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.45) 6%,black 16%,black 100%)!important;mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.45) 6%,black 16%,black 100%)!important}
+}
+
+/* Factual full-width product banner, with no couple photography. */
+.premiumSite .referenceHero .urjaFrontHero{
+  display:block!important;width:100%!important;max-width:100%!important;
+  background:#082d22!important;background-image:none!important;
+}
+.premiumSite .referenceHero .urjaFrontMessage{
+  box-sizing:border-box!important;width:100%!important;max-width:none!important;
+  min-height:360px!important;margin:0!important;
+  padding:56px max(24px,calc((100vw - 1180px)/2))!important;
+  display:flex!important;flex-direction:column!important;justify-content:center!important;
+  background:radial-gradient(ellipse at 95% 15%,#3b624b 0%,transparent 52%),linear-gradient(120deg,#061e17,#103f30)!important;
+  background-image:radial-gradient(ellipse at 95% 15%,#3b624b 0%,transparent 52%),linear-gradient(120deg,#061e17,#103f30)!important;
+}
+.premiumSite .referenceHero .urjaFrontMessage:after{display:none!important}
+.premiumSite .referenceHero .urjaFrontMessage h2{
+  font-size:clamp(48px,6vw,84px)!important;line-height:1.05!important;
+  margin:0 0 18px!important;color:#fff8e9!important;
+}
+.premiumSite .referenceHero .urjaHeroSub{color:#e9cd88!important;font-size:clamp(14px,1.6vw,20px)!important}
+.premiumSite .referenceHero .urjaFrontMessage>p:last-child{
+  max-width:680px;font-size:clamp(14px,1.3vw,18px);line-height:1.7;color:#f1f4ec;
+}
+@media(max-width:700px){
+ .premiumSite .referenceHero .urjaFrontMessage{min-height:330px!important;padding:36px 22px!important}
+ .premiumSite .referenceHero .urjaFrontMessage h2{font-size:clamp(44px,12vw,66px)!important}
 }
