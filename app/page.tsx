@@ -416,6 +416,10 @@ export default function Home() {
         <button onClick={() => openOrder("cod")} aria-label="Buy Now — ₹999 COD या UPI से ऑर्डर करें" style={{ position: "absolute", left: "35.9%", top: "8.5%", width: "28.2%", height: "7%", background: "transparent", border: 0, borderRadius: 40, cursor: "pointer" }} />
       </section>
 
+      <section aria-label="Low Energy, Daily Stress, Low Confidence" style={{ width: "100%", maxWidth: 1440, margin: "0 auto 32px", background: "#000" }}>
+        <img src="/common-problems-row2.webp" alt="Low Energy, Daily Stress और Low Confidence — तीन सामान्य जीवनशैली स्थितियों की तस्वीरें" width="2048" height="768" loading="lazy" style={{ display: "block", width: "100%", height: "auto" }} />
+      </section>
+
       <section className="playPackSection">
         <p className="playEyebrow">INSIDE YOUR COMBO</p>
         <h2>एक पैक। <span>दो प्रोडक्ट।</span></h2>
