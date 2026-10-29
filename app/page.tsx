@@ -362,7 +362,7 @@ export default function Home() {
       </header>
 
       <section className="coupleHero" id="home">
-        <img className="coupleHeroScene" src="/hero-couple-v1.webp" alt="साथ बैठे एक जोड़े की तस्वीर" width="2048" height="683" fetchPriority="high" />
+        <img className="coupleHeroScene" src="/hero-blended-v2.webp" alt="एक ही कमरे में जोड़े के साथ टेबल पर रखा Amrit Urja Capsule और Oil Combo" width="2048" height="683" fetchPriority="high" />
         <div className="coupleHeroWords">
           <p>Amrit Ayurveda presents</p>
           <h1>AMRIT<br/>URJA</h1>
@@ -370,7 +370,6 @@ export default function Home() {
           <button className="playBuy" onClick={() => openOrder("cod")}>BUY NOW · ₹999 <span aria-hidden="true">→</span></button>
           <small>Cash on Delivery / UPI</small>
         </div>
-        <div className="coupleHeroProduct"><img src={product.image} alt="Amrit Urja 30 capsules और 20 ml massage oil" width="941" height="1672" fetchPriority="high" /></div>
       </section>
 
       <section className="playIntro" id="product">
