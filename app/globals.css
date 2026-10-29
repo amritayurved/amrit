@@ -655,3 +655,10 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
  .shopStickyOrder button{width:100%;min-height:50px;background:#000;color:#fff;border:0;border-radius:28px;font-size:17px;font-weight:700;box-shadow:0 3px 10px #0003}
  .referenceShop .orderOverlay,.referenceShop .offerOverlay,.referenceShop .howOverlay{z-index:100}
 }
+
+.referenceShop .topbar>.brand,.referenceShop .topbar>.menuToggle,.referenceShop .topbar>.headerOrder{
+ position:static!important;inset:auto!important;transform:none!important;align-self:center;
+}
+.referenceShop .topbar>.brand{justify-self:center!important}
+.referenceShop .topbar{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important}
+@media(max-width:700px){.referenceShop .topbar{grid-template-columns:38px minmax(0,1fr) auto!important}.referenceShop .topbar>.brand{justify-self:center!important}}
