@@ -662,3 +662,79 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 .referenceShop .topbar>.brand{justify-self:center!important}
 .referenceShop .topbar{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important}
 @media(max-width:700px){.referenceShop .topbar{grid-template-columns:38px minmax(0,1fr) auto!important}.referenceShop .topbar>.brand{justify-self:center!important}}
+
+/* Amrit storefront with the reference's black, red and gold visual language. */
+.playShop{background:#000;color:#fff;font-family:Arial,"Noto Sans Devanagari",sans-serif}
+.playShop .announcement{background:linear-gradient(90deg,#15110a,#38270c,#15110a);color:#f6dd92;border-bottom:1px solid #ac8627;padding:12px 16px;font-size:13px;letter-spacing:.4px}
+.playShop .topbar{background:#101010;border:0;box-shadow:none;min-height:82px;padding:12px 26px}
+.playShop .menuToggle,.playShop .brand strong,.playShop .brand small{color:#fff!important}
+.playShop .brandMark{color:#e1bd64;border-color:#e1bd64}
+.playShop .headerOrder{background:transparent;border:1px solid #ae8a42;border-radius:6px;color:#f5dfaa}
+.playHero{width:100%;min-height:430px;display:grid;grid-template-columns:1.2fr 1fr;align-items:stretch;background:#faf8ef;color:#111;overflow:hidden}
+.playHeroCopy{padding:45px 28px 42px max(24px,calc((100vw - 1180px)/2));align-self:center;text-align:left}
+.playEyebrow{font-size:13px;letter-spacing:2px;font-weight:700;color:#d7b760;margin:0 0 15px}
+.playHero .playEyebrow{color:#615436}
+.playHero h1{font-size:clamp(44px,5.6vw,82px);line-height:1.05;letter-spacing:-2px;margin:0 0 15px;font-family:inherit;font-weight:800;color:#131313}
+.playHero h1 span{color:#c40013}
+.playHeroSubtitle{font-size:clamp(14px,1.7vw,23px);font-weight:700;margin:0 0 20px;line-height:1.5}
+.playHeroPacks{display:flex;gap:9px;flex-wrap:wrap}
+.playHeroPacks span{background:#191919;color:#fff;border-radius:6px;padding:10px 14px;font-size:13px;font-weight:700}
+.playHeroPrice{font-size:32px;font-weight:800;margin:22px 0}
+.playHeroPrice small{display:block;font-size:13px;color:#6c6658;font-weight:400;margin-top:7px}
+.playHeroVisual{background:#e3d7ba;min-height:430px;display:flex;align-items:center;justify-content:center}
+.playHeroVisual img{display:block;height:430px;width:100%;object-fit:contain;background:#e6dcc9;max-width:100%}
+.playBuy{display:inline-flex;align-items:center;justify-content:center;gap:18px;min-height:48px;min-width:205px;padding:12px 25px;background:#d20012;color:#fff;border:1px solid #ee2334;border-radius:28px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 3px 0 #6e0008}
+.playBuy span{font-size:28px;line-height:1}.playBuy small{font-size:11px;font-weight:500}
+.playIntro{max-width:980px;margin:auto;text-align:center;padding:54px 24px 48px}
+.playIntro h2,.playPackSection h2{font-size:clamp(30px,3.5vw,47px);line-height:1.2;letter-spacing:-1px;font-family:inherit;color:#fff;margin:0 0 20px}
+.playIntro h2 span{color:#fff}.playIntro p{font-size:16px;line-height:1.9;color:#d3d3d3;margin:0 0 16px}
+.playIntro .playBuy{margin-top:18px}
+.playPackSection{max-width:1220px;margin:auto;padding:40px 24px 56px;text-align:center}
+.playPackSection h2 span{color:#d7b760}
+.playPackGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin:30px 0}
+.playPackGrid article{background:#120b0b;border:1px solid #562022;border-top:4px solid #ba0715;border-radius:8px;padding:30px 24px;text-align:left}
+.playPackNumber{font-size:35px;font-weight:800;color:#c92331}
+.playPackGrid h3{font-size:23px;color:#fff;margin:15px 0}.playPackGrid p{font-size:15px;line-height:1.8;color:#c7c0c0}
+.playShop .routineSection{background:#050505;color:#fff;max-width:1220px;padding:40px 24px 55px}
+.playShop .sectionHeading h2{color:#fff}.playShop .sectionHeading p{color:#c8c8c8}
+.playShop .eyebrow{color:#d7b760}
+.playShop .routineGrid article,.playShop .routineDetails>div{background:#131313;border-color:#353026;color:#fff}
+.playShop .routineGrid h3,.playShop .routineDetails h3{color:#fff}
+.playShop .routineGrid p,.playShop .routineDetails p{color:#ccc}
+.playShop .routineGrid b,.playShop .routineDetailsEyebrow{color:#d7b760}
+.playShop .routinePills span{background:#201b12;border-color:#6a5730;color:#efd9a0}
+.playShop .routineHelp a,.playShop .howVisualButton{background:#c80013;color:#fff;border-color:#c80013;border-radius:26px}
+.playShop .orderBand{background:linear-gradient(110deg,#22080c,#100405);border-block:1px solid #4c1d21;color:#fff}
+.playShop .orderBand h2{color:#fff}.playShop .orderBand button{background:#cd0014;border-color:#cd0014}
+.playShop .faqSection{background:#000;color:#fff}
+.playShop .faqList details{background:#121212;color:#eee;border-color:#343434}
+.playShop .faqList summary{color:#fff}.playShop .faqList p{color:#ccc}
+.playShop footer{background:#101010;color:#eee;border-color:#353535}
+.playShop footer strong,.playShop footer b{color:#fff}
+.playShop footer a,.playShop footer span,.playShop footer small{color:#bdbdbd}
+.playShop .shopStickyOrder{display:block;position:fixed;left:0;right:0;bottom:0;z-index:45;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:#000e;border-top:1px solid #292929;text-align:center}
+.playShop .shopStickyOrder button{width:auto;min-width:270px;min-height:46px;padding:11px 25px;background:#cf0013;border:1px solid #ea2233;border-radius:28px;color:#fff;font-size:16px;font-weight:700}
+.playShop .orderOverlay,.playShop .offerOverlay,.playShop .howOverlay{z-index:100}
+@media(max-width:700px){
+ .playShop .announcement{font-size:10px;line-height:1.5;padding:8px 10px}
+ .playShop .topbar{padding:10px 14px;min-height:68px}
+ .playShop .headerOrder{font-size:11px;padding:9px 10px}
+ .playHero{grid-template-columns:1fr 1fr;min-height:340px}
+ .playHeroCopy{padding:26px 10px 26px 17px}
+ .playHero .playEyebrow{font-size:9px;letter-spacing:1px;margin-bottom:11px}
+ .playHero h1{font-size:clamp(30px,8.5vw,48px);letter-spacing:-1px;line-height:1.08}
+ .playHeroSubtitle{font-size:11px;line-height:1.5;margin-bottom:12px}
+ .playHeroPacks{gap:5px}.playHeroPacks span{font-size:9px;padding:7px 8px;border-radius:4px}
+ .playHeroPrice{font-size:26px;margin:15px 0}.playHeroPrice small{font-size:10px}
+ .playHeroVisual{min-height:340px;background:#e5dac5}
+ .playHeroVisual img{height:auto;width:100%;object-fit:contain;max-height:420px}
+ .playHero .playBuy{min-width:0;min-height:40px;font-size:12px;padding:8px 17px;gap:10px}
+ .playHero .playBuy span{font-size:22px}
+ .playIntro{padding:36px 20px}.playIntro p{font-size:14px;line-height:1.9}
+ .playIntro h2,.playPackSection h2{font-size:30px}
+ .playPackSection{padding:24px 16px 36px}
+ .playPackGrid{grid-template-columns:1fr;gap:12px}
+ .playPackGrid article{padding:22px}
+ .playShop .routineSection{padding:28px 16px}
+ .playShop .shopStickyOrder button{width:100%;min-width:0}
+}
