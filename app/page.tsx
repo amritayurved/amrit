@@ -441,6 +441,16 @@ export default function Home() {
         <p style={{ textAlign: "center", color: "#d1d5db", padding: "12px 20px", fontSize: 14 }}>सामान्य वेलनेस की आदतें — ये तस्वीरें प्रोडक्ट के परिणाम का दावा नहीं करतीं।</p>
       </section>
 
+      <section className="trustFacts" aria-labelledby="trust-facts-title">
+        <h2 id="trust-facts-title">The Power of Trust</h2>
+        <div className="trustFactsGrid">
+          <article><h3>30 + 20 ml</h3><p>Capsules + Massage Oil</p></article>
+          <article><h3>₹999</h3><p>Combo Price</p></article>
+          <article><h3>COD / UPI</h3><p>Payment Options</p></article>
+          <article><h3>Customer Support</h3><p><a href="tel:8290695226">8290695226</a></p></article>
+        </div>
+      </section>
+
       <section className="playPackSection">
         <p className="playEyebrow">INSIDE YOUR COMBO</p>
         <h2>एक पैक। <span>दो प्रोडक्ट।</span></h2>
