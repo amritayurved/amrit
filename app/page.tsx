@@ -420,6 +420,18 @@ export default function Home() {
         <img src="/common-problems-row2.webp" alt="Low Energy, Daily Stress और Low Confidence — तीन सामान्य जीवनशैली स्थितियों की तस्वीरें" width="2048" height="768" loading="lazy" style={{ display: "block", width: "100%", height: "auto" }} />
       </section>
 
+      <section aria-labelledby="amrit-combo-guide" style={{ background: "#000", color: "#fff", textAlign: "center", padding: "40px 20px 48px", maxWidth: 1080, margin: "0 auto" }}>
+        <h2 id="amrit-combo-guide" style={{ fontSize: "clamp(28px, 4vw, 46px)", lineHeight: 1.15, margin: "0 0 22px", fontWeight: 750 }}>जानिए अपना कॉम्बो<br />AMRIT URJA</h2>
+        <p style={{ fontSize: "clamp(14px, 1.4vw, 17px)", lineHeight: 1.9, color: "#e1e1e1", maxWidth: 920, margin: "0 auto 22px" }}>
+          Amrit Ayurveda के इस कॉम्बो में <strong>30 कैप्सूल और 20 ml मसाज ऑयल</strong> शामिल हैं। दोनों अलग-अलग इस्तेमाल होने वाले प्रोडक्ट हैं। खरीदने और इस्तेमाल करने से पहले प्रत्येक पैक की सामग्री, उपयोग की मात्रा और सावधानियाँ पढ़ें। अपनी उपयुक्तता या किसी मौजूदा स्वास्थ्य समस्या को लेकर सवाल हो तो योग्य स्वास्थ्य विशेषज्ञ से सलाह लें।
+        </p>
+        <button className="playBuy" onClick={() => openOrder("cod")}>BUY NOW <small>₹999 · COD / UPI</small><span aria-hidden="true">→</span></button>
+        <h2 style={{ fontSize: "clamp(27px, 3.6vw, 42px)", lineHeight: 1.2, margin: "48px 0 20px", fontWeight: 750 }}>आपको पैक में क्या मिलेगा?</h2>
+        <p style={{ fontSize: "clamp(14px, 1.4vw, 17px)", lineHeight: 1.9, color: "#e1e1e1", maxWidth: 900, margin: "0 auto" }}>
+          <strong>एक 30-कैप्सूल बोतल + एक 20 ml मसाज ऑयल बोतल।</strong> पूरे कॉम्बो की कीमत ₹999 है। ऑर्डर करते समय Cash on Delivery या Online / UPI चुन सकते हैं। सामग्री, पैक या ऑर्डर की जानकारी के लिए <a href="tel:8290695226" style={{ color: "#f0d58b", textDecoration: "underline" }}>8290695226</a> पर संपर्क करें।
+        </p>
+      </section>
+
       <section className="playPackSection">
         <p className="playEyebrow">INSIDE YOUR COMBO</p>
         <h2>एक पैक। <span>दो प्रोडक्ट।</span></h2>
