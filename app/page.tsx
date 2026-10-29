@@ -436,6 +436,11 @@ export default function Home() {
         <img src="/product-info-green.webp" alt="Pack Information, Usage Guidance, Customer Support" width="2048" height="768" loading="lazy" style={{ display: "block", width: "100%", height: "auto" }} />
       </section>
 
+      <section aria-label="सामान्य वेलनेस रूटीन" style={{ width: "100%", maxWidth: 1440, margin: "0 auto 32px", background: "#000" }}>
+        <img src="/wellness-routine-green.webp" alt="Daily Movement, Active Routine, Rest & Recharge — सामान्य जीवनशैली की आदतें" width="2172" height="724" loading="lazy" decoding="async" style={{ display: "block", width: "100%", height: "auto" }} />
+        <p style={{ textAlign: "center", color: "#d1d5db", padding: "12px 20px", fontSize: 14 }}>सामान्य वेलनेस की आदतें — ये तस्वीरें प्रोडक्ट के परिणाम का दावा नहीं करतीं।</p>
+      </section>
+
       <section className="playPackSection">
         <p className="playEyebrow">INSIDE YOUR COMBO</p>
         <h2>एक पैक। <span>दो प्रोडक्ट।</span></h2>
