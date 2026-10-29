@@ -68,6 +68,13 @@ function money(value: number) {
 
 export default function Home() {
 
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [carouselPaused, setCarouselPaused] = useState(false);
+  useEffect(() => {
+    if (carouselPaused) return;
+    const timer = window.setInterval(() => setActiveSlide((current) => (current + 1) % 3), 4500);
+    return () => window.clearInterval(timer);
+  }, [carouselPaused]);
   const [offerOpen, setOfferOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [howOpen, setHowOpen] = useState(false);
@@ -361,7 +368,10 @@ export default function Home() {
         <button className="headerOrder" onClick={() => openOrder("cod")}>अभी ऑर्डर करें</button>
       </header>
 
-      <section className="coupleHero" id="home">
+      <section className="heroCarousel" id="home" aria-label="Amrit Urja प्रोडक्ट बैनर" aria-roledescription="carousel">
+        <div className="heroCarouselStage">
+          <div className="heroCarouselSlide" hidden={activeSlide !== 0} role="group" aria-label="1 / 3">
+      <div className="coupleHero">
         <img className="coupleHeroScene" src="/hero-blended-v2.webp" alt="एक ही कमरे में जोड़े के साथ टेबल पर रखा Amrit Urja Capsule और Oil Combo" width="2048" height="683" fetchPriority="high" />
         <div className="coupleHeroWords">
           <p>Amrit Ayurveda presents</p>
@@ -369,6 +379,28 @@ export default function Home() {
           <p className="coupleHeroPack">30 CAPSULES + 20 ml OIL</p>
           <button className="playBuy" onClick={() => openOrder("cod")}>BUY NOW · ₹999 <span aria-hidden="true">→</span></button>
           <small>Cash on Delivery / UPI</small>
+        </div>
+      </div>
+
+
+          </div>
+          <div className="heroCarouselSlide" hidden={activeSlide !== 1} role="group" aria-label="2 / 3">
+            <button className="heroImageButton" onClick={() => openOrder("cod")} aria-label="Amrit Urja Stamina Booster for Men — ₹999 COD या UPI से ऑर्डर करें">
+              <img src="/hero-slide-2.webp" alt="Amrit Ayurveda — Stamina Booster for Men, Amrit Urja, 30 Capsules + 20 ml Oil" width="2048" height="683" loading="eager" />
+            </button>
+          </div>
+          <div className="heroCarouselSlide" hidden={activeSlide !== 2} role="group" aria-label="3 / 3">
+            <button className="heroImageButton" onClick={() => openOrder("cod")} aria-label="Amrit Urja Capsule + Oil Combo — ₹999 Cash on Delivery">
+              <img src="/hero-slide-3.webp" alt="Amrit Urja Capsule + Oil Combo — 30 Capsules + 20 ml Oil, ₹999 Cash on Delivery" width="2048" height="683" loading="eager" />
+            </button>
+          </div>
+          <button className="heroArrow heroArrowPrev" onClick={() => setActiveSlide((current) => (current + 2) % 3)} aria-label="पिछला बैनर">‹</button>
+          <button className="heroArrow heroArrowNext" onClick={() => setActiveSlide((current) => (current + 1) % 3)} aria-label="अगला बैनर">›</button>
+        </div>
+        <div className="heroCarouselToolbar">
+          <div className="heroCarouselDots" aria-label="बैनर चुनें">{[0,1,2].map((index) => <button key={index} className={activeSlide === index ? "selected" : ""} aria-label={`बैनर ${index + 1} दिखाएँ`} aria-current={activeSlide === index ? "true" : undefined} onClick={() => setActiveSlide(index)} />)}</div>
+          <button className="heroPause" onClick={() => setCarouselPaused((paused) => !paused)} aria-label={carouselPaused ? "बैनर अपने आप चलाएँ" : "बैनर रोकें"}>{carouselPaused ? "▶" : "Ⅱ"}</button>
+          <button className="heroCarouselBuy" onClick={() => openOrder("cod")}>BUY NOW · ₹999 COD / UPI →</button>
         </div>
       </section>
 
