@@ -432,6 +432,10 @@ export default function Home() {
         </p>
       </section>
 
+      <section aria-label="पैक की जानकारी, उपयोग के निर्देश और ग्राहक सहायता" style={{ width: "100%", maxWidth: 1440, margin: "0 auto 32px", background: "#000" }}>
+        <img src="/product-info-green.webp" alt="Pack Information, Usage Guidance, Customer Support" width="2048" height="768" loading="lazy" style={{ display: "block", width: "100%", height: "auto" }} />
+      </section>
+
       <section className="playPackSection">
         <p className="playEyebrow">INSIDE YOUR COMBO</p>
         <h2>एक पैक। <span>दो प्रोडक्ट।</span></h2>
