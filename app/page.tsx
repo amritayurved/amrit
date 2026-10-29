@@ -411,6 +411,11 @@ export default function Home() {
         <button className="playBuy" onClick={() => openOrder("cod")}>BUY NOW <small>₹999 · COD / UPI</small><span aria-hidden="true">→</span></button>
       </section>
 
+      <section aria-label="Common Problems Most Men Face Today" style={{ position: "relative", width: "100%", maxWidth: 1440, margin: "0 auto", background: "#000" }}>
+        <img src="/common-problems-approved.webp" alt="Amrit Ayurveda — Common Problems Most Men Face Today: Lack of Vitality, High Stress, Constant Tiredness" width="1536" height="1024" loading="lazy" style={{ display: "block", width: "100%", height: "auto" }} />
+        <button onClick={() => openOrder("cod")} aria-label="Buy Now — ₹999 COD या UPI से ऑर्डर करें" style={{ position: "absolute", left: "35.9%", top: "8.5%", width: "28.2%", height: "7%", background: "transparent", border: 0, borderRadius: 40, cursor: "pointer" }} />
+      </section>
+
       <section className="playPackSection">
         <p className="playEyebrow">INSIDE YOUR COMBO</p>
         <h2>एक पैक। <span>दो प्रोडक्ट।</span></h2>
