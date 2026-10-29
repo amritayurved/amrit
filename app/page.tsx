@@ -344,7 +344,7 @@ export default function Home() {
   }
 
   return (
-    <main className="premiumSite referenceShop">
+    <main className="premiumSite referenceShop playShop">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: "{\"@context\":\"https://schema.org\",\"@type\":\"Product\",\"name\":\"Amrit Urja Capsule + Oil Combo\",\"description\":\"Amrit Ayurveda combo containing 30 capsules and 20 ml massage oil.\",\"brand\":{\"@type\":\"Brand\",\"name\":\"Amrit Ayurveda\"},\"sku\":\"hdwo1ljwss\",\"offers\":{\"@type\":\"Offer\",\"url\":\"https://www.amritayurveda.shop/\",\"priceCurrency\":\"INR\",\"price\":\"999\",\"itemCondition\":\"https://schema.org/NewCondition\",\"availability\":\"https://schema.org/InStock\"}}" }} />
       <div className="announcement">🌿 सुरक्षित पैकिंग <span>•</span> Cash on Delivery उपलब्ध <span>•</span> Amrit Ayurveda</div>
       <header className="topbar">
@@ -361,33 +361,34 @@ export default function Home() {
         <button className="headerOrder" onClick={() => openOrder("cod")}>अभी ऑर्डर करें</button>
       </header>
 
-      <section className="shopProductLayout" id="home">
-        <div className="shopProductPhoto">
-          <img src={product.image} alt="Amrit Urja — 30 capsules और 20 ml massage oil combo" width="941" height="1672" fetchPriority="high" />
+      <section className="playHero" id="home">
+        <div className="playHeroCopy">
+          <p className="playEyebrow">AMRIT AYURVEDA</p>
+          <h1>AMRIT <span>URJA</span></h1>
+          <p className="playHeroSubtitle">CAPSULE + MASSAGE OIL COMBO</p>
+          <div className="playHeroPacks"><span>30 CAPSULES</span><span>20 ml OIL</span></div>
+          <p className="playHeroPrice">₹999 <small>COD / UPI उपलब्ध</small></p>
+          <button className="playBuy" onClick={() => openOrder("cod")}>BUY NOW <span aria-hidden="true">→</span></button>
         </div>
-        <div className="shopProductInfo" id="product">
-          <h1>AMRIT URJA — Capsule + Oil Combo</h1>
-          <p className="shopPackLine">30 कैप्सूल + 20 ml मसाज ऑयल</p>
-          <p className="shopPrice">₹999.00 <del>₹1,499.00</del></p>
-          <p className="shopPriceNote">एक कॉम्बो की कीमत</p>
-          <button className="shopCodButton" onClick={() => openOrder("cod")}>अभी ऑर्डर करें — Cash on Delivery</button>
-          <button className="shopOnlineButton" onClick={() => openOrder("upi")}>Pay Online / UPI — ₹999</button>
-          <p className="shopPaymentNote">Cash on Delivery / UPI Payment</p>
-          <div className="shopOrderFacts">
-            <span>30 Capsules</span><span>20 ml Oil</span><span>₹999 Combo</span>
-          </div>
-          <h2>प्रोडक्ट की जानकारी</h2>
-          <p>Amrit Ayurveda का Amrit Urja Capsule + Oil Combo। एक पैक में 30 कैप्सूल और 20 ml मसाज ऑयल शामिल है।</p>
-          <p>इस्तेमाल से पहले कैप्सूल और ऑयल के पैक पर दी गई सामग्री, मात्रा, उपयोग और सावधानियाँ अलग-अलग पढ़ें। उपयुक्तता को लेकर सवाल होने पर योग्य स्वास्थ्य विशेषज्ञ से सलाह लें।</p>
-          <div className="shopDetailRows">
-            <div><span>ब्रांड</span><strong>Amrit Ayurveda</strong></div>
-            <div><span>पैक में</span><strong>30 Capsules + 20 ml Oil</strong></div>
-            <div><span>भुगतान</span><strong>COD / Online UPI</strong></div>
-            <div><span>सहायता</span><a href="tel:8290695226">8290695226</a></div>
-          </div>
-          <button className="shopCodButton shopComplete" onClick={() => openOrder("cod")}>COMPLETE ORDER — ₹999.00</button>
-          <p className="shopPaymentNote">पैक की जानकारी या ऑर्डर से जुड़े सवाल के लिए हमारी टीम से संपर्क करें।</p>
+        <div className="playHeroVisual"><img src={product.image} alt="Amrit Urja Capsule और Massage Oil Combo" width="941" height="1672" fetchPriority="high" /></div>
+      </section>
+
+      <section className="playIntro" id="product">
+        <h2>What is <span>Amrit Urja?</span></h2>
+        <p>Amrit Ayurveda का Capsule + Massage Oil Combo। एक पैक में <strong>30 कैप्सूल और 20 ml मसाज ऑयल</strong> शामिल है।</p>
+        <p>प्रोडक्ट को इस्तेमाल करने से पहले दोनों पैक पर दी गई सामग्री, उपयोग और सावधानियाँ पढ़ें। उपयुक्तता के बारे में सवाल होने पर योग्य स्वास्थ्य विशेषज्ञ से सलाह लें।</p>
+        <button className="playBuy" onClick={() => openOrder("cod")}>BUY NOW <small>₹999 · COD / UPI</small><span aria-hidden="true">→</span></button>
+      </section>
+
+      <section className="playPackSection">
+        <p className="playEyebrow">INSIDE YOUR COMBO</p>
+        <h2>एक पैक। <span>दो प्रोडक्ट।</span></h2>
+        <div className="playPackGrid">
+          <article><span className="playPackNumber">01</span><h3>30 Capsules</h3><p>कैप्सूल के उपयोग, मात्रा और सामग्री के लिए बोतल पर दी गई जानकारी पढ़ें।</p></article>
+          <article><span className="playPackNumber">02</span><h3>20 ml Massage Oil</h3><p>मसाज ऑयल का उपयोग केवल उसके पैक पर दिए निर्देशों और सावधानियों के अनुसार करें।</p></article>
+          <article><span className="playPackNumber">03</span><h3>₹999 Combo</h3><p>ऑर्डर फॉर्म में Cash on Delivery या Online / UPI का विकल्प चुनें।</p></article>
         </div>
+        <button className="playBuy" onClick={() => openOrder("cod")}>BUY NOW <span aria-hidden="true">→</span></button>
       </section>
 
       <section className="routineSection" id="how">
@@ -449,7 +450,7 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="shopStickyOrder"><button onClick={() => openOrder("cod")}>अभी ऑर्डर करें — ₹999 COD</button></div>
+      <div className="shopStickyOrder"><button onClick={() => openOrder("cod")}>BUY NOW · ₹999 COD / UPI <span aria-hidden="true"> →</span></button></div>
       <footer>
         <div className="footerBrand">
           <strong>AMRIT AYURVEDA</strong>
@@ -465,7 +466,7 @@ export default function Home() {
 
       {howOpen && <div className="howOverlay" role="dialog" aria-modal="true" aria-labelledby="how-modal-title"><section className="howCard"><button className="howClose" onClick={() => setHowOpen(false)} aria-label="इस्तेमाल की जानकारी बंद करें">×</button><div className="howCardCopy"><small>AMRIT AYURVEDA • HOW TO USE</small><h2 id="how-modal-title">इस्तेमाल कैसे करें</h2><div className="howStep"><b>01 · कैप्सूल</b><p>कैप्सूल की मात्रा और उपयोग के लिए पैक के लेबल पर दिए निर्देश पढ़ें।</p></div><div className="howStep"><b>02 · ऑयल</b><p>ऑयल का उपयोग पैक के लेबल पर दिए निर्देशों के अनुसार करें।</p></div><p className="howCaution">सामग्री और सावधानियों के लिए पैक की जानकारी पढ़ें।</p><button onClick={() => { setHowOpen(false); openOrder("cod"); }}>AMRIT URJA ऑर्डर करें</button></div></section></div>}
 
-      {offerOpen && !orderOpen && (
+      {false && offerOpen && !orderOpen && (
         <div className="offerOverlay" role="dialog" aria-modal="true" aria-labelledby="quick-offer-title">
           <section className="offerCard">
             <button className="offerClose" onClick={() => setOfferOpen(false)} aria-label="ऑफर बंद करें">×</button>
