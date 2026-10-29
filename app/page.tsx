@@ -101,7 +101,7 @@ export default function Home() {
     const timer = window.setTimeout(() => {
       setOfferOpen(true);
       setOfferShown(true);
-    }, 650);
+    }, 25000);
     return () => window.clearTimeout(timer);
   }, [offerShown, orderOpen]);
 
@@ -344,7 +344,7 @@ export default function Home() {
   }
 
   return (
-    <main className="premiumSite">
+    <main className="premiumSite referenceShop">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: "{\"@context\":\"https://schema.org\",\"@type\":\"Product\",\"name\":\"Amrit Urja Capsule + Oil Combo\",\"description\":\"Amrit Ayurveda combo containing 30 capsules and 20 ml massage oil.\",\"brand\":{\"@type\":\"Brand\",\"name\":\"Amrit Ayurveda\"},\"sku\":\"hdwo1ljwss\",\"offers\":{\"@type\":\"Offer\",\"url\":\"https://www.amritayurveda.shop/\",\"priceCurrency\":\"INR\",\"price\":\"999\",\"itemCondition\":\"https://schema.org/NewCondition\",\"availability\":\"https://schema.org/InStock\"}}" }} />
       <div className="announcement">🌿 सुरक्षित पैकिंग <span>•</span> Cash on Delivery उपलब्ध <span>•</span> Amrit Ayurveda</div>
       <header className="topbar">
@@ -361,35 +361,34 @@ export default function Home() {
         <button className="headerOrder" onClick={() => openOrder("cod")}>अभी ऑर्डर करें</button>
       </header>
 
-      <section className="referenceHero" id="home">
-        <div className="urjaFrontHero">
-          <div className="urjaFrontMessage">
-            <h2>AMRIT<br/>URJA</h2>
-            <p className="urjaHeroSub">CAPSULE + OIL COMBO</p>
-            <p>पैक में 30 कैप्सूल और 20 ml मसाज ऑयल। सामग्री, उपयोग और सावधानियाँ पैक के लेबल पर देखें।</p>
-          </div>
+      <section className="shopProductLayout" id="home">
+        <div className="shopProductPhoto">
+          <img src={product.image} alt="Amrit Urja — 30 capsules और 20 ml massage oil combo" width="941" height="1672" fetchPriority="high" />
         </div>
-        <div className="urjaFrontCheckout" id="product">
-          <h1>AMRIT URJA<br/><span>CAPSULE + OIL COMBO</span></h1>
-          <p className="urjaFrontPack">AMRIT AYURVEDA · 30 CAPSULES + 20 ML OIL</p>
-          <p className="urjaFrontPrice">₹999 <del>₹1,499</del><span>33% OFF</span></p>
-          <div className="urjaFrontButtons">
-            <button className="posterCod" onClick={() => openOrder("cod")}><span aria-hidden="true">🛒</span> ORDER NOW <small>(CASH ON DELIVERY)</small></button>
-            <button className="posterOnline" onClick={() => openOrder("upi")}><span aria-hidden="true">▣</span> PAY ONLINE / UPI <small>₹999 · UPI Payment</small></button>
+        <div className="shopProductInfo" id="product">
+          <h1>AMRIT URJA — Capsule + Oil Combo</h1>
+          <p className="shopPackLine">30 कैप्सूल + 20 ml मसाज ऑयल</p>
+          <p className="shopPrice">₹999.00 <del>₹1,499.00</del></p>
+          <p className="shopPriceNote">एक कॉम्बो की कीमत</p>
+          <button className="shopCodButton" onClick={() => openOrder("cod")}>अभी ऑर्डर करें — Cash on Delivery</button>
+          <button className="shopOnlineButton" onClick={() => openOrder("upi")}>Pay Online / UPI — ₹999</button>
+          <p className="shopPaymentNote">Cash on Delivery / UPI Payment</p>
+          <div className="shopOrderFacts">
+            <span>30 Capsules</span><span>20 ml Oil</span><span>₹999 Combo</span>
           </div>
-          <div className="urjaFrontTrust">
-            <span><strong>❀</strong><b>Pack<br/>Information</b></span>
-            <span><strong>✧</strong><b>Secure<br/>Packaging</b></span>
-            <span><strong>♧</strong><b>Shipping<br/>Across India</b></span>
-            <span><strong>▣</strong><b>COD / UPI<br/>Available</b></span>
+          <h2>प्रोडक्ट की जानकारी</h2>
+          <p>Amrit Ayurveda का Amrit Urja Capsule + Oil Combo। एक पैक में 30 कैप्सूल और 20 ml मसाज ऑयल शामिल है।</p>
+          <p>इस्तेमाल से पहले कैप्सूल और ऑयल के पैक पर दी गई सामग्री, मात्रा, उपयोग और सावधानियाँ अलग-अलग पढ़ें। उपयुक्तता को लेकर सवाल होने पर योग्य स्वास्थ्य विशेषज्ञ से सलाह लें।</p>
+          <div className="shopDetailRows">
+            <div><span>ब्रांड</span><strong>Amrit Ayurveda</strong></div>
+            <div><span>पैक में</span><strong>30 Capsules + 20 ml Oil</strong></div>
+            <div><span>भुगतान</span><strong>COD / Online UPI</strong></div>
+            <div><span>सहायता</span><a href="tel:8290695226">8290695226</a></div>
           </div>
-          <div className="urjaFrontPolicies">
-            <span>🚚 <b>CASH ON DELIVERY</b><small>Available Across India</small></span>
-            <span>↩ <b>Return Policy</b><small><a href="mailto:contact@amritayurveda.shop?subject=Amrit%20Urja%20Return%20Policy">Contact for terms</a></small></span>
-          </div>
+          <button className="shopCodButton shopComplete" onClick={() => openOrder("cod")}>COMPLETE ORDER — ₹999.00</button>
+          <p className="shopPaymentNote">पैक की जानकारी या ऑर्डर से जुड़े सवाल के लिए हमारी टीम से संपर्क करें।</p>
         </div>
       </section>
-
 
       <section className="routineSection" id="how">
         <div className="sectionHeading">
@@ -450,6 +449,7 @@ export default function Home() {
         </div>
       </section>
 
+      <div className="shopStickyOrder"><button onClick={() => openOrder("cod")}>अभी ऑर्डर करें — ₹999 COD</button></div>
       <footer>
         <div className="footerBrand">
           <strong>AMRIT AYURVEDA</strong>
