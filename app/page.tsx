@@ -404,6 +404,11 @@ export default function Home() {
           <button className="heroArrow heroArrowPrev" onClick={() => setActiveSlide((current) => (current + 2) % 3)} aria-label="पिछला बैनर">‹</button>
           <button className="heroArrow heroArrowNext" onClick={() => setActiveSlide((current) => (current + 1) % 3)} aria-label="अगला बैनर">›</button>
         </div>
+        <div className="mobileHeroSummary">
+          <p>AMRIT AYURVEDA</p><h2>AMRIT URJA</h2>
+          <span>30 Capsules + 20 ml Massage Oil</span>
+          <strong>₹999 <small>Cash on Delivery / UPI</small></strong>
+        </div>
         <div className="heroCarouselToolbar">
           <div className="heroCarouselDots" aria-label="बैनर चुनें">{[0,1,2].map((index) => <button key={index} className={activeSlide === index ? "selected" : ""} aria-label={`बैनर ${index + 1} दिखाएँ`} aria-current={activeSlide === index ? "true" : undefined} onClick={() => setActiveSlide(index)} />)}</div>
           <button className="heroPause" onClick={() => setCarouselPaused((paused) => !paused)} aria-label={carouselPaused ? "बैनर अपने आप चलाएँ" : "बैनर रोकें"}>{carouselPaused ? "▶" : "Ⅱ"}</button>
@@ -424,13 +429,25 @@ export default function Home() {
         </button>
       </section>
 
-      <section aria-label="Common Problems Most Men Face Today" style={{ position: "relative", width: "100%", maxWidth: 1440, margin: "0 auto", background: "#000" }}>
+      <section className="desktopProblemStrip" aria-label="Common Problems Most Men Face Today" style={{ position: "relative", width: "100%", maxWidth: 1440, margin: "0 auto", background: "#000" }}>
         <img src="/common-problems-approved.webp" alt="Amrit Ayurveda — Common Problems Most Men Face Today: Lack of Vitality, High Stress, Constant Tiredness" width="1536" height="1024" loading="lazy" style={{ display: "block", width: "100%", height: "auto" }} />
         <span aria-hidden="true" style={{ position: "absolute", left: "34%", top: "7%", width: "32%", height: "10%", background: "#000" }} />
       </section>
 
-      <section aria-label="Low Energy, Daily Stress, Low Confidence" style={{ width: "100%", maxWidth: 1440, margin: "0 auto 32px", background: "#000" }}>
+      <section className="desktopProblemStrip" aria-label="Low Energy, Daily Stress, Low Confidence" style={{ width: "100%", maxWidth: 1440, margin: "0 auto 32px", background: "#000" }}>
         <img src="/common-problems-row2.webp" alt="Low Energy, Daily Stress और Low Confidence — तीन सामान्य जीवनशैली स्थितियों की तस्वीरें" width="2048" height="768" loading="lazy" style={{ display: "block", width: "100%", height: "auto" }} />
+      </section>
+
+      <section className="mobileProblemCards" aria-labelledby="mobile-problems-title">
+        <h2 id="mobile-problems-title">Common Problems<br />Most Men Face Today</h2>
+        <div className="mobileProblemGrid">
+          {["Lack of Vitality", "High Stress", "Constant Tiredness", "Low Energy", "Daily Stress", "Low Confidence"].map((label, index) => (
+            <article key={label}>
+              <div className={index < 3 ? "mobileProblemPhoto firstProblemPhoto" : "mobileProblemPhoto secondProblemPhoto"} role="img" aria-label={label} style={{ backgroundImage: `url(${index < 3 ? "/common-problems-approved.webp" : "/common-problems-row2.webp"})`, backgroundPosition: `${index % 3 === 0 ? "3.3%" : index % 3 === 1 ? "50%" : "96.7%"} ${index < 3 ? "64.3%" : "15%"}` }} />
+              <h3>{label}</h3>
+            </article>
+          ))}
+        </div>
       </section>
 
       <section className="playPackSection">
@@ -593,7 +610,7 @@ export default function Home() {
 
                 {paymentMethod === "upi" && <p className="onlinePaymentHint">पहले ऑर्डर की जानकारी सेव होगी, उसके बाद UPI Payment का आसान विकल्प खुलेगा। पेमेंट पूरा होने तक Status Pending रहेगा।</p>}
                 <div className="orderFields">
-                  <label>पूरा नाम<input autoFocus value={customer.name} onChange={(e) => updateCustomer("name", e.target.value)} autoComplete="name" placeholder="Customer Name" /></label>
+                  <label>पूरा नाम<input value={customer.name} onChange={(e) => updateCustomer("name", e.target.value)} autoComplete="name" placeholder="Customer Name" /></label>
                   <label>मोबाइल नंबर (बिना +91)<input type="tel" value={customer.mobile} onChange={(e) => { const next = e.target.value; if (!/^\d*$/.test(next) || next.length > 10) { setOrderError("कृपया +91 या देश कोड न डालें। केवल अपने मोबाइल के 10 अंक भरें।"); return; } updateCustomer("mobile", next); }} onPaste={(e) => { e.preventDefault(); const pasted = e.clipboardData.getData("text").trim(); if (!/^[6-9]\d{9}$/.test(pasted)) { setOrderError("+91, 0 या अतिरिक्त अंक वाला नंबर स्वीकार नहीं है। केवल अपना 10 अंकों का मोबाइल नंबर डालें।"); return; } updateCustomer("mobile", pasted); }} inputMode="numeric" autoComplete="off" minLength={10} maxLength={10} pattern="[6-9][0-9]{9}" required placeholder="केवल 10 अंक, +91 नहीं" /><small style={{ display: "block", marginTop: 6 }}>देश का कोड +91 न जोड़ें। अपने नंबर के पूरे 10 अंक भरें।</small></label>
                   <label>पूरा पता<textarea value={customer.address} onChange={(e) => updateCustomer("address", e.target.value)} autoComplete="street-address" rows={3} placeholder="House, street, area, city" /></label>
                   <label>PIN code<input value={customer.pincode} onChange={(e) => updateCustomer("pincode", e.target.value.replace(/\D/g, "").slice(0, 6))} inputMode="numeric" autoComplete="postal-code" placeholder="6 digit PIN code" /></label>
