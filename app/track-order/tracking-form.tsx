@@ -50,6 +50,6 @@ export default function TrackingForm() {
         <p className="trackingUpdated">कूरियर के नए स्कैन CRM में आने के बाद स्टेटस बदलेगा। नया स्टेटस देखने के लिए दोबारा Track Order दबाएँ।</p>
       </section>}
     </div>
-    <div className="trackingHelp">ऑर्डर नंबर नहीं मिल रहा? <a href="tel:8290695226">8290695226 पर सहायता लें</a></div>
+    <div className="trackingHelp">स्टेटस देखने में परेशानी? <a href="tel:8290695226">8290695226 पर सहायता लें</a></div>
   </div>;
 }
