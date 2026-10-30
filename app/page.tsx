@@ -97,26 +97,26 @@ export default function Home() {
   const payable = basePayable;
 
   useEffect(() => {
-    // Show the checkout once per tab session; opening it is not a checkout event.
-    try { if (sessionStorage.getItem("amrit-welcome-order-shown")) return; } catch {}
+    if (offerShown || orderOpen) return;
+    try { if (sessionStorage.getItem("amrit-welcome-offer-v2")) return; } catch {}
     const timer = window.setTimeout(() => {
-      try { sessionStorage.setItem("amrit-welcome-order-shown", "1"); } catch {}
-      setPaymentMethod("cod");
-      setOrderOpen(true);
-    }, 1800);
+      try { sessionStorage.setItem("amrit-welcome-offer-v2", "1"); } catch {}
+      setOfferShown(true);
+      setOfferOpen(true);
+    }, 2000);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [offerShown, orderOpen]);
 
   useEffect(() => {
-    if (!orderOpen) return;
-    const onEscape = (event: KeyboardEvent) => { if (event.key === "Escape" && !submitting.current) setOrderOpen(false); };
+    if (!orderOpen && !offerOpen) return;
+    const onEscape = (event: KeyboardEvent) => { if (event.key === "Escape" && !submitting.current) { setOrderOpen(false); setOfferOpen(false); } };
     window.addEventListener("keydown", onEscape);
     return () => window.removeEventListener("keydown", onEscape);
-  }, [orderOpen]);
+  }, [orderOpen, offerOpen]);
 
 
   useEffect(() => {
-    if (!orderOpen) return;
+    if (!orderOpen && !offerOpen) return;
 
     const scrollY = window.scrollY;
     const body = document.body;
@@ -150,7 +150,7 @@ export default function Home() {
       html.style.overflow = previous.htmlOverflow;
       window.scrollTo(0, scrollY);
     };
-  }, [orderOpen]);
+  }, [orderOpen, offerOpen]);
 
   useEffect(() => {
     const section = document.getElementById("product");
@@ -195,6 +195,7 @@ export default function Home() {
 
   function openOrder(method: PaymentMethod = "cod", orderPack: 1 = pack) {
     const catalog = packCatalog[orderPack];
+    setOfferShown(true);
     setPaymentMethod(method);
     setOrderError("");
     setOrderSuccess("");
@@ -470,15 +471,15 @@ export default function Home() {
 
       {howOpen && <div className="howOverlay" role="dialog" aria-modal="true" aria-labelledby="how-modal-title"><section className="howCard"><button className="howClose" onClick={() => setHowOpen(false)} aria-label="इस्तेमाल की जानकारी बंद करें">×</button><div className="howCardCopy"><small>AMRIT AYURVEDA • HOW TO USE</small><h2 id="how-modal-title">इस्तेमाल कैसे करें</h2><div className="howStep"><b>01 · कैप्सूल</b><p>कैप्सूल की मात्रा और उपयोग के लिए पैक के लेबल पर दिए निर्देश पढ़ें।</p></div><div className="howStep"><b>02 · ऑयल</b><p>ऑयल का उपयोग पैक के लेबल पर दिए निर्देशों के अनुसार करें।</p></div><p className="howCaution">सामग्री और सावधानियों के लिए पैक की जानकारी पढ़ें।</p><button onClick={() => { setHowOpen(false); openOrder("cod"); }}>AMRIT URJA ऑर्डर करें</button></div></section></div>}
 
-      {false && offerOpen && !orderOpen && (
+      {offerOpen && !orderOpen && (
         <div className="offerOverlay" role="dialog" aria-modal="true" aria-labelledby="quick-offer-title">
           <section className="offerCard">
-            <button className="offerClose" onClick={() => setOfferOpen(false)} aria-label="ऑफर बंद करें">×</button>
-            <span className="offerBadge">⚡ SPECIAL OFFER</span>
-            <h2 id="quick-offer-title">रुकिए! जाने से पहले<br /><span>यह ऑफर देखिए</span></h2>
-            <p>AMRIT URJA — Only <b>₹999</b> में</p>
+            <button autoFocus className="offerClose" onClick={() => setOfferOpen(false)} aria-label="ऑफर बंद करें">×</button>
+            <span className="offerBadge">⚡ खास ऑफर</span>
+            <h2 id="quick-offer-title">रुकिए! जाने से पहले<br /><span>यह ऑफर मत छोड़िए</span></h2>
+            <p>AMRIT URJA अभी सिर्फ़ <b>₹999</b> में</p>
             <strong className="offerCodLine">✅ Cash on Delivery उपलब्ध</strong>
-            <button className="offerAction" onClick={() => { openOrder("cod", 1); }}>अभी ऑर्डर करें — कैश ऑन डिलीवरी ₹999</button>
+            <button className="offerAction" onClick={() => { openOrder("cod", 1); }}>अभी ऑर्डर करें ₹999 COD</button>
             <small>🔒 सुरक्षित पैकिंग • आसान ऑर्डर</small>
           </section>
         </div>
