@@ -372,7 +372,7 @@ export default function Home() {
         <nav>
           <a href="#product">Product</a>
           <button className="navHow" onClick={() => setHowOpen(true)}>How to use</button>
-          <a href="#faq">FAQ</a><a href="/track-order">Track Order</a>
+          <a href="#faq">FAQ</a>
         </nav>
       </header>
 
@@ -478,8 +478,6 @@ export default function Home() {
         <button className="howVisualButton" onClick={() => setHowOpen(true)}>उपयोग की जानकारी देखें</button>
       </section>
 
-      <section className="trackingHomeCallout"><div><small>ORDER TRACKING</small><h2>अपने पार्सल का स्टेटस देखें</h2><p>सिर्फ़ अपने मोबाइल नंबर से नवीनतम ऑर्डर का स्टेटस देखें।</p></div><a href="/track-order">TRACK YOUR ORDER →</a></section>
-
       <section className="faqSection" id="faq">
         <div className="sectionHeading">
           <p className="eyebrow">FAQ</p>
@@ -530,7 +528,7 @@ export default function Home() {
         <small>इस्तेमाल से पहले पैक पर दी गई सामग्री, उपयोग और सावधानियाँ पढ़ें। उपयुक्तता को लेकर सवाल होने पर योग्य स्वास्थ्य विशेषज्ञ से सलाह लें।</small>
       </footer>
 
-      {menuOpen && <div className="menuOverlay" role="dialog" aria-modal="true" aria-label="वेबसाइट मेन्यू"><div className="menuDrawer"><button className="menuClose" onClick={() => setMenuOpen(false)} aria-label="मेन्यू बंद करें">×</button><strong>AMRIT AYURVEDA</strong><a href="#home" onClick={() => setMenuOpen(false)}>होम</a><a href="#product" onClick={() => setMenuOpen(false)}>AMRIT URJA Combo</a><button onClick={() => { setMenuOpen(false); setHowOpen(true); }}>How to use — इस्तेमाल कैसे करें</button><a href="#faq" onClick={() => setMenuOpen(false)}>सवाल और जवाब</a><a href="/track-order">Track Your Order — ऑर्डर ट्रैक करें</a><button className="menuBuy" onClick={() => { setMenuOpen(false); openOrder("cod"); }}>ऑर्डर करें</button></div><button className="menuBackdrop" aria-label="मेन्यू बंद करें" onClick={() => setMenuOpen(false)} /></div>}
+      {menuOpen && <div className="menuOverlay" role="dialog" aria-modal="true" aria-label="वेबसाइट मेन्यू"><div className="menuDrawer"><button className="menuClose" onClick={() => setMenuOpen(false)} aria-label="मेन्यू बंद करें">×</button><strong>AMRIT AYURVEDA</strong><a href="#home" onClick={() => setMenuOpen(false)}>होम</a><a href="#product" onClick={() => setMenuOpen(false)}>AMRIT URJA Combo</a><button onClick={() => { setMenuOpen(false); setHowOpen(true); }}>How to use — इस्तेमाल कैसे करें</button><a href="#faq" onClick={() => setMenuOpen(false)}>सवाल और जवाब</a><button className="menuBuy" onClick={() => { setMenuOpen(false); openOrder("cod"); }}>ऑर्डर करें</button></div><button className="menuBackdrop" aria-label="मेन्यू बंद करें" onClick={() => setMenuOpen(false)} /></div>}
 
       {howOpen && <div className="howOverlay" role="dialog" aria-modal="true" aria-labelledby="how-modal-title"><section className="howCard"><button className="howClose" onClick={() => setHowOpen(false)} aria-label="इस्तेमाल की जानकारी बंद करें">×</button><div className="howCardCopy"><small>AMRIT AYURVEDA • HOW TO USE</small><h2 id="how-modal-title">इस्तेमाल कैसे करें</h2><div className="howStep"><b>01 · कैप्सूल</b><p>कैप्सूल की मात्रा और उपयोग के लिए पैक के लेबल पर दिए निर्देश पढ़ें।</p></div><div className="howStep"><b>02 · ऑयल</b><p>ऑयल का उपयोग पैक के लेबल पर दिए निर्देशों के अनुसार करें।</p></div><p className="howCaution">सामग्री और सावधानियों के लिए पैक की जानकारी पढ़ें।</p><button onClick={() => { setHowOpen(false); openOrder("cod"); }}>AMRIT URJA ऑर्डर करें</button></div></section></div>}
 
@@ -596,7 +594,7 @@ export default function Home() {
                   <div><small>किसी मदद के लिए कॉल करें</small><strong>8290695226</strong></div>
                 </a>
 
-                <p className="successLead">ऑर्डर नंबर: <strong>{orderSuccess}</strong></p><a className="secondaryButton full" href="/track-order">अपना ऑर्डर ट्रैक करें</a>
+                <p className="successLead">ऑर्डर नंबर: <strong>{orderSuccess}</strong></p>
                 <button className="secondaryButton full successClose" onClick={() => setOrderOpen(false)}>DONE</button>
                 <small className="successFoot">AMRIT AYURVEDA • सुरक्षित पैकिंग • Customer Support</small>
               </div>
