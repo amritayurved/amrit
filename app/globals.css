@@ -823,3 +823,19 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 .playShop .trustFactsGrid a{color:inherit;text-decoration:underline;text-underline-offset:4px}
 @media(max-width:760px){.playShop .trustFacts{padding:24px 16px 48px}.playShop .trustFactsGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.playShop .trustFactsGrid article{min-height:160px;padding:24px 12px}.playShop .trustFactsGrid h3{font-size:24px}.playShop .trustFactsGrid p{font-size:14px}}
 @media(max-width:360px){.playShop .trustFactsGrid{grid-template-columns:1fr}}
+
+/* One persistent checkout button with payment app marks. */
+.playShop .shopStickyOrder{padding:10px 16px calc(8px + env(safe-area-inset-bottom));background:linear-gradient(0deg,#000 75%,#000e);border-top:1px solid #292929}
+.playShop .shopStickyOrder .floatingBuy{display:inline-flex;align-items:center;justify-content:center;gap:16px;min-width:320px;max-width:440px;width:auto;min-height:54px;padding:8px 22px;border-radius:40px;cursor:pointer;animation:buyNowNudge 3.5s ease-in-out infinite;box-shadow:0 0 0 0 #e5092340}
+.floatingBuyLabel{font-size:17px;font-weight:800;white-space:nowrap}
+.paymentMini{display:inline-flex;align-items:center;gap:3px}
+.paymentMini>span{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;background:#fff;border:1px solid #e5e5e5;border-radius:50%;font-size:9px;line-height:1;box-shadow:0 1px 3px #0003}
+.gpayMini{color:#333;gap:1px}.gpayMini b{font-size:16px;color:#4285f4}
+.paymentMini .phonepeMini{color:#fff;background:#5f259f;font-size:18px;border:2px solid white}
+.paytmMini{color:#003b74;font-weight:900;letter-spacing:-.7px}
+.floatingBuyArrow{font-size:38px;line-height:1}
+.floatingBuyNote{display:block;color:#ddd;font-size:11px;margin-top:5px}
+@keyframes buyNowNudge{0%,72%,100%{transform:translateY(0)}80%{transform:translateY(-4px)}88%{transform:translateY(0)}94%{transform:translateY(-2px)}}
+.playShop footer{padding-bottom:120px}
+@media(max-width:700px){.playShop .shopStickyOrder .floatingBuy{min-width:0;width:100%;max-width:380px;gap:12px}.floatingBuyLabel{font-size:16px}.paymentMini>span{width:27px;height:27px}}
+@media(prefers-reduced-motion:reduce){.playShop .shopStickyOrder .floatingBuy{animation:none}}

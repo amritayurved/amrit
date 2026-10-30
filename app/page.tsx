@@ -365,7 +365,6 @@ export default function Home() {
           <button className="navHow" onClick={() => setHowOpen(true)}>How to use</button>
           <a href="#faq">FAQ</a>
         </nav>
-        <button className="headerOrder" onClick={() => openOrder("cod")}>अभी ऑर्डर करें</button>
       </header>
 
       <section className="heroCarousel" id="home" aria-label="Amrit Urja प्रोडक्ट बैनर" aria-roledescription="carousel">
@@ -377,8 +376,7 @@ export default function Home() {
           <p>Amrit Ayurveda presents</p>
           <h1>AMRIT<br/>URJA</h1>
           <p className="coupleHeroPack">30 CAPSULES + 20 ml OIL</p>
-          <button className="playBuy" onClick={() => openOrder("cod")}>BUY NOW · ₹999 <span aria-hidden="true">→</span></button>
-          <small>Cash on Delivery / UPI</small>
+            <small>Cash on Delivery / UPI</small>
         </div>
       </div>
 
@@ -400,7 +398,6 @@ export default function Home() {
         <div className="heroCarouselToolbar">
           <div className="heroCarouselDots" aria-label="बैनर चुनें">{[0,1,2].map((index) => <button key={index} className={activeSlide === index ? "selected" : ""} aria-label={`बैनर ${index + 1} दिखाएँ`} aria-current={activeSlide === index ? "true" : undefined} onClick={() => setActiveSlide(index)} />)}</div>
           <button className="heroPause" onClick={() => setCarouselPaused((paused) => !paused)} aria-label={carouselPaused ? "बैनर अपने आप चलाएँ" : "बैनर रोकें"}>{carouselPaused ? "▶" : "Ⅱ"}</button>
-          <button className="heroCarouselBuy" onClick={() => openOrder("cod")}>BUY NOW · ₹999 COD / UPI →</button>
         </div>
       </section>
 
@@ -408,47 +405,15 @@ export default function Home() {
         <h2>What is <span>Amrit Urja?</span></h2>
         <p>Amrit Ayurveda का Capsule + Massage Oil Combo। एक पैक में <strong>30 कैप्सूल और 20 ml मसाज ऑयल</strong> शामिल है।</p>
         <p>प्रोडक्ट को इस्तेमाल करने से पहले दोनों पैक पर दी गई सामग्री, उपयोग और सावधानियाँ पढ़ें। उपयुक्तता के बारे में सवाल होने पर योग्य स्वास्थ्य विशेषज्ञ से सलाह लें।</p>
-        <button className="playBuy" onClick={() => openOrder("cod")}>BUY NOW <small>₹999 · COD / UPI</small><span aria-hidden="true">→</span></button>
       </section>
 
       <section aria-label="Common Problems Most Men Face Today" style={{ position: "relative", width: "100%", maxWidth: 1440, margin: "0 auto", background: "#000" }}>
         <img src="/common-problems-approved.webp" alt="Amrit Ayurveda — Common Problems Most Men Face Today: Lack of Vitality, High Stress, Constant Tiredness" width="1536" height="1024" loading="lazy" style={{ display: "block", width: "100%", height: "auto" }} />
-        <button onClick={() => openOrder("cod")} aria-label="Buy Now — ₹999 COD या UPI से ऑर्डर करें" style={{ position: "absolute", left: "35.9%", top: "8.5%", width: "28.2%", height: "7%", background: "transparent", border: 0, borderRadius: 40, cursor: "pointer" }} />
+        <span aria-hidden="true" style={{ position: "absolute", left: "34%", top: "7%", width: "32%", height: "10%", background: "#000" }} />
       </section>
 
       <section aria-label="Low Energy, Daily Stress, Low Confidence" style={{ width: "100%", maxWidth: 1440, margin: "0 auto 32px", background: "#000" }}>
         <img src="/common-problems-row2.webp" alt="Low Energy, Daily Stress और Low Confidence — तीन सामान्य जीवनशैली स्थितियों की तस्वीरें" width="2048" height="768" loading="lazy" style={{ display: "block", width: "100%", height: "auto" }} />
-      </section>
-
-      <section aria-labelledby="amrit-combo-guide" style={{ background: "#000", color: "#fff", textAlign: "center", padding: "40px 20px 48px", maxWidth: 1080, margin: "0 auto" }}>
-        <h2 id="amrit-combo-guide" style={{ fontSize: "clamp(28px, 4vw, 46px)", lineHeight: 1.15, margin: "0 0 22px", fontWeight: 750 }}>जानिए अपना कॉम्बो<br />AMRIT URJA</h2>
-        <p style={{ fontSize: "clamp(14px, 1.4vw, 17px)", lineHeight: 1.9, color: "#e1e1e1", maxWidth: 920, margin: "0 auto 22px" }}>
-          Amrit Ayurveda के इस कॉम्बो में <strong>30 कैप्सूल और 20 ml मसाज ऑयल</strong> शामिल हैं। दोनों अलग-अलग इस्तेमाल होने वाले प्रोडक्ट हैं। खरीदने और इस्तेमाल करने से पहले प्रत्येक पैक की सामग्री, उपयोग की मात्रा और सावधानियाँ पढ़ें। अपनी उपयुक्तता या किसी मौजूदा स्वास्थ्य समस्या को लेकर सवाल हो तो योग्य स्वास्थ्य विशेषज्ञ से सलाह लें।
-        </p>
-        <button className="playBuy" onClick={() => openOrder("cod")}>BUY NOW <small>₹999 · COD / UPI</small><span aria-hidden="true">→</span></button>
-        <h2 style={{ fontSize: "clamp(27px, 3.6vw, 42px)", lineHeight: 1.2, margin: "48px 0 20px", fontWeight: 750 }}>आपको पैक में क्या मिलेगा?</h2>
-        <p style={{ fontSize: "clamp(14px, 1.4vw, 17px)", lineHeight: 1.9, color: "#e1e1e1", maxWidth: 900, margin: "0 auto" }}>
-          <strong>एक 30-कैप्सूल बोतल + एक 20 ml मसाज ऑयल बोतल।</strong> पूरे कॉम्बो की कीमत ₹999 है। ऑर्डर करते समय Cash on Delivery या Online / UPI चुन सकते हैं। सामग्री, पैक या ऑर्डर की जानकारी के लिए <a href="tel:8290695226" style={{ color: "#f0d58b", textDecoration: "underline" }}>8290695226</a> पर संपर्क करें।
-        </p>
-      </section>
-
-      <section aria-label="पैक की जानकारी, उपयोग के निर्देश और ग्राहक सहायता" style={{ width: "100%", maxWidth: 1440, margin: "0 auto 32px", background: "#000" }}>
-        <img src="/product-info-green.webp" alt="Pack Information, Usage Guidance, Customer Support" width="2048" height="768" loading="lazy" style={{ display: "block", width: "100%", height: "auto" }} />
-      </section>
-
-      <section aria-label="सामान्य वेलनेस रूटीन" style={{ width: "100%", maxWidth: 1440, margin: "0 auto 32px", background: "#000" }}>
-        <img src="/wellness-routine-green.webp" alt="Daily Movement, Active Routine, Rest & Recharge — सामान्य जीवनशैली की आदतें" width="2172" height="724" loading="lazy" decoding="async" style={{ display: "block", width: "100%", height: "auto" }} />
-        <p style={{ textAlign: "center", color: "#d1d5db", padding: "12px 20px", fontSize: 14 }}>सामान्य वेलनेस की आदतें — ये तस्वीरें प्रोडक्ट के परिणाम का दावा नहीं करतीं।</p>
-      </section>
-
-      <section className="trustFacts" aria-labelledby="trust-facts-title">
-        <h2 id="trust-facts-title">The Power of Trust</h2>
-        <div className="trustFactsGrid">
-          <article><h3>30 + 20 ml</h3><p>Capsules + Massage Oil</p></article>
-          <article><h3>₹999</h3><p>Combo Price</p></article>
-          <article><h3>COD / UPI</h3><p>Payment Options</p></article>
-          <article><h3>Customer Support</h3><p><a href="tel:8290695226">8290695226</a></p></article>
-        </div>
       </section>
 
       <section className="playPackSection">
@@ -459,7 +424,6 @@ export default function Home() {
           <article><span className="playPackNumber">02</span><h3>20 ml Massage Oil</h3><p>मसाज ऑयल का उपयोग केवल उसके पैक पर दिए निर्देशों और सावधानियों के अनुसार करें।</p></article>
           <article><span className="playPackNumber">03</span><h3>₹999 Combo</h3><p>ऑर्डर फॉर्म में Cash on Delivery या Online / UPI का विकल्प चुनें।</p></article>
         </div>
-        <button className="playBuy" onClick={() => openOrder("cod")}>BUY NOW <span aria-hidden="true">→</span></button>
       </section>
 
       <section className="routineSection" id="how">
@@ -478,18 +442,6 @@ export default function Home() {
           <div className="routineHelp"><h3>इस्तेमाल को लेकर कोई सवाल?</h3><p>सही पैक, सामग्री या इस्तेमाल की जानकारी के लिए हमारी सपोर्ट टीम से बात करें।</p><a href="tel:8290695226">☎ सहायता के लिए कॉल करें</a></div>
         </div>
         <button className="howVisualButton" onClick={() => setHowOpen(true)}>उपयोग की जानकारी देखें</button>
-      </section>
-
-      <section className="orderBand">
-        <div>
-          <p className="eyebrow light">AMRIT URJA COMBO</p>
-          <h2>30 Capsules + 20 ml Oil</h2>
-          <p>Only ₹999</p>
-        </div>
-        <div className="orderBandActions">
-          <button onClick={() => openOrder("upi")}>ONLINE PAYMENT</button>
-          <button onClick={() => openOrder("cod")}>अभी ऑर्डर करें — कैश ऑन डिलीवरी ₹999</button>
-        </div>
       </section>
 
       <section className="faqSection" id="faq">
@@ -521,7 +473,16 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="shopStickyOrder"><button onClick={() => openOrder("cod")}>BUY NOW · ₹999 COD / UPI <span aria-hidden="true"> →</span></button></div>
+      {!orderOpen && <div className="shopStickyOrder">
+        <button className="floatingBuy" onClick={() => openOrder("cod")} aria-label="Buy Now ₹999 — Cash on Delivery या UPI से ऑर्डर करें">
+          <span className="floatingBuyLabel">BUY NOW · ₹999</span>
+          <span className="paymentMini" aria-label="Google Pay, PhonePe, Paytm">
+            <span className="gpayMini"><b>G</b> Pay</span><span className="phonepeMini">पे</span><span className="paytmMini">paytm</span>
+          </span>
+          <span className="floatingBuyArrow" aria-hidden="true">›</span>
+        </button>
+        <small className="floatingBuyNote">Cash on Delivery / UPI</small>
+      </div>}
       <footer>
         <div className="footerBrand">
           <strong>AMRIT AYURVEDA</strong>
