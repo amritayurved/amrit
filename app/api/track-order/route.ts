@@ -10,12 +10,12 @@ export async function POST(request: Request) {
     const text = await request.text();
     if (text.length > 1024) return reply({ ok: false, error: "Invalid request" }, 400);
     const input = JSON.parse(text);
-    if (!input || typeof input !== "object" || typeof input.orderCode !== "string" || typeof input.mobile !== "string" || !/^AACRM\d{4,12}$/.test(input.orderCode.trim().toUpperCase()) || !/^[6-9]\d{9}$/.test(input.mobile)) return reply({ ok: false, error: "सही ऑर्डर नंबर और 10 अंकों का मोबाइल नंबर भरें।" }, 400);
-    const response = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json", Origin: "https://www.amritayurveda.shop" }, body: JSON.stringify({ orderCode: input.orderCode.trim().toUpperCase(), mobile: input.mobile }), cache: "no-store", signal: AbortSignal.timeout(10000) });
+    if (!input || typeof input !== "object" || typeof input.mobile !== "string" || !/^[6-9]\d{9}$/.test(input.mobile)) return reply({ ok: false, error: "सही 10 अंकों का मोबाइल नंबर भरें।" }, 400);
+    const response = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json", Origin: "https://www.amritayurveda.shop" }, body: JSON.stringify({ mobile: input.mobile }), cache: "no-store", signal: AbortSignal.timeout(10000) });
     const result = await response.json().catch(() => null);
-    if (!response.ok || !result?.ok || !result.tracking) return reply({ ok: false, error: response.status === 404 ? "इन विवरणों से ऑर्डर नहीं मिला। ऑर्डर नंबर और मोबाइल नंबर जाँचें।" : response.status === 429 ? "कृपया थोड़ी देर बाद कोशिश करें।" : "ट्रैकिंग अभी उपलब्ध नहीं है। बाद में कोशिश करें या 8290695226 पर संपर्क करें।" }, [400, 404, 429].includes(response.status) ? response.status : 503);
+    if (!response.ok || !result?.ok || !result.tracking) return reply({ ok: false, error: response.status === 404 ? "इस मोबाइल नंबर से ऑर्डर नहीं मिला। ऑर्डर वाला मोबाइल नंबर जाँचें।" : response.status === 429 ? "कृपया थोड़ी देर बाद कोशिश करें।" : "ट्रैकिंग अभी उपलब्ध नहीं है। बाद में कोशिश करें या 8290695226 पर संपर्क करें।" }, [400, 404, 429].includes(response.status) ? response.status : 503);
     // Project again at the public storefront boundary. Never forward a full CRM object.
     const t = result.tracking;
-    return reply({ ok: true, tracking: { orderCode: String(t.orderCode), status: String(t.status).slice(0, 100), stage: Math.max(0, Math.min(4, Number(t.stage) || 0)), attention: t.attention === true, courier: String(t.courier || "").slice(0, 80), awb: String(t.awb || "").slice(0, 80), shipmentStatus: String(t.shipmentStatus || "").slice(0, 240), updatedAt: String(t.updatedAt || "").slice(0, 50) } });
+    return reply({ ok: true, tracking: { orderCode: String(t.orderCode).slice(-8), status: String(t.status).slice(0, 100), stage: Math.max(0, Math.min(4, Number(t.stage) || 0)), attention: t.attention === true, courier: "", awb: "", shipmentStatus: "", updatedAt: String(t.updatedAt || "").slice(0, 50) } });
   } catch { return reply({ ok: false, error: "ट्रैकिंग अभी उपलब्ध नहीं है। कृपया थोड़ी देर बाद कोशिश करें।" }, 503); }
 }

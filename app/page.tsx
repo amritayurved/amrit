@@ -478,7 +478,7 @@ export default function Home() {
         <button className="howVisualButton" onClick={() => setHowOpen(true)}>उपयोग की जानकारी देखें</button>
       </section>
 
-      <section className="trackingHomeCallout"><div><small>ORDER TRACKING</small><h2>अपने पार्सल का स्टेटस देखें</h2><p>ऑर्डर नंबर और मोबाइल नंबर से अपने ऑर्डर की जानकारी पाएँ।</p></div><a href="/track-order">TRACK YOUR ORDER →</a></section>
+      <section className="trackingHomeCallout"><div><small>ORDER TRACKING</small><h2>अपने पार्सल का स्टेटस देखें</h2><p>सिर्फ़ अपने मोबाइल नंबर से नवीनतम ऑर्डर का स्टेटस देखें।</p></div><a href="/track-order">TRACK YOUR ORDER →</a></section>
 
       <section className="faqSection" id="faq">
         <div className="sectionHeading">

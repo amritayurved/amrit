@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import TrackingForm from "./tracking-form";
 
-export const metadata: Metadata = { title: "Track Your Order | Amrit Ayurveda", description: "अपने ऑर्डर नंबर और मोबाइल नंबर से Amrit Ayurveda पार्सल का स्टेटस देखें।", robots: { index: false, follow: true } };
+export const metadata: Metadata = { title: "Track Your Order | Amrit Ayurveda", description: "अपने मोबाइल नंबर से Amrit Ayurveda के नवीनतम ऑर्डर का स्टेटस देखें।", robots: { index: false, follow: true } };
 
 export default function TrackOrderPage() {
   return <main className="customerTrackingPage">
@@ -9,7 +9,7 @@ export default function TrackOrderPage() {
     <section className="trackingContent">
       <p className="trackingEyebrow">ORDER TRACKING</p>
       <h1>आपका पार्सल कहाँ पहुँचा?</h1>
-      <p className="trackingLead">ऑर्डर नंबर और ऑर्डर करते समय दिया गया मोबाइल नंबर भरें।</p>
+      <p className="trackingLead">सिर्फ़ ऑर्डर वाला मोबाइल नंबर भरें। ऑर्डर ID की ज़रूरत नहीं है।</p>
       <TrackingForm />
     </section>
   </main>;
