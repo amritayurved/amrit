@@ -89,6 +89,8 @@ export default function Home() {
     pincode: "",
   });
   const [saving, setSaving] = useState(false);
+  const [leadConsent, setLeadConsent] = useState(false);
+  const capturedLead = useRef("");
   const submitting = useRef(false);
   const checkoutAttempt = useRef({ fingerprint: "", ref: "", createdAt: 0 });
   const [orderError, setOrderError] = useState("");
@@ -224,6 +226,31 @@ export default function Home() {
     setOrderError("");
     setCustomer((current) => ({ ...current, [field]: value }));
   }
+
+  useEffect(() => {
+    const mobile = normalizeIndianMobile(customer.mobile);
+    if (!orderOpen || orderSuccess || !leadConsent || !/^[6-9]\d{9}$/.test(mobile)) return;
+    if (capturedLead.current === mobile) return;
+    const timer = window.setTimeout(async () => {
+      try {
+        const response = await fetch("/api/abandoned-cart", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            phone: mobile,
+            name: customer.name.trim().slice(0, 120),
+            product: product.name,
+            source: "Amrit Urja Abandoned Cart",
+            consent: true,
+          }),
+        });
+        if (response.ok) capturedLead.current = mobile;
+      } catch {
+        // Lead capture is best-effort; never block the checkout.
+      }
+    }, 800);
+    return () => window.clearTimeout(timer);
+  }, [customer.mobile, customer.name, leadConsent, orderOpen, orderSuccess]);
 
   function validate() {
     if (customer.name.trim().length < 2) return "कृपया पूरा नाम भरें।";
@@ -618,6 +645,11 @@ export default function Home() {
                   <label>पूरा पता<textarea value={customer.address} onChange={(e) => updateCustomer("address", e.target.value)} autoComplete="street-address" rows={3} placeholder="House, street, area, city" /></label>
                   <label>PIN code<input value={customer.pincode} onChange={(e) => updateCustomer("pincode", e.target.value.replace(/\D/g, "").slice(0, 6))} inputMode="numeric" autoComplete="postal-code" placeholder="6 digit PIN code" /></label>
                 </div>
+
+                <label style={{display:"flex",alignItems:"flex-start",gap:8,fontSize:12,lineHeight:1.5,marginTop:10}}>
+                  <input type="checkbox" checked={leadConsent} onChange={(e) => setLeadConsent(e.target.checked)} style={{marginTop:3}} />
+                  <span>मैं अधूरा ऑर्डर छोड़ने पर Amrit Ayurveda से इस नंबर पर ऑर्डर सहायता के लिए संपर्क किए जाने की सहमति देता/देती हूँ।</span>
+                </label>
 
                 {orderError && <p className="orderError">{orderError}</p>}
 
