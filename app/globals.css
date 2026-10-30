@@ -839,3 +839,21 @@ footer{display:grid;grid-template-columns:2fr 1fr 1fr;gap:46px;padding:62px max(
 .playShop footer{padding-bottom:120px}
 @media(max-width:700px){.playShop .shopStickyOrder .floatingBuy{min-width:0;width:100%;max-width:380px;gap:12px}.floatingBuyLabel{font-size:16px}.paymentMini>span{width:27px;height:27px}}
 @media(prefers-reduced-motion:reduce){.playShop .shopStickyOrder .floatingBuy{animation:none}}
+
+/* Clear COD messaging and compact welcome checkout. */
+.playShop .floatingBuyLabel{display:flex;flex-direction:column;gap:3px;line-height:1.15}
+.playShop .floatingBuyLabel small{font-size:12px;font-weight:650;color:#fff}
+.playShop .inlineCodOrder{text-align:center;padding:0 16px 32px;background:#000}
+.playShop .inlineCodOrder .playBuy{gap:15px;max-width:100%;padding:12px 20px;box-shadow:0 4px 18px #d2001233}
+.playShop .inlineCodLabel{display:flex;flex-direction:column;gap:5px;font-size:17px;line-height:1.2}
+.playShop .inlineCodLabel small{font-size:12px;font-weight:600}
+.playShop .inlineCodOrder .paymentMini{font-size:initial}
+.playShop .inlineCodOrder .paymentMini>span{font-size:9px}
+.playShop .inlineCodOrder .paymentMini .phonepeMini{font-size:18px}
+.playShop .orderCard{width:min(100%,430px);padding:18px;border-radius:18px}
+.playShop .checkoutCodBanner{background:#e6f5e8;color:#17622a;border:1px solid #b8dfbf;border-radius:10px;padding:10px 12px;margin:12px 0 8px;font-size:17px;font-weight:800;line-height:1.4}
+.playShop .checkoutCodBanner small{font-size:12px;font-weight:600}
+.playShop .checkoutIntro{font-size:12px;line-height:1.5;margin:8px 0}
+.playShop .orderFields{gap:8px}
+.playShop .orderFields input,.playShop .orderFields textarea{padding:10px 11px}
+@media(max-width:480px){.playShop .inlineCodOrder .playBuy{gap:10px;padding:12px 14px}.playShop .inlineCodLabel{font-size:16px}.playShop .inlineCodLabel small{font-size:10px}.playShop .orderCard{padding:15px;max-height:calc(100dvh - 24px)}}

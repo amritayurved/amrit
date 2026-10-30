@@ -104,13 +104,22 @@ export default function Home() {
   const payable = basePayable;
 
   useEffect(() => {
-    if (offerShown || orderOpen) return;
+    // Show the checkout once per tab session; opening it is not a checkout event.
+    try { if (sessionStorage.getItem("amrit-welcome-order-shown")) return; } catch {}
     const timer = window.setTimeout(() => {
-      setOfferOpen(true);
-      setOfferShown(true);
-    }, 25000);
+      try { sessionStorage.setItem("amrit-welcome-order-shown", "1"); } catch {}
+      setPaymentMethod("cod");
+      setOrderOpen(true);
+    }, 1800);
     return () => window.clearTimeout(timer);
-  }, [offerShown, orderOpen]);
+  }, []);
+
+  useEffect(() => {
+    if (!orderOpen) return;
+    const onEscape = (event: KeyboardEvent) => { if (event.key === "Escape" && !submitting.current) setOrderOpen(false); };
+    window.addEventListener("keydown", onEscape);
+    return () => window.removeEventListener("keydown", onEscape);
+  }, [orderOpen]);
 
 
   useEffect(() => {
@@ -407,6 +416,14 @@ export default function Home() {
         <p>प्रोडक्ट को इस्तेमाल करने से पहले दोनों पैक पर दी गई सामग्री, उपयोग और सावधानियाँ पढ़ें। उपयुक्तता के बारे में सवाल होने पर योग्य स्वास्थ्य विशेषज्ञ से सलाह लें।</p>
       </section>
 
+      <section className="inlineCodOrder" aria-label="Cash on Delivery से ऑर्डर करें">
+        <button className="playBuy" onClick={() => openOrder("cod")}>
+          <span className="inlineCodLabel">BUY NOW · ₹999<small>Cash on Delivery — घर पर भुगतान</small></span>
+          <span className="paymentMini" aria-label="Google Pay, PhonePe, Paytm"><span className="gpayMini"><b>G</b> Pay</span><span className="phonepeMini">पे</span><span className="paytmMini">paytm</span></span>
+          <span aria-hidden="true">›</span>
+        </button>
+      </section>
+
       <section aria-label="Common Problems Most Men Face Today" style={{ position: "relative", width: "100%", maxWidth: 1440, margin: "0 auto", background: "#000" }}>
         <img src="/common-problems-approved.webp" alt="Amrit Ayurveda — Common Problems Most Men Face Today: Lack of Vitality, High Stress, Constant Tiredness" width="1536" height="1024" loading="lazy" style={{ display: "block", width: "100%", height: "auto" }} />
         <span aria-hidden="true" style={{ position: "absolute", left: "34%", top: "7%", width: "32%", height: "10%", background: "#000" }} />
@@ -475,7 +492,7 @@ export default function Home() {
 
       {!orderOpen && <div className="shopStickyOrder">
         <button className="floatingBuy" onClick={() => openOrder("cod")} aria-label="Buy Now ₹999 — Cash on Delivery या UPI से ऑर्डर करें">
-          <span className="floatingBuyLabel">BUY NOW · ₹999</span>
+          <span className="floatingBuyLabel">BUY NOW · ₹999<small>Cash on Delivery</small></span>
           <span className="paymentMini" aria-label="Google Pay, PhonePe, Paytm">
             <span className="gpayMini"><b>G</b> Pay</span><span className="phonepeMini">पे</span><span className="paytmMini">paytm</span>
           </span>
@@ -565,7 +582,7 @@ export default function Home() {
               </div>
             ) : (
               <>
-                <p className="checkoutIntro">अपना नाम, 10 अंकों का मोबाइल नंबर और डिलीवरी पता भरें। फिर पेमेंट का तरीका चुनें।</p><div className="paymentTabs">
+                <p className="checkoutCodBanner">✓ Cash on Delivery · ₹999<br /><small>पार्सल मिलने पर भुगतान करें</small></p><p className="checkoutIntro">अपना नाम, 10 अंकों का मोबाइल नंबर और डिलीवरी पता भरें। फिर पेमेंट का तरीका चुनें।</p><div className="paymentTabs">
                   <button className={paymentMethod === "cod" ? "active" : ""} onClick={() => setPaymentMethod("cod")}>
                     <span>घर पर भुगतान (COD)</span><b>₹{money(payable)}</b>
                   </button>
@@ -576,7 +593,7 @@ export default function Home() {
 
                 {paymentMethod === "upi" && <p className="onlinePaymentHint">पहले ऑर्डर की जानकारी सेव होगी, उसके बाद UPI Payment का आसान विकल्प खुलेगा। पेमेंट पूरा होने तक Status Pending रहेगा।</p>}
                 <div className="orderFields">
-                  <label>पूरा नाम<input value={customer.name} onChange={(e) => updateCustomer("name", e.target.value)} autoComplete="name" placeholder="Customer Name" /></label>
+                  <label>पूरा नाम<input autoFocus value={customer.name} onChange={(e) => updateCustomer("name", e.target.value)} autoComplete="name" placeholder="Customer Name" /></label>
                   <label>मोबाइल नंबर (बिना +91)<input type="tel" value={customer.mobile} onChange={(e) => { const next = e.target.value; if (!/^\d*$/.test(next) || next.length > 10) { setOrderError("कृपया +91 या देश कोड न डालें। केवल अपने मोबाइल के 10 अंक भरें।"); return; } updateCustomer("mobile", next); }} onPaste={(e) => { e.preventDefault(); const pasted = e.clipboardData.getData("text").trim(); if (!/^[6-9]\d{9}$/.test(pasted)) { setOrderError("+91, 0 या अतिरिक्त अंक वाला नंबर स्वीकार नहीं है। केवल अपना 10 अंकों का मोबाइल नंबर डालें।"); return; } updateCustomer("mobile", pasted); }} inputMode="numeric" autoComplete="off" minLength={10} maxLength={10} pattern="[6-9][0-9]{9}" required placeholder="केवल 10 अंक, +91 नहीं" /><small style={{ display: "block", marginTop: 6 }}>देश का कोड +91 न जोड़ें। अपने नंबर के पूरे 10 अंक भरें।</small></label>
                   <label>पूरा पता<textarea value={customer.address} onChange={(e) => updateCustomer("address", e.target.value)} autoComplete="street-address" rows={3} placeholder="House, street, area, city" /></label>
                   <label>PIN code<input value={customer.pincode} onChange={(e) => updateCustomer("pincode", e.target.value.replace(/\D/g, "").slice(0, 6))} inputMode="numeric" autoComplete="postal-code" placeholder="6 digit PIN code" /></label>
