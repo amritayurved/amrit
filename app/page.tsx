@@ -396,7 +396,13 @@ export default function Home() {
           <figure><img width="915" height="1600" loading="lazy" src="/my-photos/photo-3.jpg" alt="Amrit Urja प्रोडक्ट जानकारी — तीसरी पूरी तस्वीर" /><figcaption>03 / 03 · पूरी तस्वीर</figcaption></figure>
         </div>
       </section>
-
+<div style={{ textAlign: "center", padding: "20px" }}>
+  <img
+    src="/PHOTO-KA-NAAM.jpg"
+    alt="Amrit Ayurveda की फोटो"
+    style={{ maxWidth: "100%", height: "auto" }}
+  />
+</div>
       <section className="routineSection" id="how">
         <div className="sectionHeading">
           <p className="eyebrow">YOUR DAILY WELLNESS GUIDE</p>
