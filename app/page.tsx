@@ -398,7 +398,7 @@ export default function Home() {
       </section>
 <div style={{ textAlign: "center", padding: "20px" }}>
   <img
-    src="/PHOTO-KA-NAAM.jpg"
+    src="/meri-photo.jpg.jpeg"
     alt="Amrit Ayurveda की फोटो"
     style={{ maxWidth: "100%", height: "auto" }}
   />
