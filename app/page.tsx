@@ -469,7 +469,7 @@ export default function Home() {
           <a className="footerPhone" href="tel:8290695226">☎ SUPPORT: +91 8290695226</a>
         </div>
         <div><b>Product</b><a href="#product">AMRIT URJA</a><a href="#how">How to use</a></div>
-        <div><b>Contact</b><a href="tel:8290695226">Call: 8290695226</a><a href="mailto:contact@amritayurveda.shop">contact@amritayurveda.shop</a><a href="#faq">FAQ</a></div>
+        <div><b>Contact</b><a href="tel:8290695226">Call: 8290695226</a><a href="mailto:contact@amritayurveda.shop">contact@amritayurveda.shop</a><a href="#faq">FAQ</a><a href="/privacy-policy">Privacy Policy / गोपनीयता नीति</a></div>
         <small>यह product general wellness presentation के लिए है। किसी बीमारी के diagnosis, treatment, cure या prevention का दावा नहीं किया गया है।</small>
       </footer>
 
