@@ -84,6 +84,8 @@ export default function Home() {
   const [saving, setSaving] = useState(false);
   const submitting = useRef(false);
   const checkoutAttempt = useRef({ fingerprint: "", ref: "", createdAt: 0 });
+  const [followupConsent, setFollowupConsent] = useState(false);
+  const draftSession = useRef("");
   const [orderError, setOrderError] = useState("");
   const [orderSuccess, setOrderSuccess] = useState("");
   const [duplicateOrder, setDuplicateOrder] = useState(false);
@@ -193,6 +195,19 @@ export default function Home() {
     return `upi://pay?${params.toString()}`;
   }, [orderRef, payable]);
 
+  useEffect(() => {
+    if (!orderOpen || !followupConsent || orderSuccess || !/^[6-9]\d{9}$/.test(customer.mobile)) return;
+    if (!draftSession.current) {
+      const bytes = new Uint8Array(32);
+      crypto.getRandomValues(bytes);
+      draftSession.current = Array.from(bytes, x => x.toString(16).padStart(2, "0")).join("");
+    }
+    const timer = window.setTimeout(() => {
+      void fetch("/api/checkout-draft", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ session: draftSession.current, sequence: Date.now(), consent: true, phone: customer.mobile, name: customer.name, address: customer.address, pincode: customer.pincode }) }).catch(() => {});
+    }, 1000);
+    return () => window.clearTimeout(timer);
+  }, [orderOpen, followupConsent, orderSuccess, customer]);
+
   function openOrder(method: PaymentMethod = "cod", orderPack: 1 = pack) {
     const catalog = packCatalog[orderPack];
     setOfferShown(true);
@@ -284,6 +299,7 @@ export default function Home() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           order_id: ref,
+          checkout_session: followupConsent ? draftSession.current : "",
           customer: customer.name.trim(),
           phone: normalizedMobile,
           address: customer.address.trim(),
@@ -555,6 +571,7 @@ export default function Home() {
                 </div>
 
                 {paymentMethod === "upi" && <p className="onlinePaymentHint">पहले ऑर्डर की जानकारी सेव होगी, उसके बाद UPI Payment का आसान विकल्प खुलेगा। पेमेंट पूरा होने तक Status Pending रहेगा।</p>}
+                <label style={{display:"flex",gap:8,alignItems:"start",margin:"12px 0",fontSize:14}}><input type="checkbox" checked={followupConsent} onChange={e => { const checked = e.target.checked; setFollowupConsent(checked); if (!checked && draftSession.current) { const session = draftSession.current; draftSession.current = ""; void fetch("/api/checkout-draft", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({session, revoke: true}) }).catch(() => {}); } }} /> <span>ऑर्डर पूरा न होने पर सहायता के लिए संपर्क की अनुमति दें। सहमति देने पर भरी हुई जानकारी सेव होगी। <a href="/privacy-policy" target="_blank" rel="noreferrer">गोपनीयता नीति</a></span></label>
                 <div className="orderFields">
                   <label>पूरा नाम<input value={customer.name} onChange={(e) => updateCustomer("name", e.target.value)} autoComplete="name" placeholder="Customer Name" /></label>
                   <label>मोबाइल नंबर (बिना +91)<input type="tel" value={customer.mobile} onChange={(e) => { const next = e.target.value; if (!/^\d*$/.test(next) || next.length > 10) { setOrderError("कृपया +91 या देश कोड न डालें। केवल अपने मोबाइल के 10 अंक भरें।"); return; } updateCustomer("mobile", next); }} onPaste={(e) => { e.preventDefault(); const pasted = e.clipboardData.getData("text").trim(); if (!/^[6-9]\d{9}$/.test(pasted)) { setOrderError("+91, 0 या अतिरिक्त अंक वाला नंबर स्वीकार नहीं है। केवल अपना 10 अंकों का मोबाइल नंबर डालें।"); return; } updateCustomer("mobile", pasted); }} inputMode="numeric" autoComplete="off" minLength={10} maxLength={10} pattern="[6-9][0-9]{9}" required placeholder="केवल 10 अंक, +91 नहीं" /><small style={{ display: "block", marginTop: 6 }}>देश का कोड +91 न जोड़ें। अपने नंबर के पूरे 10 अंक भरें।</small></label>
@@ -576,4 +593,5 @@ export default function Home() {
     </main>
   );
 }
+
 
