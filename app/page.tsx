@@ -209,6 +209,7 @@ export default function Home() {
   }, [orderOpen, followupConsent, orderSuccess, customer]);
 
   function openOrder(method: PaymentMethod = "cod", orderPack: 1 = pack) {
+    if (orderSuccess) { draftSession.current = ""; setFollowupConsent(false); }
     const catalog = packCatalog[orderPack];
     setOfferShown(true);
     setPaymentMethod(method);
